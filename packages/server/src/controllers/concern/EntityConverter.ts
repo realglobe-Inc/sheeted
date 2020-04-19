@@ -1,0 +1,155 @@
+import { Schema } from '@sheeted/core'
+import { WithEntityMetaField } from '@sheeted/core/build/web/Shared.type'
+import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+
+import { DisplayFunctions } from './DisplayFunctions'
+import { UserAccessPolicy } from './UserAccessPolicy'
+
+const displayDefault = (entity: any) => String(entity.id)
+
+export class EntityConverter {
+  constructor(
+    private sheetName: string,
+    private schema: Schema,
+    private accessPolicy: UserAccessPolicy,
+    private displays: DisplayFunctions,
+  ) {}
+
+  beforeSave(changes: any) {
+    return [changes]
+      .map((changes) => this.parseFieldsByInterceptors(changes))
+      .map((changes) => this.dropMetaFields(changes))
+      .pop()
+  }
+
+  beforeSend(entity: any) {
+    return [entity]
+      .map((entity) => this.withEntityMetaField(entity))
+      .map((entity) => this.dropPrivateFields(entity))
+      .map((entity) => this.stringifyFieldsByInterceptors(entity))
+      .map((entity) => this.dropExcludedColumns(entity))
+      .pop()
+  }
+
+  private parseFieldsByInterceptors(entity: any) {
+    const copy = { ...entity }
+    const { schema } = this
+    // partial entity なので entity の filed を見る
+    for (const field of Object.keys(entity)) {
+      const interceptor = schema[field]?.type.interceptor
+      if (interceptor) {
+        copy[field] = interceptor.parse(entity[field])
+      }
+    }
+    return copy
+  }
+
+  private stringifyFieldsByInterceptors(entity: any) {
+    const copy = { ...entity }
+    const { schema } = this
+    for (const field of Object.keys(schema)) {
+      if (entity[field] == null) {
+        continue
+      }
+      const interceptor = schema[field]?.type.interceptor
+      if (interceptor) {
+        copy[field] = interceptor.stringify(entity[field])
+      }
+    }
+    return copy
+  }
+
+  private withEntityMetaField(entity: any) {
+    const { sheetName, schema, displays } = this
+    const copy = { ...entity }
+    // Set meta field in sub entities
+    for (const field of Object.keys(copy)) {
+      const isEntityField = schema[field]?.type.rawType === 'entity'
+      if (!isEntityField) {
+        continue
+      }
+      const subEntity = copy[field]
+      if (!subEntity) {
+        continue
+      }
+      const sheetName = schema[field].entityProperties?.sheetName ?? ''
+      const display = displays[sheetName] || displayDefault
+      const withMeta = {
+        [ENTITY_META_FIELD]: {
+          displayText: display(subEntity),
+        },
+      }
+      Object.assign(subEntity, withMeta)
+    }
+    // Set meta field in entity
+    const display = displays[sheetName] || displayDefault
+    const permissions = this.getPermissions(entity)
+    const withMeta: WithEntityMetaField = {
+      [ENTITY_META_FIELD]: {
+        displayText: display(copy),
+        permissions,
+      },
+    }
+    Object.assign(copy, withMeta)
+    return copy
+  }
+
+  private dropMetaFields(entity: any) {
+    const copy = { ...entity }
+    for (const field of Object.keys(copy)) {
+      if (field === ENTITY_META_FIELD) {
+        delete copy[field]
+      }
+    }
+    return copy
+  }
+
+  private dropPrivateFields(entity: any) {
+    const copy = { ...entity }
+    for (const field of Object.keys(copy)) {
+      // __v などを消す。_id は ref のために残す
+      if (field !== '_id' && field.startsWith('_')) {
+        delete copy[field]
+      }
+    }
+    return copy
+  }
+
+  private dropExcludedColumns(entity: any) {
+    const { accessPolicy } = this
+    const readPolicy = accessPolicy.ofRead
+    if (!readPolicy) {
+      // Must be blocked before
+      throw new Error('Has no permission to read')
+    }
+    const excludeColumns = readPolicy.excludeColumns ?? []
+    const copy = { ...entity }
+    for (const field of Object.keys(entity)) {
+      if (excludeColumns.includes(field)) {
+        delete copy[field]
+      }
+    }
+    return copy
+  }
+
+  private getPermissions(entity: any) {
+    const { accessPolicy } = this
+    const updatePolicy = accessPolicy.ofUpdate
+    const updates = updatePolicy
+      ? updatePolicy.condition
+        ? updatePolicy.condition(entity)
+        : true
+      : false
+    const deletePolicy = accessPolicy.ofDelete
+    const deletes = deletePolicy
+      ? deletePolicy.condition
+        ? deletePolicy.condition(entity)
+        : true
+      : false
+    const permissions = {
+      updates,
+      deletes,
+    }
+    return permissions
+  }
+}

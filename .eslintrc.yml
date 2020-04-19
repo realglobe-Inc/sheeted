@@ -1,0 +1,43 @@
+extends:
+  # Recommended extensions with prettier: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin
+  - eslint:recommended
+  - plugin:react/recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/eslint-recommended
+  - plugin:@typescript-eslint/recommended-requiring-type-checking
+  - prettier
+  - plugin:prettier/recommended
+  - prettier/@typescript-eslint
+  # Extension for "import": https://github.com/benmosher/eslint-plugin-import
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project:
+    - ./tsconfig.eslint.json
+plugins:
+  - "@typescript-eslint"
+  - import
+  - react
+  - react-hooks
+settings:
+  react:
+    version: detect
+rules:
+  # import rules
+  "import/no-default-export": "error"
+  "import/order": ["error", {"newlines-between": "always"}]
+  # disabled rules
+  "@typescript-eslint/explicit-member-accessibility": off
+  "@typescript-eslint/explicit-function-return-type": off
+  "@typescript-eslint/require-await": off
+  "@typescript-eslint/no-explicit-any": off
+  "@typescript-eslint/no-non-null-assertion": off
+  "react/prop-types": off
+  "@typescript-eslint/unbound-method": off
+  "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+  "@typescript-eslint/interface-name-prefix": off
+  # React
+  "react-hooks/rules-of-hooks": "error"
+  "react-hooks/exhaustive-deps": "warn"

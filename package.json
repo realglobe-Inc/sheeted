@@ -1,0 +1,51 @@
+{
+  "name": "sheeted",
+  "description": "Table UI web application development framework",
+  "version": "0.1.7",
+  "author": "Sheeted team <sheeted@realglobe.jp>",
+  "bugs": {
+    "url": "https://github.com/Sheeted team <sheeted@realglobe.jp>/sheeted/issues"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.7.7",
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^3.0.0",
+    "jest": "^25.1.0",
+    "mongodb-memory-server": "^6.5.0",
+    "prettier": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.2"
+  },
+  "homepage": "https://github.com/Sheeted team <sheeted@realglobe.jp>/sheeted#readme",
+  "keywords": [
+    "Low-Code",
+    "Sheet"
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sheeted team <sheeted@realglobe.jp>/sheeted.git"
+  },
+  "scripts": {
+    "build": "yarn w/core build && yarn w/server build && yarn w/example build",
+    "lint": "eslint --ext .ts,.tsx packages",
+    "typecheck": "tsc -p tsconfig.eslint.json",
+    "w/core": "yarn workspace @sheeted/core",
+    "w/example": "yarn workspace sheeted-examples",
+    "w/server": "yarn workspace @sheeted/server",
+    "w/ui": "yarn workspace @sheeted/ui"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples"
+  ]
+}

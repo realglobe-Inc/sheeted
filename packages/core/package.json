@@ -1,0 +1,22 @@
+{
+  "name": "@sheeted/core",
+  "description": "Core library of Sheeted framework",
+  "version": "0.1.7",
+  "author": "Sheeted team <sheeted@realglobe.jp>",
+  "dependencies": {},
+  "files": [
+    "build"
+  ],
+  "license": "UNLICENSED",
+  "main": "build",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf build",
+    "prepare": "yarn build",
+    "test": "jest"
+  },
+  "types": "build/index.d.ts"
+}

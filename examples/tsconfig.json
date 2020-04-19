@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "module": "CommonJS",
+    "incremental": true
+  },
+  "include": [
+    "1-sheet-app",
+    "account-management",
+    "project-daily-report"
+  ]
+}

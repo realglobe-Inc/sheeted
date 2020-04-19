@@ -1,0 +1,7 @@
+{
+  "watch": ["build", "example/emptyApp.js"],
+  "ext": "js",
+  "ignore": ["build/*.tsbuildinfo"],
+  "exec": "node example/emptyApp.js",
+  "delay": "500"
+}
