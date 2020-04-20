@@ -26,6 +26,7 @@ export const App1Sheet: Sheet<App1Entity> = {
       type: Types.Numeric,
     },
   },
+  Model: App1Model,
   Validator: (_ctx) => (_input) => {
     const result = new ValidationResult()
     return result
