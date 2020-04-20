@@ -25,6 +25,7 @@ To create a sheet, define some type and objects as below.
 [EntityBase]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/EntityBase.type.ts
 [Schema]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Schema.type.ts
 [Model]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Schema.type.ts
+[AccessPolicy]: https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/AccessPolicy.type.ts
 [Hook]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Hook.type.ts
 [Validator]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Validator.type.ts
 [View]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/View.type.ts
@@ -33,6 +34,7 @@ To create a sheet, define some type and objects as below.
 * Entity: a raw data shape. Interface which extends [EntityBase][EntityBase].
 * [Schema][Schema]: defines properties of each field in Entity.
 * [Model][Model]: MongoDB [Mongoose model](https://mongoosejs.com/docs/api/model.html).
+* AccessPolicies: Access policies based on roles. Array of [AccessPolicy][AccessPolicy].
 * [Hook][Hook]: functions which will be executed after creating / updating / destroying entities.
 * [Validator][Validator]: defines validations on creating / updating entities.
 * [View][View]: about UI such as column titles.
