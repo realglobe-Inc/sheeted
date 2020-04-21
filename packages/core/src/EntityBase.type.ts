@@ -7,3 +7,13 @@ export interface EntityBase {
    */
   id: string
 }
+
+/**
+ * Entity id.
+ */
+export type EntityId = string
+
+/**
+ * Entity field
+ */
+export type Field<Entity> = Exclude<keyof Entity, number | symbol>
