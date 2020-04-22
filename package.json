@@ -43,6 +43,7 @@
     "typecheck": "tsc -p tsconfig.eslint.json",
     "w/core": "yarn workspace @sheeted/core",
     "w/example": "yarn workspace sheeted-examples",
+    "w/mongoose": "yarn workspace @sheeted/mongoose",
     "w/server": "yarn workspace @sheeted/server",
     "w/ui": "yarn workspace @sheeted/ui"
   },
