@@ -5,8 +5,8 @@ import { Field, EntityId } from './EntityBase.type'
  */
 export type FindListResult<Entity> = {
   page: number
-  total: number
   pages: number
+  total: number
   entities: Entity[]
 }
 
@@ -27,7 +27,7 @@ export type SortQuery<Entity> = {
  * Search query object. Search words (AND condition) over fields (OR condition).
  */
 export type SeachQuery<Entity> = {
-  fields: Field<Entity>
+  fields: Field<Entity>[]
   words: string[]
 }
 

@@ -1,10 +1,9 @@
-import { Model, Document } from 'mongoose'
-
 import { Schema } from './Schema.type'
 import { View } from './View.type'
 import { AccessPolicy } from './AccessPolicy.type'
 import { Hook } from './Hook.type'
 import { Validator } from './Validator.type'
+import { Repository } from './Repository.type'
 
 /**
  * Sheet definition.
@@ -26,9 +25,9 @@ export type Sheet<Entity = any, Role extends string = string> = {
   Schema: Schema<Entity>
 
   /**
-   * Mongoose model
+   * Database repository
    */
-  Model: Model<Entity & Document>
+  Repository: Repository<Entity>
 
   /**
    * Validator function.
