@@ -77,6 +77,11 @@ export type Repository<Entity> = {
   findById(id: EntityId): Promise<Entity | null>
 
   /**
+   * Find an entity
+   */
+  findOne(filter: Partial<Entity>): Promise<Entity | null>
+
+  /**
    * Create an entity
    */
   create(input: Partial<Entity>): Promise<Entity>

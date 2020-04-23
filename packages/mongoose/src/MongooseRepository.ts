@@ -65,6 +65,11 @@ export const MongoRepository: RepositoryConstructor = class MongoRepository<
     return doc?.toJSON() || null
   }
 
+  async findOne(filter: Partial<Entity>): Promise<Entity | null> {
+    const doc = await this.model.findOne(filter)
+    return doc?.toJSON() || null
+  }
+
   async create(input: Partial<Entity>): Promise<Entity> {
     const doc = await this.model.create(input)
     return doc.toJSON()
