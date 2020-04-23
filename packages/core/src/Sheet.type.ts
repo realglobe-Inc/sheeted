@@ -3,7 +3,6 @@ import { View } from './View.type'
 import { AccessPolicy } from './AccessPolicy.type'
 import { Hook } from './Hook.type'
 import { Validator } from './Validator.type'
-import { Repository } from './Repository.type'
 
 /**
  * Sheet definition.
@@ -23,11 +22,6 @@ export type Sheet<Entity = any, Role extends string = string> = {
    * Data schema.
    */
   Schema: Schema<Entity>
-
-  /**
-   * Database repository
-   */
-  Repository: Repository<Entity>
 
   /**
    * Validator function.
