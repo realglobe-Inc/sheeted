@@ -5,10 +5,13 @@ import Router from 'express-promise-router'
 import { Request, Response } from 'express'
 import template from 'lodash.template'
 
+import { RouterParams } from '../types/Router.type'
+import { version } from '../../package.json'
+
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
 const TITLE = 'Sheeted App'
 
-export const contentRoute = ({ version }: { version: string }) => {
+export const ContentRoute = (_params: RouterParams) => {
   // TODO: UI と共通化
   const jsUrl = new URL(`/${version}/js/sheeted.js`, JS_CDN_URL).toString()
   const htmlPath = join(__dirname, '../../assets/index.html.template')

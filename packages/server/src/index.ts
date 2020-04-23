@@ -5,18 +5,18 @@ import Logger from 'morgan'
 
 import { SamlPassport } from './Passport'
 import { buildIAMUserSheet } from './sheets/IAMUserSheet/IAMUserSheetBuilder'
-import { buildSheetRoute } from './routes/SheetRoute'
-import { buildSignRoutes } from './routes/SignRoute'
-import { buildEntityRoute } from './routes/EntityRoute'
-import { currentUserRoute } from './routes/CurrentUserRoute'
-import { contentRoute } from './routes/ContentRoute'
+import { SheetRoute } from './routes/SheetRoute'
+import { SignRoute } from './routes/SignRoute'
+import { EntityRoute } from './routes/EntityRoute'
+import { CurrentUserRoute } from './routes/CurrentUserRoute'
+import { ContentRoute } from './routes/ContentRoute'
 import { handleNotFound } from './middlewares/NotFoundMiddleware'
 import { handleError } from './middlewares/ErrorMiddleware'
 import { ApplicationConfig } from './types/ApplicationConfig.type'
 import { JWT } from './JWT'
 import { validateSheets } from './server/SheetValidator'
+import { RouterBuilder } from './types/Router.type'
 
-export { IAMUserModel } from './sheets/IAMUserSheet/IAMUserModel'
 export type { ApplicationConfig }
 
 export const createApp = (
@@ -24,8 +24,9 @@ export const createApp = (
   config: ApplicationConfig,
 ) => {
   validateSheets(application.Sheets)
+  const groups = [...(application.Groups || [])]
   const IAMUserSheet = buildIAMUserSheet(application.Roles)
-  const Sheets = [IAMUserSheet].concat(application.Sheets)
+  const sheets = [IAMUserSheet].concat(application.Sheets)
 
   const app = Express()
   app.set('trust proxy', true)
@@ -37,17 +38,23 @@ export const createApp = (
   app.use(passport.initialize())
 
   const routes = [
-    buildSignRoutes(passport, jwt, {
-      contentUrl: config.contentServer?.externalUrl,
-    }),
-    buildSheetRoute(Sheets, [...(application.Groups || [])], jwt),
-    buildEntityRoute(Sheets, jwt),
-    currentUserRoute(jwt),
-    !config.contentServer?.externalUrl &&
-      contentRoute({
-        version: require('../package.json').version,
+    SignRoute,
+    SheetRoute,
+    EntityRoute,
+    CurrentUserRoute,
+    !config.contentServer?.externalUrl && ContentRoute,
+  ]
+    .filter((Route): Route is RouterBuilder => Boolean(Route))
+    .map((Route) =>
+      Route({
+        sheets,
+        groups,
+        config,
+        passport,
+        jwt,
+        repositories: null as any,
       }),
-  ].filter((route): route is Express.Router => Boolean(route))
+    )
   for (const route of routes) {
     app.use(route)
   }

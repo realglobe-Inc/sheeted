@@ -1,6 +1,5 @@
 import Router from 'express-promise-router'
 import { Request, Response } from 'express'
-import { Sheet } from '@sheeted/core'
 import {
   ApiPaths,
   SheetPathParams,
@@ -11,9 +10,9 @@ import bodyParser from 'body-parser'
 
 import { EntityController } from '../controllers/EntityController'
 import { parseListQuery } from '../middlewares/QueryMiddleware'
-import { JWT } from '../JWT'
+import { RouterParams } from '../types/Router.type'
 
-export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
+export const EntityRoute = ({ sheets, jwt }: RouterParams) => {
   return (
     Router()
       // list
