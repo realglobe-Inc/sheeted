@@ -5,12 +5,17 @@ import { Sheets } from '@sheeted/core/build/web/Shared.type'
 import { EntityController } from '../controllers/EntityController'
 import { RouterParams } from '../types/Router.type'
 
-export const SheetRoute = ({ sheets, groups, jwt }: RouterParams) => {
+export const SheetRoute = ({
+  sheets,
+  groups,
+  jwt,
+  repositories,
+}: RouterParams) => {
   return (
     Router()
       // one
       .get<SheetPathParams>(ApiPaths.SHEET_ONE, jwt.guard, async (req, res) => {
-        const controller = EntityController.from(req, sheets)
+        const controller = EntityController.from(req, sheets, repositories)
         const info = await controller.info()
         res.json(info)
       })

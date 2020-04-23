@@ -1,4 +1,4 @@
-import { Application } from '@sheeted/core'
+import { Application, IAM_USER_SHEET } from '@sheeted/core'
 import Express from 'express'
 import cors from 'cors'
 import Logger from 'morgan'
@@ -36,7 +36,7 @@ export const createApp = (
   app.use(Logger(config.logger?.format || 'dev', config.logger?.options))
 
   const jwt = new JWT(config.jwt.secret, config.jwt.expiresIn)
-  const passport = SamlPassport(config.saml)
+  const passport = SamlPassport(config.saml, repositories.get(IAM_USER_SHEET))
   app.use(passport.initialize())
 
   const routes = [

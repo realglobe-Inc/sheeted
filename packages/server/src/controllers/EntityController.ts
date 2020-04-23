@@ -1,8 +1,13 @@
-import { Sheet, Context, EntityBase } from '@sheeted/core'
+import {
+  Sheet,
+  Context,
+  Repositories,
+  Repository,
+  SearchQuery,
+  SortQuery,
+  EntityBase,
+} from '@sheeted/core'
 import { Request } from 'express'
-import { connection, Document, PaginateModel } from 'mongoose'
-import { v4 as uuid } from 'uuid'
-import { paginate } from 'mongoose-paginate'
 import {
   SheetInfo,
   ListQuery,
@@ -32,6 +37,7 @@ export class EntityController {
       sheetName: string
     }>,
     sheets: Sheet[],
+    repositories: Repositories,
   ) {
     const ctx = req.context
     if (!ctx) {
@@ -43,7 +49,8 @@ export class EntityController {
       throw new HttpError(`Sheet "${name}" not found`, HttpStatuses.BAD_REQUEST)
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
-    return new EntityController(sheet, ctx, displays)
+    const repository = repositories.get<any>(sheetName)
+    return new EntityController(sheet, ctx, displays, repository)
   }
 
   private readonly userRoles: string[]
@@ -51,12 +58,12 @@ export class EntityController {
   private readonly converter: EntityConverter
   private readonly validator: EntityValidator
   private readonly hook: HookTrigger
-  private readonly Model: PaginateModel<EntityBase & Document>
 
   constructor(
     private readonly sheet: Sheet,
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
+    private readonly repository: Repository<EntityBase>,
   ) {
     const { Schema } = sheet
     this.userRoles = ctx.user.roles
@@ -71,13 +78,10 @@ export class EntityController {
       displays,
     )
     this.hook = new HookTrigger(sheet.Hook)
-    this.Model = connection.model(sheet.name) as PaginateModel<
-      EntityBase & Document
-    >
     this.validator = new EntityValidator(
       Schema,
       sheet.Validator(ctx),
-      this.Model,
+      repository,
     )
   }
 
@@ -140,33 +144,27 @@ export class EntityController {
     }
     const { Schema } = this.sheet
     const { queryFilter = {} } = readPolicy
-    const searchColumns = Object.keys(Schema).filter(
+    const searchFields = Object.keys(Schema).filter(
       (field) => Schema[field]?.searchable,
     )
-    const query =
-      search && searchColumns.length > 0
-        ? {
-            ...queryFilter,
-            $or: searchColumns.map((column) => ({
-              [column]: {
-                // Needs to escape?
-                $regex: new RegExp(search, 'i'),
-              },
-            })),
-          }
-        : queryFilter
-    const entityFields = Object.keys(Schema).filter((field) =>
-      Boolean(Schema[field]?.entityProperties),
-    )
-    const { docs, total, pages = 0 } = await paginate.call(this.Model, query, {
-      sort: sort.join(' '),
-      populate: entityFields,
+    const words = search.split(/\s/).filter(Boolean)
+    const searchQuery: SearchQuery<any> | undefined =
+      searchFields.length > 0 ? { fields: searchFields, words } : undefined
+    const sortQuery: SortQuery<any>[] = sort.map((field) => ({
+      field, // FIXME: '' なら asc、 '-' なら desc
+      order: 'asc',
+    }))
+    const result = await this.repository.find({
       page,
       limit,
+      search: searchQuery,
+      sort: sortQuery,
+      filter: queryFilter,
     })
-    const entities = docs.map((entity) =>
-      this.converter.beforeSend(entity.toObject()),
+    const entities = result.entities.map((entity) =>
+      this.converter.beforeSend(entity),
     )
+    const { total, pages } = result
     return {
       entities,
       total,
@@ -181,14 +179,14 @@ export class EntityController {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
     const { queryFilter = {} } = readPolicy
-    const entity = await this.Model.findOne({
+    const entity = await this.repository.findOne({
       id,
       ...queryFilter,
     })
     if (!entity) {
       throw new HttpError('Not found', HttpStatuses.NOT_FOUND)
     }
-    return this.converter.beforeSend(entity.toObject())
+    return this.converter.beforeSend(entity)
   }
 
   async create(input: any) {
@@ -198,11 +196,7 @@ export class EntityController {
     }
     await this.validator.validate(input, null)
     const creating = this.converter.beforeSave(input)
-    const doc = await this.Model.create({
-      ...creating,
-      id: uuid(),
-    })
-    const entity = doc.toObject()
+    const entity = await this.repository.create(creating)
     await this.hook.triggerCreate(entity, this.ctx)
     return this.converter.beforeSend(entity)
   }
@@ -212,9 +206,8 @@ export class EntityController {
     if (!updatePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const doc = await this.Model.findOne({ id })
-    const current = doc?.toObject()!
-    if (!doc) {
+    const current = await this.repository.findById(id)
+    if (!current) {
       throw new HttpError(`Entity not found "${id}"`, HttpStatuses.NOT_FOUND)
     }
     if (updatePolicy.condition?.(current) === false) {
@@ -222,8 +215,7 @@ export class EntityController {
     }
     await this.validator.validate(changes, current)
     const updating = this.converter.beforeSave(changes)
-    await this.Model.updateOne({ id }, updating)
-    const entity = (await this.Model.findOne({ id }))!.toObject()
+    const entity = await this.repository.update(id, updating)
     await this.hook.triggerUpdate(entity, this.ctx)
     return this.converter.beforeSend(entity)
   }
@@ -233,12 +225,11 @@ export class EntityController {
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const doc = await this.Model.findOne({ id })
-    const entity = doc?.toObject()
+    const entity = await this.repository.findById(id)
     if (deletePolicy.condition?.(entity) === false) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    await this.Model.deleteOne({ id })
+    await this.repository.destroy(id)
     await this.hook.triggerDestroy(entity, this.ctx)
   }
 }

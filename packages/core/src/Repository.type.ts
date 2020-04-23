@@ -27,7 +27,7 @@ export type SortQuery<Entity> = {
 /**
  * Search query object. Search words (AND condition) over fields (OR condition).
  */
-export type SeachQuery<Entity> = {
+export type SearchQuery<Entity> = {
   fields: Field<Entity>[]
   words: string[]
 }
@@ -54,7 +54,7 @@ export type FindListQuery<Entity = any> = {
   /**
    * Search string
    */
-  search?: SeachQuery<Entity>
+  search?: SearchQuery<Entity>
 
   /**
    * Filter object. Find entities only matching the object.

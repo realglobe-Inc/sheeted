@@ -1,7 +1,7 @@
 export type ReadAccessPolicy<Entity = any, Role extends string = string> = {
   action: 'read'
   role: Role
-  queryFilter?: any
+  queryFilter?: Partial<Entity>
   excludeColumns?: (keyof Entity)[]
 }
 

@@ -6,7 +6,9 @@ import { Request, Response } from 'express'
 import template from 'lodash.template'
 
 import { RouterParams } from '../types/Router.type'
-import { version } from '../../package.json'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version } = require('../../package.json') // import にすると build/ に package.json が含まれてしまう
 
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
 const TITLE = 'Sheeted App'
