@@ -1,4 +1,5 @@
 import { Field, EntityId } from './EntityBase.type'
+import { Schema } from './Schema.type'
 
 /**
  * Result of find() method.
@@ -107,4 +108,11 @@ export type Repository<Entity> = {
    * Destroy entities
    */
   destroyBulk(ids: EntityId[]): Promise<void>
+}
+
+/**
+ * Repository constructor interface
+ */
+export type RepositoryConstructor = {
+  new <Entity>(name: string, schema: Schema<Entity>): Repository<Entity>
 }

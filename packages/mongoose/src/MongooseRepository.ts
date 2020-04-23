@@ -1,17 +1,27 @@
 import { Document, Model as MongoModel } from 'mongoose'
 import {
   Repository,
+  RepositoryConstructor,
   FindListQuery,
   FindListResult,
   EntityBase,
   EntityId,
+  Schema,
 } from '@sheeted/core'
+
+import { compileModel } from './MongooseModel'
 
 /**
  * Mongo repository implementation
  */
-export class MongoRepository<Entity> implements Repository<Entity> {
-  constructor(private readonly model: MongoModel<EntityBase & Document>) {}
+export const MongoRepository: RepositoryConstructor = class MongoRepository<
+  Entity
+> implements Repository<Entity> {
+  private readonly model: MongoModel<EntityBase & Document>
+
+  constructor(name: string, schema: Schema<Entity>) {
+    this.model = compileModel<EntityBase>(name, schema)
+  }
 
   async find(
     condition: FindListQuery<Entity>,

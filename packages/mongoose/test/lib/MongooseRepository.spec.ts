@@ -23,8 +23,7 @@ test('MongoRepository/01 simple schame', async () => {
       type: Types.Text,
     },
   }
-  const model = compileModel<Entity>('model1', schema)
-  const repository = new MongoRepository<Entity>(model)
+  const repository = new MongoRepository<Entity>('model1', schema)
 
   const created = await repository.create({
     name: 'foo',
@@ -120,8 +119,7 @@ test('MongoRepository/02 complex queries', async () => {
       },
     },
   }
-  const model = compileModel<Entity>('Entity', schema)
-  const repository = new MongoRepository<Entity>(model)
+  const repository = new MongoRepository<Entity>('Entity', schema)
   const inputs = [
     {
       name: 'aaa bbb',
