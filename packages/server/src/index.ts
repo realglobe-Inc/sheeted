@@ -16,6 +16,7 @@ import { ApplicationConfig } from './types/ApplicationConfig.type'
 import { JWT } from './JWT'
 import { validateSheets } from './server/SheetValidator'
 import { RouterBuilder } from './types/Router.type'
+import { createRepositories } from './server/Repositories'
 
 export type { ApplicationConfig }
 
@@ -27,6 +28,7 @@ export const createApp = (
   const groups = [...(application.Groups || [])]
   const IAMUserSheet = buildIAMUserSheet(application.Roles)
   const sheets = [IAMUserSheet].concat(application.Sheets)
+  const repositories = createRepositories(sheets, application.Repository)
 
   const app = Express()
   app.set('trust proxy', true)
@@ -52,7 +54,7 @@ export const createApp = (
         config,
         passport,
         jwt,
-        repositories: null as any,
+        repositories,
       }),
     )
   for (const route of routes) {
