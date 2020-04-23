@@ -116,3 +116,10 @@ export type Repository<Entity> = {
 export type RepositoryConstructor = {
   new <Entity>(name: string, schema: Schema<Entity>): Repository<Entity>
 }
+
+/**
+ * Repositories for a sheet.
+ */
+export type Repositories = {
+  get<Entity>(sheetName: string): Repository<Entity>
+}
