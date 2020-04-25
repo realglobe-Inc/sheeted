@@ -1,5 +1,5 @@
 import { IAMUserEntity, DefaultIAMRoles, IAM_USER_SHEET } from '@sheeted/core'
-import { compileModel, MongoRepository } from '@sheeted/mongoose'
+import { compileModel, MongoDriver } from '@sheeted/mongoose'
 
 import { buildIAMUserSchema } from '../../../src/sheets/IAMUserSheet/IAMUserSchema'
 
@@ -22,7 +22,7 @@ const schema = buildIAMUserSchema<string>([])
 
 export const userModel = compileModel(IAM_USER_SHEET, schema)
 
-export const userRepository = new MongoRepository(IAM_USER_SHEET, schema)
+export const userRepository = new MongoDriver(IAM_USER_SHEET, schema)
 
 export const seedUsers = async () => {
   for (const user of users) {

@@ -1,5 +1,5 @@
 import { DefaultIAMRoles, Application, DefaultIAMRole } from '@sheeted/core'
-import { MongoRepository } from '@sheeted/mongoose'
+import { MongoDriver } from '@sheeted/mongoose'
 
 import { createApp, ApplicationConfig } from '../../../../src'
 
@@ -21,7 +21,7 @@ export function App(config: ApplicationConfig) {
         value: DefaultIAMRoles.DEFAULT_ROLE,
       },
     ],
-    Repository: MongoRepository,
+    DatabaseDriver: MongoDriver,
   }
   const app = createApp(application, config)
   return app

@@ -1,7 +1,7 @@
 import { Document, Model as MongoModel } from 'mongoose'
 import {
   Repository,
-  RepositoryConstructor,
+  RepositoryDriver,
   FindListQuery,
   FindListResult,
   EntityBase,
@@ -14,9 +14,8 @@ import { compileModel } from './MongooseModel'
 /**
  * Mongo repository implementation
  */
-export const MongoRepository: RepositoryConstructor = class MongoRepository<
-  Entity
-> implements Repository<Entity> {
+export const MongoDriver: RepositoryDriver = class MongoRepository<Entity>
+  implements Repository<Entity> {
   private readonly model: MongoModel<EntityBase & Document>
 
   constructor(name: string, schema: Schema<Entity>) {

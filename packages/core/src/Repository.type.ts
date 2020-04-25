@@ -116,9 +116,9 @@ export type Repository<Entity> = {
 }
 
 /**
- * Repository constructor interface
+ * Repository driver interface
  */
-export type RepositoryConstructor = {
+export type RepositoryDriver = {
   new <Entity>(name: string, schema: Schema<Entity>): Repository<Entity>
 }
 

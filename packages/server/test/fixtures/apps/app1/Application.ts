@@ -8,7 +8,7 @@ import {
   DefaultIAMRole,
   Schema,
 } from '@sheeted/core'
-import { MongoRepository, compileModel } from '@sheeted/mongoose'
+import { MongoDriver, compileModel } from '@sheeted/mongoose'
 
 import { createApp, ApplicationConfig } from '../../../../src'
 
@@ -23,7 +23,7 @@ const App1Schema: Schema<App1Entity> = {
 }
 
 export const app1Model = compileModel('App1', App1Schema)
-export const app1Repository = new MongoRepository('App1', App1Schema)
+export const app1Repository = new MongoDriver('App1', App1Schema)
 
 export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
   name: 'App1',
@@ -58,7 +58,7 @@ export function App() {
         value: DefaultIAMRoles.DEFAULT_ROLE,
       },
     ],
-    Repository: MongoRepository,
+    DatabaseDriver: MongoDriver,
   }
   const app = createApp(application, config)
   return app

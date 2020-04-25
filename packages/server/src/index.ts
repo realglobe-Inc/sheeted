@@ -28,7 +28,7 @@ export const createApp = (
   const groups = [...(application.Groups || [])]
   const IAMUserSheet = buildIAMUserSheet(application.Roles)
   const sheets = [IAMUserSheet].concat(application.Sheets)
-  const repositories = createRepositories(sheets, application.Repository)
+  const repositories = createRepositories(sheets, application.DatabaseDriver)
 
   const app = Express()
   app.set('trust proxy', true)

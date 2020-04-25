@@ -16,6 +16,7 @@ import {
   App1Sheet,
   App1Entity,
   app1Repository,
+  app1Model,
 } from '../../fixtures/apps/app1/Application'
 
 const roles = [
@@ -26,6 +27,7 @@ const roles = [
 beforeAll(async () => {
   await connectMongo()
 
+  await app1Model.deleteMany({})
   await userModel.deleteMany({})
   await userModel.create(adminUser)
 })

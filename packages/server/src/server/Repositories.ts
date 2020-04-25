@@ -1,13 +1,13 @@
 import {
   Sheet,
-  RepositoryConstructor,
+  RepositoryDriver,
   Repositories,
   Repository,
 } from '@sheeted/core'
 
 export const createRepositories = (
   sheets: Sheet[],
-  RepositoryClass: RepositoryConstructor,
+  RepositoryClass: RepositoryDriver,
 ) => {
   const map = new Map(
     sheets.map((sheet) => [

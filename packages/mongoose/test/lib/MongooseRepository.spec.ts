@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import { compileModel, MongoRepository } from '../../src'
+import { compileModel, MongoDriver } from '../../src'
 import { connectMongo } from '../tools/mongoose'
 import { Schema } from '../../../core/src/Schema.type'
 import { EntityBase } from '../../../core/src/EntityBase.type'
@@ -14,7 +14,7 @@ afterAll(async () => {
   await mongoose.disconnect()
 })
 
-test('MongoRepository/01 simple schame', async () => {
+test('MongoDriver/01 simple schame', async () => {
   interface Entity extends EntityBase {
     name: string
   }
@@ -23,7 +23,7 @@ test('MongoRepository/01 simple schame', async () => {
       type: Types.Text,
     },
   }
-  const repository = new MongoRepository<Entity>('model1', schema)
+  const repository = new MongoDriver<Entity>('model1', schema)
 
   const created = await repository.create({
     name: 'foo',
@@ -72,7 +72,7 @@ test('MongoRepository/01 simple schame', async () => {
   expect(notFounds.total).toBe(0)
 })
 
-test('MongoRepository/02 complex queries', async () => {
+test('MongoDriver/02 complex queries', async () => {
   interface SubEntity extends EntityBase {
     name: string
   }
@@ -119,7 +119,7 @@ test('MongoRepository/02 complex queries', async () => {
       },
     },
   }
-  const repository = new MongoRepository<Entity>('Entity', schema)
+  const repository = new MongoDriver<Entity>('Entity', schema)
   const inputs = [
     {
       name: 'aaa bbb',
