@@ -1,4 +1,6 @@
-import { Validator, IAMUserEntity, ValidationResult } from '@sheeted/core'
+import { Validator } from '../../Validator.type'
+import { IAMUserEntity } from '../../entities/IAMUserEntity.type'
+import { ValidationResult } from '../../ValidationResult'
 
 export const IAMUserValidator: Validator<IAMUserEntity> = () => (
   input: Partial<IAMUserEntity>,

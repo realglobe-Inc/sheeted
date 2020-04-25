@@ -1,4 +1,6 @@
-import { Sheet, IAMUserEntity, IAM_USER_SHEET } from '@sheeted/core'
+import { Sheet } from '../../Sheet.type'
+import { IAMUserEntity } from '../../entities/IAMUserEntity.type'
+import { IAM_USER_SHEET } from '../../Const'
 
 import { buildIAMUserView } from './IAMUserViewBuilder'
 import { buildIAMUserSchema } from './IAMUserSchema'

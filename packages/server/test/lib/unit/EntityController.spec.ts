@@ -2,8 +2,8 @@ import mongoose from 'mongoose'
 import { DefaultIAMRoles, IAM_USER_SHEET } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
 
-import { buildIAMUserSheet } from '../../../src/sheets/IAMUserSheet/IAMUserSheetBuilder'
 import { connectMongo } from '../../tools/mongoose'
 import { EntityController } from '../../../src/controllers/EntityController'
 import {
