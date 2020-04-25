@@ -1,4 +1,5 @@
-import { DefaultIAMRoles } from '@sheeted/core'
+import { DefaultIAMRoles, Application, DefaultIAMRole } from '@sheeted/core'
+import { MongoRepository } from '@sheeted/mongoose'
 
 import { createApp, ApplicationConfig } from '../../../../src'
 
@@ -10,8 +11,8 @@ export const config: ApplicationConfig = {
   saml: {},
 }
 
-export function Application(config: ApplicationConfig) {
-  const application = {
+export function App(config: ApplicationConfig) {
+  const application: Application<DefaultIAMRole> = {
     Sheets: [],
     Roles: [
       { label: DefaultIAMRoles.ADMIN_ROLE, value: DefaultIAMRoles.ADMIN_ROLE },
@@ -20,6 +21,7 @@ export function Application(config: ApplicationConfig) {
         value: DefaultIAMRoles.DEFAULT_ROLE,
       },
     ],
+    Repository: MongoRepository,
   }
   const app = createApp(application, config)
   return app

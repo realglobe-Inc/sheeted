@@ -7,12 +7,8 @@ import qs from 'qs'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 
 import { connectMongo } from '../../tools/mongoose'
-import { IAMUserModel } from '../../../src/sheets/IAMUserSheet/IAMUserModel'
-import { seedUsers, adminUser } from '../../fixtures/seeds/users'
-import {
-  Application,
-  config,
-} from '../../fixtures/apps/no-sheet-app/Application'
+import { seedUsers, adminUser, userModel } from '../../fixtures/db/users'
+import { App, config } from '../../fixtures/apps/no-sheet-app/Application'
 import { JWT } from '../../../src/JWT'
 
 let app: express.Application
@@ -20,9 +16,9 @@ let authHeader: [string, string]
 
 beforeAll(async () => {
   await connectMongo()
-  await IAMUserModel.deleteMany({})
+  await userModel.deleteMany({})
   await seedUsers()
-  app = Application(config)
+  app = App(config)
   const token = await new JWT(config.jwt.secret, config.jwt.expiresIn).sign(
     adminUser,
   )

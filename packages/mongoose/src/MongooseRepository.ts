@@ -31,11 +31,14 @@ export const MongoRepository: RepositoryConstructor = class MongoRepository<
     const sortQuery = Object.fromEntries(
       sort.map(({ field, order }) => [field, order]),
     )
-    const conditions = search
+    const hasSearchCondition = Boolean(
+      search && search.fields.length > 0 && search.words.length > 0,
+    )
+    const conditions = hasSearchCondition
       ? {
           ...filter,
-          $or: search.fields.map((field) => ({
-            $and: search.words.map((word) => ({
+          $or: search!.fields.map((field) => ({
+            $and: search!.words.map((word) => ({
               [field]: {
                 $regex: new RegExp(word, 'i'),
               },

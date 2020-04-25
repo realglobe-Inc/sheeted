@@ -10,7 +10,6 @@ test('SheetValidator.validateSheet()', () => {
     validateSheet({
       name: 'a',
       Schema: {},
-      Model: null as any,
       Validator: null as any,
       View: {
         title: 'a',
@@ -38,7 +37,6 @@ test('SheetValidator.validateSheet()', () => {
           // entityProperties is required
         },
       },
-      Model: null as any,
       Validator: null as any,
       View: {
         title: 'a',
@@ -65,7 +63,6 @@ test('SheetValidator.validateSheets()', () => {
       {
         name: 'duplicate',
         Schema: {},
-        Model: null as any,
         Validator: null as any,
         View: null as any,
         AccessPolicies: [],
@@ -73,7 +70,6 @@ test('SheetValidator.validateSheets()', () => {
       {
         name: 'duplicate',
         Schema: {},
-        Model: null as any,
         Validator: null as any,
         View: null as any,
         AccessPolicies: [],
