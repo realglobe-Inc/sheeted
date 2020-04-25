@@ -1,4 +1,4 @@
-import { compileModel } from '@sheeted/core'
+import { compileModel } from '@sheeted/mongoose'
 
 import { SheetNames } from '../../constants'
 

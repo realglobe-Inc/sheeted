@@ -1,6 +1,7 @@
-import { IAMUserModel } from '@sheeted/server'
+import { buildIAMUserSchema } from '@sheeted/server/build/sheets/IAMUserSheet/IAMUserSchema'
 import { Types } from 'mongoose'
-import { IAMUserEntity } from '@sheeted/core'
+import { IAMUserEntity, IAM_USER_SHEET } from '@sheeted/core'
+import { compileModel } from '@sheeted/mongoose'
 
 import { Seeder, reduce } from '../util/seeder.util'
 
@@ -8,6 +9,9 @@ import { Roles, PlanName, Color } from './constants'
 import { Sheet1Model } from './sheets/sheet1/sheet1.model'
 import { Sheet1Entity } from './sheets/sheet1/sheet1.entity'
 
+const userSchema = buildIAMUserSchema<string>([])
+// こういうのは repository library 側で提供してほしい
+const IAMUserModel = compileModel(IAM_USER_SHEET, userSchema)
 const users = Array.from({ length: 60 }).map((_, i) => ({
   _id: Types.ObjectId.createFromTime(100 + i),
   id: 'user' + i,

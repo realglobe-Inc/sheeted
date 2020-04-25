@@ -8,12 +8,10 @@ import { AggregationValidator } from './aggregation.validator'
 import { AggregationView } from './aggregation.view'
 import { AggregationAccessPolicies } from './aggregation.access-policies'
 import { AggregationHook } from './aggregation.hook'
-import { AggregationModel } from './aggregation.model'
 
 export const AggregationSheet: Sheet<AggregationEntity, Role> = {
   name: SheetNames.AGGREGATION_SHEET,
   Schema: AggregationSchema,
-  Model: AggregationModel,
   Validator: AggregationValidator,
   View: AggregationView,
   AccessPolicies: AggregationAccessPolicies,
