@@ -21,3 +21,5 @@ jobs:
         yarn test
     - name: Release
       run: ./misc/scripts/release.sh
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
