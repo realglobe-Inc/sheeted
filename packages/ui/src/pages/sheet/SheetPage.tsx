@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
@@ -8,6 +8,7 @@ import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
 import { useUserContext } from '../../hooks/UserContextHook'
 import { useLocale } from '../../hooks/LocaleContextHook'
+import { tableLocalization } from '../../locale'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import {
@@ -74,6 +75,18 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   }, [sheet.sheetName, trigger])
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
+  const localization = useMemo(() => {
+    return {
+      ...tableLocalization,
+      body: {
+        ...tableLocalization,
+        emptyDataSourceMessage: forbidden
+          ? l.table.permissionDenied
+          : l.table.emptyList,
+      },
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forbidden])
   return (
     <MaterialTable
       title={sheet.title}
@@ -86,13 +99,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         onRowUpdate,
         onRowDelete,
       }}
-      localization={{
-        body: {
-          emptyDataSourceMessage: forbidden
-            ? l.table.permissionDenied
-            : l.table.emptyList,
-        },
-      }}
+      localization={localization}
       components={{ Toolbar, EditRow, Container: SheetContainer }}
       icons={tableIcons}
       options={tableOptions}
