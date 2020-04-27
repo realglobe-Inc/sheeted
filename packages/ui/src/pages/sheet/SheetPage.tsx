@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react'
+import React, { FC, useEffect } from 'react'
 import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
@@ -8,7 +8,6 @@ import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
 import { useUserContext } from '../../hooks/UserContextHook'
 import { useLocale } from '../../hooks/LocaleContextHook'
-import { tableLocalization } from '../../locale'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import {
@@ -25,6 +24,7 @@ import { useEditEntity } from './hooks/EditEntityHook'
 import { EntityDialogContextProvider } from './hooks/EntityDialogContextHook'
 import { EntitySelectDialog } from './components/EntitySelectDialog'
 import { SheetContainer } from './components/SheetContainer'
+import { useTableLocalization } from './hooks/TableLocalizationHook'
 
 const tableOptions: TableOptions = {
   pageSize: 10,
@@ -75,18 +75,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   }, [sheet.sheetName, trigger])
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
-  const localization = useMemo(() => {
-    return {
-      ...tableLocalization,
-      body: {
-        ...tableLocalization.body,
-        emptyDataSourceMessage: forbidden
-          ? l.table.permissionDenied
-          : l.table.emptyList,
-      },
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forbidden])
+  const localization = useTableLocalization({ forbidden })
   return (
     <MaterialTable
       title={sheet.title}
