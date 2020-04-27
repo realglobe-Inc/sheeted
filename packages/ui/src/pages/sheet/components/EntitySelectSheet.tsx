@@ -6,6 +6,7 @@ import { useFetchSheetInfo } from '../hooks/FetchSheetInfoHook'
 import { useQueryEntities } from '../hooks/QueryEntitiesHook'
 import { convertColumn } from '../converters/ColumnConverter'
 import { tableIcons } from '../assets/icons'
+import { useTableLocalization } from '../hooks/TableLocalizationHook'
 
 import { SheetContainer } from './SheetContainer'
 
@@ -22,6 +23,7 @@ export const EntitySelectSheet: FC<{
 }> = ({ sheet, onSelect }) => {
   const { result: info } = useFetchSheetInfo(sheet.sheetName)
   const queryEntities = useQueryEntities(sheet.sheetName)
+  const tableLocalization = useTableLocalization({ forbidden: false })
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   return (
     <MaterialTable
@@ -36,6 +38,7 @@ export const EntitySelectSheet: FC<{
       components={{
         Container: SheetContainer,
       }}
+      localization={tableLocalization}
     />
   )
 }
