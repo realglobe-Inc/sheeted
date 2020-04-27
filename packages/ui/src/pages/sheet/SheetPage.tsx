@@ -79,7 +79,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
     return {
       ...tableLocalization,
       body: {
-        ...tableLocalization,
+        ...tableLocalization.body,
         emptyDataSourceMessage: forbidden
           ? l.table.permissionDenied
           : l.table.emptyList,
