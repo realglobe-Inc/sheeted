@@ -51,6 +51,7 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf build",
     "prepare": "yarn build",
+    "release": "npx publish-if-needed",
     "test": "jest"
   }
 }
