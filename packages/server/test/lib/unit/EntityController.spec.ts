@@ -24,7 +24,7 @@ const roles = [
   { label: 'USER', value: DefaultIAMRoles.DEFAULT_ROLE },
 ]
 
-beforeAll(async () => {
+beforeEach(async () => {
   await connectMongo()
 
   await app1Model.deleteMany({})
@@ -32,7 +32,7 @@ beforeAll(async () => {
   await userModel.create(adminUser)
 })
 
-afterAll(async () => {
+afterEach(async () => {
   await mongoose.disconnect()
 })
 

@@ -14,7 +14,7 @@ import { JWT } from '../../../src/JWT'
 let app: express.Application
 let authHeader: [string, string]
 
-beforeAll(async () => {
+beforeEach(async () => {
   await connectMongo()
   await userModel.deleteMany({})
   await seedUsers()
@@ -25,7 +25,7 @@ beforeAll(async () => {
   authHeader = ['authorization', `Bearer ${token}`]
 })
 
-afterAll(async () => {
+afterEach(async () => {
   await mongoose.disconnect()
 })
 
