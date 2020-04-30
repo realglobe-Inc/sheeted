@@ -1,17 +1,16 @@
-import { Document } from 'mongoose'
 import passport, { PassportStatic } from 'passport'
-import { v4 as uuid } from 'uuid'
 import {
   Strategy as SamlStrategy,
   SamlConfig,
   VerifyWithoutRequest,
 } from 'passport-saml'
-import { DefaultIAMRoles, IAMUserEntity } from '@sheeted/core'
+import { DefaultIAMRoles, IAMUserEntity, Repository } from '@sheeted/core'
 import { ApiPaths } from '@sheeted/core/build/web/Paths'
 
-import { IAMUserModel } from './sheets/IAMUserSheet/IAMUserModel'
-
-export const SamlPassport = (samlConfig: SamlConfig): PassportStatic => {
+export const SamlPassport = (
+  samlConfig: SamlConfig,
+  iamUserRepository: Repository<IAMUserEntity>,
+): PassportStatic => {
   passport.serializeUser((user, done) => {
     done(null, user)
   })
@@ -33,23 +32,22 @@ export const SamlPassport = (samlConfig: SamlConfig): PassportStatic => {
       done(new Error('email address not found'))
       return
     }
-    let user: IAMUserEntity & Document
-    const found = await IAMUserModel.findOne({ email })
+    let user: IAMUserEntity
+    const found = await iamUserRepository.findOne({ email })
     if (found) {
       user = found
     } else {
       // TODO: name も取れるようにしたい
       // TODO: role control
       // TODO: option not to create user
-      user = await IAMUserModel.create({
-        id: uuid(),
+      user = await iamUserRepository.create({
         name: email.split('@').shift() || '-',
         email,
         roles: [DefaultIAMRoles.DEFAULT_ROLE],
       })
       console.log('Created:', JSON.stringify(user))
     }
-    return done(null, user.toJSON())
+    return done(null, user)
   }
   passport.use(
     new SamlStrategy(

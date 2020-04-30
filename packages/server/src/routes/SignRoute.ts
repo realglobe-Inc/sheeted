@@ -1,5 +1,4 @@
 import Router from 'express-promise-router'
-import { PassportStatic } from 'passport'
 import bodyParser from 'body-parser'
 import qs from 'qs'
 import {
@@ -9,17 +8,12 @@ import {
 } from '@sheeted/core/build/web/Paths'
 import { IAMUserEntity } from '@sheeted/core'
 
-import { JWT } from '../JWT'
+import { RouterParams } from '../types/Router.type'
 
-export const buildSignRoutes = (
-  passport: PassportStatic,
-  jwt: JWT,
-  options: {
-    contentUrl?: string
-  },
-) => {
+export const SignRoute = ({ passport, jwt, config }: RouterParams) => {
   const apiPaths = ApiPathBuilder()
   const uiPaths = UIPathBuilder()
+  const { externalUrl } = config.contentServer || {}
   return Router()
     .get(
       ApiPaths.SIGN_IN,
@@ -29,8 +23,8 @@ export const buildSignRoutes = (
       }),
       async (req, res) => {
         const signInPath = uiPaths.signInPath()
-        const signInUrl = options.contentUrl
-          ? new URL(signInPath, options.contentUrl).toString()
+        const signInUrl = externalUrl
+          ? new URL(signInPath, externalUrl).toString()
           : signInPath
         res.redirect(signInUrl)
       },
@@ -46,8 +40,8 @@ export const buildSignRoutes = (
         const user = req.user as IAMUserEntity
         const token = await jwt.sign(user)
         const callbackPath = uiPaths.signInCallbackPath()
-        const callbackUrl = options.contentUrl
-          ? new URL(callbackPath, options.contentUrl).toString()
+        const callbackUrl = externalUrl
+          ? new URL(callbackPath, externalUrl).toString()
           : callbackPath
         res.redirect(callbackUrl + '?' + qs.stringify({ token }))
       },

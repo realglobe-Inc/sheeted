@@ -1,4 +1,6 @@
-import { IAMUserEntity, Types, Schema } from '@sheeted/core'
+import { IAMUserEntity } from '../../entities/IAMUserEntity.type'
+import { Schema } from '../../Schema.type'
+import { Types } from '../../Types'
 
 export const buildIAMUserSchema = <Role extends string>(roles: Role[]) => {
   const IAMUserSchema: Schema<IAMUserEntity<Role>> = {

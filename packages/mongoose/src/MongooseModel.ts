@@ -3,18 +3,18 @@ import {
   Types as MongoTypes,
   Schema as MongoSchema,
   model,
-  PaginateModel as MongoModel,
+  Model as MongoModel,
   modelNames,
 } from 'mongoose'
-
-import { Schema, SchemaField } from './Schema.type'
+import { v4 as uuid } from 'uuid'
+import { Schema, SchemaField } from '@sheeted/core'
 
 /**
- * Compile mongoose model from Schema.
+ * Compile mongoose model from Sheeted Schema.
  * @param name - model name
  * @param schema - schema
  */
-export const compileModel = <Entity = {}>(
+export const compileModel = <Entity>(
   name: string,
   schema: Schema<Entity>,
 ): MongoModel<Document & Entity> => {
@@ -38,6 +38,7 @@ export const compileModel = <Entity = {}>(
               ref:
                 schema[field as Exclude<keyof Entity, 'id'>].entityProperties
                   ?.sheetName,
+              autopopulate: true,
             }
         }
       })()
@@ -50,7 +51,11 @@ export const compileModel = <Entity = {}>(
       type: String,
       required: true,
       unique: true,
+      index: true,
+      default: () => uuid(),
     },
   })
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  mongoSchema.plugin(require('mongoose-autopopulate'))
   return model<Document & Entity>(name, mongoSchema)
 }

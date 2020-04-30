@@ -1,6 +1,5 @@
 import Router from 'express-promise-router'
 import { Request, Response } from 'express'
-import { Sheet } from '@sheeted/core'
 import {
   ApiPaths,
   SheetPathParams,
@@ -11,9 +10,9 @@ import bodyParser from 'body-parser'
 
 import { EntityController } from '../controllers/EntityController'
 import { parseListQuery } from '../middlewares/QueryMiddleware'
-import { JWT } from '../JWT'
+import { RouterParams } from '../types/Router.type'
 
-export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
+export const EntityRoute = ({ sheets, jwt, repositories }: RouterParams) => {
   return (
     Router()
       // list
@@ -22,7 +21,7 @@ export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
         jwt.guard,
         parseListQuery,
         async (req: Request<SheetPathParams>, res: Response) => {
-          const controller = EntityController.from(req, sheets)
+          const controller = EntityController.from(req, sheets, repositories)
           const { page = 1, limit = 20, search = '', sort = [] } = (req as any)
             .listQuery as ListQuery // parseListQuery により作られた値
           const list = await controller.list({ page, limit, search, sort })
@@ -35,7 +34,7 @@ export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
         jwt.guard,
         async (req, res) => {
           const { entityId } = req.params
-          const controller = EntityController.from(req, sheets)
+          const controller = EntityController.from(req, sheets, repositories)
           const entity = await controller.one(entityId)
           res.json(entity)
         },
@@ -46,7 +45,7 @@ export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
         jwt.guard,
         bodyParser.json(),
         async (req, res) => {
-          const controller = EntityController.from(req, sheets)
+          const controller = EntityController.from(req, sheets, repositories)
           const entity = await controller.create(req.body)
           res.json(entity)
         },
@@ -57,7 +56,7 @@ export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
         jwt.guard,
         bodyParser.json(),
         async (req, res) => {
-          const controller = EntityController.from(req, sheets)
+          const controller = EntityController.from(req, sheets, repositories)
           const { entityId } = req.params
           const entity = await controller.update(entityId, req.body)
           res.json(entity)
@@ -68,7 +67,7 @@ export const buildEntityRoute = (sheets: Sheet<any>[], jwt: JWT) => {
         ApiPaths.ENTITY_ONE,
         jwt.guard,
         async (req, res) => {
-          const controller = EntityController.from(req, sheets)
+          const controller = EntityController.from(req, sheets, repositories)
           const { entityId } = req.params
           await controller.delete(entityId)
           res.json({ ok: true })

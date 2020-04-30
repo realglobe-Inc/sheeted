@@ -1,5 +1,3 @@
-import { Model, Document } from 'mongoose'
-
 import { Schema } from './Schema.type'
 import { View } from './View.type'
 import { AccessPolicy } from './AccessPolicy.type'
@@ -24,11 +22,6 @@ export type Sheet<Entity = any, Role extends string = string> = {
    * Data schema.
    */
   Schema: Schema<Entity>
-
-  /**
-   * Mongoose model
-   */
-  Model: Model<Entity & Document>
 
   /**
    * Validator function.

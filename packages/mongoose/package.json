@@ -1,0 +1,32 @@
+{
+  "name": "@sheeted/mongoose",
+  "description": "Mongoose support of Sheeted framework",
+  "version": "0.2.0",
+  "author": "Sheeted team <sheeted@realglobe.jp>",
+  "dependencies": {
+    "mongoose-autopopulate": "^0.12.2",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/uuid": "^7.0.2"
+  },
+  "files": [
+    "build"
+  ],
+  "license": "UNLICENSED",
+  "main": "build",
+  "peerDependencies": {
+    "@sheeted/core": "0.2.0",
+    "mongoose": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf build",
+    "prepare": "yarn build",
+    "test": "jest"
+  },
+  "types": "build/index.d.ts"
+}

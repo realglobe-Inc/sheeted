@@ -2,6 +2,7 @@
 require('dotenv').config()
 
 import { createApp } from '@sheeted/server'
+import { MongoDriver } from '@sheeted/mongoose'
 
 import { config } from '../util/config.util'
 import { connect } from '../util/mongo.util'
@@ -20,6 +21,7 @@ async function main() {
     {
       Sheets: [ProjectSheet, ReportSheet, AggregationSheet],
       Roles: RoleLabels,
+      DatabaseDriver: MongoDriver,
     },
     config,
   )

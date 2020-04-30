@@ -1,4 +1,5 @@
-import { View, IAMUserEntity } from '@sheeted/core'
+import { IAMUserEntity } from '../../entities/IAMUserEntity.type'
+import { View } from '../../View.type'
 
 export const buildIAMUserView = (roleLabels: { [role: string]: string }) => {
   const IAMUserView: View<IAMUserEntity<string>> = {

@@ -2,27 +2,37 @@ import mongoose from 'mongoose'
 import { DefaultIAMRoles, IAM_USER_SHEET } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
 
-import { IAMUserModel } from '../../../src/sheets/IAMUserSheet/IAMUserModel'
-import { buildIAMUserSheet } from '../../../src/sheets/IAMUserSheet/IAMUserSheetBuilder'
 import { connectMongo } from '../../tools/mongoose'
 import { EntityController } from '../../../src/controllers/EntityController'
-import { adminUser, defaultUser } from '../../fixtures/seeds/users'
-import { App1Sheet, App1Entity } from '../../fixtures/apps/app1/Application'
+import {
+  adminUser,
+  defaultUser,
+  userModel,
+  userRepository,
+} from '../../fixtures/db/users'
+import {
+  App1Sheet,
+  App1Entity,
+  app1Repository,
+  app1Model,
+} from '../../fixtures/apps/app1/Application'
 
 const roles = [
   { label: 'ADMIN', value: DefaultIAMRoles.ADMIN_ROLE },
   { label: 'USER', value: DefaultIAMRoles.DEFAULT_ROLE },
 ]
 
-beforeAll(async () => {
+beforeEach(async () => {
   await connectMongo()
 
-  await IAMUserModel.deleteMany({})
-  await IAMUserModel.create(adminUser)
+  await app1Model.deleteMany({})
+  await userModel.deleteMany({})
+  await userModel.create(adminUser)
 })
 
-afterAll(async () => {
+afterEach(async () => {
   await mongoose.disconnect()
 })
 
@@ -37,6 +47,7 @@ test('EntityController with IAMUser with admin', async () => {
     {
       [IAM_USER_SHEET]: sheet.View.display,
     },
+    userRepository,
   )
 
   const expected: SheetInfo = {
@@ -122,6 +133,7 @@ test('EntityController with IAMUser with guest', async () => {
     {
       [IAM_USER_SHEET]: sheet.View.display,
     },
+    userRepository,
   )
 
   await expect(
@@ -159,6 +171,7 @@ test('EntityController with a sheet', async () => {
       user: adminUser,
     },
     {},
+    app1Repository,
   )
 
   const entity = await controller.create({

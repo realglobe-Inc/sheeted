@@ -1,6 +1,6 @@
-import { IAMUserModel } from '@sheeted/server'
 import { Types } from 'mongoose'
 import { IAMUserEntity } from '@sheeted/core'
+import { IAMUserModel } from '@sheeted/mongoose'
 
 import { Seeder, reduce } from '../util/seeder.util'
 

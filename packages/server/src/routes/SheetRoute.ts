@@ -1,22 +1,21 @@
 import Router from 'express-promise-router'
-import { Sheet } from '@sheeted/core'
 import { ApiPaths, SheetPathParams } from '@sheeted/core/build/web/Paths'
 import { Sheets } from '@sheeted/core/build/web/Shared.type'
-import { SheetGroup } from '@sheeted/core/build/SheetGroup.type'
 
 import { EntityController } from '../controllers/EntityController'
-import { JWT } from '../JWT'
+import { RouterParams } from '../types/Router.type'
 
-export const buildSheetRoute = (
-  sheets: Sheet[],
-  groups: SheetGroup[],
-  jwt: JWT,
-) => {
+export const SheetRoute = ({
+  sheets,
+  groups,
+  jwt,
+  repositories,
+}: RouterParams) => {
   return (
     Router()
       // one
       .get<SheetPathParams>(ApiPaths.SHEET_ONE, jwt.guard, async (req, res) => {
-        const controller = EntityController.from(req, sheets)
+        const controller = EntityController.from(req, sheets, repositories)
         const info = await controller.info()
         res.json(info)
       })

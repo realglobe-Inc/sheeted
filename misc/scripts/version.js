@@ -30,6 +30,11 @@ const updatePackageVersions = async (version = updatePatchVersion(currentVersion
   }
   await editJson('package.json', updateVersion)
   await editJson('packages/core/package.json', updateVersion)
+  await editJson('packages/mongoose/package.json', (pkg) => {
+    pkg = updateVersion(pkg)
+    pkg.peerDependencies['@sheeted/core'] = version
+    return pkg
+  })
   await editJson('packages/server/package.json', (pkg) => {
     pkg = updateVersion(pkg)
     pkg.peerDependencies['@sheeted/core'] = version

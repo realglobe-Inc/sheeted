@@ -1,5 +1,4 @@
-import { Schema, Validate } from '@sheeted/core'
-import { Model } from 'mongoose'
+import { Schema, Validate, Repository } from '@sheeted/core'
 
 import { HttpValidationError } from '../../middlewares/ErrorMiddleware'
 
@@ -7,7 +6,7 @@ export class EntityValidator {
   constructor(
     private readonly schema: Schema,
     private readonly validateEntity: Validate,
-    private readonly model: Model<any>,
+    private readonly repository: Repository<any>,
   ) {}
 
   async validate(changes: any, currentEntity: any) {
@@ -42,7 +41,7 @@ export class EntityValidator {
       }
       if (schemaValue.unique) {
         // DBレベルで unique バリデーションをしたほうがパフォーマンスが高いがここで行ったほうがコードがきれいなので
-        const found = await this.model.findOne({ [field]: value })
+        const found = await this.repository.findOne({ [field]: value })
         if (found) {
           result.appendError({
             field,
