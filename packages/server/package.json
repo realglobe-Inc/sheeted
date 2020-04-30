@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/server",
   "description": "Server of Sheeted framework",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
     "@types/uuid": "^7.0.2",
@@ -38,7 +38,7 @@
   "license": "UNLICENSED",
   "main": "build",
   "peerDependencies": {
-    "@sheeted/core": "0.1.8"
+    "@sheeted/core": "0.2.0"
   },
   "publishConfig": {
     "access": "public"
