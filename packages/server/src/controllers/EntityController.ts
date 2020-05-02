@@ -220,16 +220,17 @@ export class EntityController {
     return this.converter.beforeSend(entity)
   }
 
-  async delete(id: string) {
+  async delete(ids: string[]) {
     const deletePolicy = this.userAccessPolicy.ofDelete
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const entity = await this.repository.findById(id)
+    const entity = await this.repository.findByIds(ids)
     if (deletePolicy.condition?.(entity) === false) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    await this.repository.destroy(id)
+    await this.repository.destroyBulk(ids)
+    await Promise.all()
     await this.hook.triggerDestroy(entity, this.ctx)
   }
 }

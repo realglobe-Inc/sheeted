@@ -149,6 +149,18 @@ test('MongoDriver/02 complex queries', async () => {
   expect(entities).toMatchObject(inputs)
 
   {
+    const entityMap = await repository.findByIds([
+      entities[0].id,
+      entities[1].id,
+      'X',
+    ])
+    expect(entityMap).toEqual({
+      [entities[0].id]: entities[0],
+      [entities[1].id]: entities[1],
+      X: null,
+    })
+  }
+  {
     const { entities } = await repository.find({
       page: 1,
       limit: 1,
