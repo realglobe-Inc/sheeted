@@ -219,7 +219,7 @@ it('should succeed to update IAMUser', async () => {
     })
 })
 
-it('should eble to delete IAMUser', async () => {
+it('should be able to delete IAMUser', async () => {
   const user = {
     name: 'new user 4',
     email: 'new4@example.com',

@@ -225,12 +225,27 @@ export class EntityController {
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const entity = await this.repository.findByIds(ids)
-    if (deletePolicy.condition?.(entity) === false) {
-      throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
+    const entities = await this.repository.findByIds(ids)
+    const forbiddenIds = Object.values(entities)
+      .filter((entity): entity is EntityBase =>
+        Boolean(entity && deletePolicy.condition?.(entity) === false),
+      )
+      .map(({ id }) => id)
+    if (forbiddenIds.length > 0) {
+      throw new HttpError(
+        `Permission denied for entities: ${forbiddenIds.join(', ')}`,
+        HttpStatuses.FORBIDDEN,
+      )
     }
     await this.repository.destroyBulk(ids)
-    await Promise.all()
-    await this.hook.triggerDestroy(entity, this.ctx)
+    await Promise.all(
+      ids.map((id) => {
+        const entity = entities[id]
+        if (!entity) {
+          return Promise.resolve()
+        }
+        return this.hook.triggerDestroy(entity, this.ctx)
+      }),
+    )
   }
 }

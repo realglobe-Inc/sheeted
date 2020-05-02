@@ -69,7 +69,7 @@ export const EntityRoute = ({ sheets, jwt, repositories }: RouterParams) => {
         async (req, res) => {
           const controller = EntityController.from(req, sheets, repositories)
           const { entityId } = req.params
-          await controller.delete(entityId)
+          await controller.delete([entityId])
           res.json({ ok: true })
         },
       )
