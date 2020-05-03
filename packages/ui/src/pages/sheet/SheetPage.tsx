@@ -7,7 +7,6 @@ import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
 import { useUserContext } from '../../hooks/UserContextHook'
-import { useLocale } from '../../hooks/LocaleContextHook'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import {
@@ -15,6 +14,7 @@ import {
   SheetInfoContextProvider,
 } from './hooks/SheetInfoContextHook'
 import { Toolbar } from './components/Toolbar'
+import { TableHeader } from './components/TableHeader'
 import { EditRow } from './components/EditRow'
 import { tableIcons } from './assets/icons'
 import { convertColumn } from './converters/ColumnConverter'
@@ -60,7 +60,6 @@ export const SheetPage: FC = () => {
 const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   sheet,
 }) => {
-  const l = useLocale()
   const { result: info, trigger, error } = useSheetInfoContext()
   const queryEntities = useQueryEntities(sheet.sheetName)
   const {
@@ -89,7 +88,12 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         onRowDelete,
       }}
       localization={localization}
-      components={{ Toolbar, EditRow, Container: SheetContainer }}
+      components={{
+        Toolbar,
+        EditRow,
+        Container: SheetContainer,
+        Header: TableHeader,
+      }}
       icons={tableIcons}
       options={tableOptions}
     />
