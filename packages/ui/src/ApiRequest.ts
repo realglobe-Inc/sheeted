@@ -111,12 +111,12 @@ export class ApiRequest {
     return result
   }
 
-  async deleteEntity(sheetName: string, entityId: string) {
+  async deleteEntities(sheetName: string, entityIds: string[]) {
     const resp = await this.fetch(
       this.apiPaths.entitiesDeletePath({ sheetName }),
       {
         method: 'POST',
-        body: JSON.stringify({ ids: [entityId] }),
+        body: JSON.stringify({ ids: entityIds }),
       },
     )
     if (!resp.ok) {

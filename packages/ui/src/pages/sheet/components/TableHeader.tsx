@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(() => ({
   header: {
     wordBreak: 'keep-all',
+    background: 'rgb(238, 245, 250)',
+    fontWeight: 600,
   },
 }))
 

@@ -27,15 +27,6 @@ export const useEditEntity = (sheet: SheetInfo | null) => {
     },
     [sheet],
   )
-  const isDeletable = useCallback(
-    (entity: Entity) => {
-      return (
-        Boolean(sheet?.permissions.deletes) &&
-        entity[ENTITY_META_FIELD].permissions.deletes
-      )
-    },
-    [sheet],
-  )
   const onRowUpdate = useCallback(
     async (newEntity: Entity, oldEntity?: Entity) => {
       if (!sheet || !oldEntity) {
@@ -59,27 +50,6 @@ export const useEditEntity = (sheet: SheetInfo | null) => {
       }
     },
     [api, sheet, l, enqueueSnackbar, setErrors, resetErrors],
-  )
-  const onRowDelete = useCallback(
-    async (oldEntity: Entity) => {
-      if (!sheet) {
-        return
-      }
-      try {
-        await api.deleteEntity(sheet.sheetName, oldEntity.id)
-        enqueueSnackbar(l.snackbars.deleteComplete, {
-          variant: 'success',
-        })
-      } catch (e) {
-        // TODO: show reasons
-        console.error(e)
-        enqueueSnackbar(l.snackbars.deleteFailed, {
-          variant: 'error',
-        })
-        throw e
-      }
-    },
-    [api, sheet, l, enqueueSnackbar],
   )
   // material-table provides no prop such as "isAddable".
   const canAdd = Boolean(sheet?.permissions.creates)
@@ -110,9 +80,7 @@ export const useEditEntity = (sheet: SheetInfo | null) => {
   )
   return {
     isEditable,
-    isDeletable,
     onRowAdd: canAdd ? onRowAdd : undefined,
     onRowUpdate,
-    onRowDelete,
   }
 }

@@ -1,6 +1,9 @@
 import { Localization } from 'material-table'
 
 export const locale = {
+  actions: {
+    delete: '削除',
+  },
   buttons: {
     ok: 'OK',
     cancel: 'キャンセル',
