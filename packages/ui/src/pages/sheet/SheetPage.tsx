@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
@@ -63,10 +63,14 @@ export const SheetPage: FC = () => {
 const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   sheet,
 }) => {
+  const tableRef = useRef<{ onQueryChange: () => void }>()
   const { result: info, trigger, error } = useSheetInfoContext()
   const queryEntities = useQueryEntities(sheet.sheetName)
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
-  const { actions, onSelectionChange } = useTableActions(info)
+  const { actions, onSelectionChange } = useTableActions(
+    info,
+    tableRef.current?.onQueryChange!,
+  )
   useEffect(() => {
     trigger(sheet.sheetName)
   }, [sheet.sheetName, trigger])
@@ -76,6 +80,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   return (
     <MaterialTable
       title={sheet.title}
+      tableRef={tableRef}
       columns={columns}
       data={queryEntities}
       editable={{

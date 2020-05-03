@@ -11,11 +11,13 @@ import { RoleLabels } from './constants'
 import { ProjectSheet } from './sheets/project/project.sheet'
 import { ReportSheet } from './sheets/report/report.sheet'
 import { AggregationSheet } from './sheets/aggregation/aggregation.sheet'
+import { seeders } from './seeder'
 
 main()
 
 async function main() {
   await connect('project-daily-report')
+  await seeders.seed()
 
   const app = createApp(
     {
