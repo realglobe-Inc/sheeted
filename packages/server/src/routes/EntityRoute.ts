@@ -50,6 +50,19 @@ export const EntityRoute = ({ sheets, jwt, repositories }: RouterParams) => {
           res.json(entity)
         },
       )
+      // delete
+      .post<EntityPathParams>(
+        ApiPaths.ENTITIES_DELETE,
+        jwt.guard,
+        bodyParser.json(),
+        async (req, res) => {
+          const { body = {} } = req
+          const { ids } = body
+          const controller = EntityController.from(req, sheets, repositories)
+          await controller.delete(ids)
+          res.json({ ok: true })
+        },
+      )
       // update
       .post<EntityPathParams>(
         ApiPaths.ENTITY_ONE,
@@ -60,17 +73,6 @@ export const EntityRoute = ({ sheets, jwt, repositories }: RouterParams) => {
           const { entityId } = req.params
           const entity = await controller.update(entityId, req.body)
           res.json(entity)
-        },
-      )
-      // delete
-      .delete<EntityPathParams>(
-        ApiPaths.ENTITY_ONE,
-        jwt.guard,
-        async (req, res) => {
-          const controller = EntityController.from(req, sheets, repositories)
-          const { entityId } = req.params
-          await controller.delete([entityId])
-          res.json({ ok: true })
         },
       )
   )

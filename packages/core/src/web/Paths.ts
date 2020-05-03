@@ -12,6 +12,7 @@ export const ApiPaths = {
   SHEETS: '/api/sheets',
   SHEET_ONE: '/api/sheets/:sheetName',
   ENTITIES: '/api/sheets/:sheetName/entities',
+  ENTITIES_DELETE: '/api/sheets/:sheetName/entities/delete',
   ENTITY_ONE: '/api/sheets/:sheetName/entities/:entityId',
   SIGN_IN: '/api/sign/in',
   SIGN_IN_CALLBACK: '/api/sign/in/callback',
@@ -33,6 +34,8 @@ export const ApiPathBuilder = (base?: string) => {
       based(ApiPaths.SHEET_ONE.replace(':sheetName', sheetName)),
     entitiesPath: ({ sheetName }: SheetPathParams) =>
       based(ApiPaths.ENTITIES.replace(':sheetName', sheetName)),
+    entitiesDeletePath: ({ sheetName }: SheetPathParams) =>
+      based(ApiPaths.ENTITIES_DELETE.replace(':sheetName', sheetName)),
     entityOnePath: ({ sheetName, entityId }: EntityPathParams) =>
       based(
         ApiPaths.ENTITY_ONE.replace(':sheetName', sheetName).replace(

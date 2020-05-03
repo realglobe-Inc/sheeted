@@ -221,6 +221,11 @@ export class EntityController {
   }
 
   async delete(ids: string[]) {
+    if (
+      !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
+    ) {
+      throw new HttpError('Invalid body', HttpStatuses.BAD_REQUEST)
+    }
     const deletePolicy = this.userAccessPolicy.ofDelete
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)

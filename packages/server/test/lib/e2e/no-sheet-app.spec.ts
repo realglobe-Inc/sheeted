@@ -244,12 +244,14 @@ it('should be able to delete IAMUser', async () => {
     .expect(200)
 
   await request(app)
-    .delete(
-      ApiPathBuilder().entityOnePath({
+    .post(
+      ApiPathBuilder().entitiesDeletePath({
         sheetName: IAM_USER_SHEET,
-        entityId: created.id,
       }),
     )
+    .send({
+      ids: [created.id],
+    })
     .set(...authHeader)
     .expect(200)
 
