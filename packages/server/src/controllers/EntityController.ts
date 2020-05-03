@@ -77,7 +77,7 @@ export class EntityController {
       this.userAccessPolicy,
       displays,
     )
-    this.hook = new HookTrigger(sheet.Hook)
+    this.hook = new HookTrigger(ctx, sheet.Hook)
     this.validator = new EntityValidator(
       Schema,
       sheet.Validator(ctx),
@@ -197,7 +197,7 @@ export class EntityController {
     await this.validator.validate(input, null)
     const creating = this.converter.beforeSave(input)
     const entity = await this.repository.create(creating)
-    await this.hook.triggerCreate(entity, this.ctx)
+    await this.hook.triggerCreate(entity)
     return this.converter.beforeSend(entity)
   }
 
@@ -216,7 +216,7 @@ export class EntityController {
     await this.validator.validate(changes, current)
     const updating = this.converter.beforeSave(changes)
     const entity = await this.repository.update(id, updating)
-    await this.hook.triggerUpdate(entity, this.ctx)
+    await this.hook.triggerUpdate(entity)
     return this.converter.beforeSend(entity)
   }
 
@@ -244,7 +244,7 @@ export class EntityController {
         if (!entity) {
           return Promise.resolve()
         }
-        return this.hook.triggerDestroy(entity, this.ctx)
+        return this.hook.triggerDestroy(entity)
       }),
     )
   }
