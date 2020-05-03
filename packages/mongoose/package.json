@@ -5,7 +5,7 @@
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
     "mongoose-autopopulate": "^0.12.2",
-    "uuid": "^7.0.3"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^7.0.2"
