@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid'
 import { Schema, SchemaField } from '@sheeted/core'
 
 /**
- * Compile a [Mongoose Model](https://mongoosejs.com/docs/api/model.html) from a Sheeted schema object.
+ * A helper function to compile a [Mongoose Model](https://mongoosejs.com/docs/api/model.html) from a Sheeted schema object.
  * @param name  The model name. Usually use the sheet name.
  * @param schema  the sheeted schema.
  */
