@@ -10,9 +10,9 @@ import { v4 as uuid } from 'uuid'
 import { Schema, SchemaField } from '@sheeted/core'
 
 /**
- * Compile mongoose model from Sheeted Schema.
- * @param name - model name
- * @param schema - schema
+ * Compile a [Mongoose Model](https://mongoosejs.com/docs/api/model.html) from a Sheeted schema object.
+ * @param name  The model name. Usually use the sheet name.
+ * @param schema  the sheeted schema.
  */
 export const compileModel = <Entity>(
   name: string,

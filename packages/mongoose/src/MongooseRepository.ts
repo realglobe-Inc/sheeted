@@ -11,11 +11,8 @@ import {
 
 import { compileModel } from './MongooseModel'
 
-/**
- * Mongo repository implementation
- */
-export const MongoDriver: RepositoryDriver = class MongoRepository<Entity>
-  implements Repository<Entity> {
+/** @internal */
+class MongoRepositoryImpl<Entity> implements Repository<Entity> {
   private readonly model: MongoModel<EntityBase & Document>
 
   constructor(name: string, schema: Schema<Entity>) {
@@ -113,3 +110,8 @@ export const MongoDriver: RepositoryDriver = class MongoRepository<Entity>
     await this.model.deleteMany({ id: { $in: ids } })
   }
 }
+
+/**
+ * The database driver for mongoose.
+ */
+export const MongoDriver: RepositoryDriver = MongoRepositoryImpl
