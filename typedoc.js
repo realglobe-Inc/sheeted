@@ -15,7 +15,13 @@ const base = {
 }
 
 const configs = {
-  core: {},
+  core: {
+    mode: 'modules',
+    out: 'doc/core',
+    readme: 'packages/core/README.doc.md',
+    inputFiles: ['packages/core/src'],
+    exclude: ['packages/core/src/web', 'packages/core/src/sheets'],
+  },
   server: {
     out: 'doc/server',
     readme: 'packages/server/README.doc.md',
