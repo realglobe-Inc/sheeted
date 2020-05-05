@@ -24,7 +24,7 @@ export const locale = {
     managementSheets: '管理シート',
   },
   placeholders: {
-    pleaseSelect: '[選択]',
+    pleaseSelect: '[未選択]',
   },
   table: {
     permissionDenied: 'アクセス権限がありません',
