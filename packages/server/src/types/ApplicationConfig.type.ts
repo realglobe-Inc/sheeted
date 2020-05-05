@@ -1,6 +1,9 @@
 import { SamlConfig } from 'passport-saml'
 import morgan from 'morgan'
 
+/**
+ * Sheeted application server config.
+ */
 export type ApplicationConfig = {
   /**
    * SAML config
@@ -16,7 +19,7 @@ export type ApplicationConfig = {
   }
 
   /**
-   * Logger config (optional)
+   * Logger config
    */
   logger?: {
     format: string
@@ -24,7 +27,7 @@ export type ApplicationConfig = {
   }
 
   /**
-   * Content server config (optional)
+   * Content server config
    */
   contentServer?: {
     externalUrl?: string
