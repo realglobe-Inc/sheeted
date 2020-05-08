@@ -77,6 +77,11 @@ export type Repository<Entity> = {
   findById(id: EntityId): Promise<Entity | null>
 
   /**
+   * Find entities by ids
+   */
+  findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }>
+
+  /**
    * Find an entity
    */
   findOne(filter: Partial<Entity>): Promise<Entity | null>

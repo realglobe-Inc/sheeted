@@ -4,7 +4,7 @@ import { EntityBase } from '@sheeted/core'
 export class Seeder<E extends EntityBase> {
   constructor(
     private model: Model<EntityBase & Document>,
-    private data: (E & { _id: Types.ObjectId })[],
+    private data: (E & { _id?: Types.ObjectId })[],
   ) {}
 
   async seed() {

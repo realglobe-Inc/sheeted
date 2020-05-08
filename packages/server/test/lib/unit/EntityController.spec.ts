@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { DefaultIAMRoles, IAM_USER_SHEET } from '@sheeted/core'
+import { DefaultIAMRoles, IAM_USER_SHEET, IAMUserEntity } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
@@ -88,7 +88,8 @@ test('EntityController with IAMUser with admin', async () => {
   }
   expect(await controller.info()).toEqual(expected)
 
-  const user = await controller.create({
+  // FIXME: 本当は IAMUserEntity の拡張型
+  const user: IAMUserEntity = await controller.create({
     name: 'user',
     email: 'user@example.com',
     roles: ['default'],
@@ -118,7 +119,7 @@ test('EntityController with IAMUser with admin', async () => {
     total: 2,
     pages: 1,
   })
-  await controller.delete(user.id)
+  await controller.delete([user.id])
   await expect(controller.one(user.id)).rejects.toBeTruthy()
 })
 
@@ -159,7 +160,7 @@ test('EntityController with IAMUser with guest', async () => {
   ).rejects.toMatchObject({
     status: 403,
   })
-  await expect(controller.delete(adminUser.id)).rejects.toMatchObject({
+  await expect(controller.delete([adminUser.id])).rejects.toMatchObject({
     status: 403,
   })
 })

@@ -219,7 +219,7 @@ it('should succeed to update IAMUser', async () => {
     })
 })
 
-it('should eble to delete IAMUser', async () => {
+it('should be able to delete IAMUser', async () => {
   const user = {
     name: 'new user 4',
     email: 'new4@example.com',
@@ -244,12 +244,14 @@ it('should eble to delete IAMUser', async () => {
     .expect(200)
 
   await request(app)
-    .delete(
-      ApiPathBuilder().entityOnePath({
+    .post(
+      ApiPathBuilder().entitiesDeletePath({
         sheetName: IAM_USER_SHEET,
-        entityId: created.id,
       }),
     )
+    .send({
+      ids: [created.id],
+    })
     .set(...authHeader)
     .expect(200)
 

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
@@ -7,7 +7,6 @@ import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
 import { useUserContext } from '../../hooks/UserContextHook'
-import { useLocale } from '../../hooks/LocaleContextHook'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import {
@@ -15,6 +14,7 @@ import {
   SheetInfoContextProvider,
 } from './hooks/SheetInfoContextHook'
 import { Toolbar } from './components/Toolbar'
+import { TableHeader } from './components/TableHeader'
 import { EditRow } from './components/EditRow'
 import { tableIcons } from './assets/icons'
 import { convertColumn } from './converters/ColumnConverter'
@@ -25,16 +25,16 @@ import { EntityDialogContextProvider } from './hooks/EntityDialogContextHook'
 import { EntitySelectDialog } from './components/EntitySelectDialog'
 import { SheetContainer } from './components/SheetContainer'
 import { useTableLocalization } from './hooks/TableLocalizationHook'
+import { ActionContextProvider } from './hooks/ActionContextHook'
+import { ActionDialog } from './components/ActionDialog'
+import { useTableActions } from './hooks/TableActionsHook'
 
 const tableOptions: TableOptions = {
   pageSize: 10,
   pageSizeOptions: [10, 20, 30],
   padding: 'dense',
   debounceInterval: 500,
-  headerStyle: {
-    background: 'rgb(238, 245, 250)',
-    fontWeight: 600,
-  },
+  selection: true,
 }
 
 export const SheetPage: FC = () => {
@@ -43,16 +43,19 @@ export const SheetPage: FC = () => {
   const ready = useSheetReady(sheet)
   return (
     <SheetInfoContextProvider>
-      <InputErrorContextProvider>
-        <EntityDialogContextProvider>
-          <PageLayout>
-            {sheet && user && ready ? (
-              <SheetPageTable user={user} sheet={sheet} />
-            ) : null}
-            <EntitySelectDialog />
-          </PageLayout>
-        </EntityDialogContextProvider>
-      </InputErrorContextProvider>
+      <ActionContextProvider>
+        <InputErrorContextProvider>
+          <EntityDialogContextProvider>
+            <PageLayout>
+              {sheet && user && ready ? (
+                <SheetPageTable user={user} sheet={sheet} />
+              ) : null}
+              <EntitySelectDialog />
+              <ActionDialog />
+            </PageLayout>
+          </EntityDialogContextProvider>
+        </InputErrorContextProvider>
+      </ActionContextProvider>
     </SheetInfoContextProvider>
   )
 }
@@ -60,16 +63,14 @@ export const SheetPage: FC = () => {
 const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   sheet,
 }) => {
-  const l = useLocale()
+  const tableRef = useRef<{ onQueryChange: () => void }>()
   const { result: info, trigger, error } = useSheetInfoContext()
   const queryEntities = useQueryEntities(sheet.sheetName)
-  const {
-    isEditable,
-    isDeletable,
-    onRowUpdate,
-    onRowDelete,
-    onRowAdd,
-  } = useEditEntity(info)
+  const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
+  const { actions, onSelectionChange } = useTableActions(
+    info,
+    tableRef.current?.onQueryChange!,
+  )
   useEffect(() => {
     trigger(sheet.sheetName)
   }, [sheet.sheetName, trigger])
@@ -79,17 +80,23 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   return (
     <MaterialTable
       title={sheet.title}
+      tableRef={tableRef}
       columns={columns}
       data={queryEntities}
       editable={{
         isEditable,
-        isDeletable,
         onRowAdd,
         onRowUpdate,
-        onRowDelete,
       }}
+      actions={actions}
+      onSelectionChange={onSelectionChange}
       localization={localization}
-      components={{ Toolbar, EditRow, Container: SheetContainer }}
+      components={{
+        Toolbar,
+        EditRow,
+        Container: SheetContainer,
+        Header: TableHeader,
+      }}
       icons={tableIcons}
       options={tableOptions}
     />

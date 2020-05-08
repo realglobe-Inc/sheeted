@@ -77,7 +77,7 @@ export class EntityController {
       this.userAccessPolicy,
       displays,
     )
-    this.hook = new HookTrigger(sheet.Hook)
+    this.hook = new HookTrigger(ctx, sheet.Hook)
     this.validator = new EntityValidator(
       Schema,
       sheet.Validator(ctx),
@@ -197,7 +197,7 @@ export class EntityController {
     await this.validator.validate(input, null)
     const creating = this.converter.beforeSave(input)
     const entity = await this.repository.create(creating)
-    await this.hook.triggerCreate(entity, this.ctx)
+    await this.hook.triggerCreate(entity)
     return this.converter.beforeSend(entity)
   }
 
@@ -216,20 +216,41 @@ export class EntityController {
     await this.validator.validate(changes, current)
     const updating = this.converter.beforeSave(changes)
     const entity = await this.repository.update(id, updating)
-    await this.hook.triggerUpdate(entity, this.ctx)
+    await this.hook.triggerUpdate(entity)
     return this.converter.beforeSend(entity)
   }
 
-  async delete(id: string) {
+  async delete(ids: string[]) {
+    if (
+      !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
+    ) {
+      throw new HttpError('Invalid body', HttpStatuses.BAD_REQUEST)
+    }
     const deletePolicy = this.userAccessPolicy.ofDelete
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const entity = await this.repository.findById(id)
-    if (deletePolicy.condition?.(entity) === false) {
-      throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
+    const entities = await this.repository.findByIds(ids)
+    const forbiddenIds = Object.values(entities)
+      .filter((entity): entity is EntityBase =>
+        Boolean(entity && deletePolicy.condition?.(entity) === false),
+      )
+      .map(({ id }) => id)
+    if (forbiddenIds.length > 0) {
+      throw new HttpError(
+        `Permission denied for entities: ${forbiddenIds.join(', ')}`,
+        HttpStatuses.FORBIDDEN,
+      )
     }
-    await this.repository.destroy(id)
-    await this.hook.triggerDestroy(entity, this.ctx)
+    await this.repository.destroyBulk(ids)
+    await Promise.all(
+      ids.map((id) => {
+        const entity = entities[id]
+        if (!entity) {
+          return Promise.resolve()
+        }
+        return this.hook.triggerDestroy(entity)
+      }),
+    )
   }
 }

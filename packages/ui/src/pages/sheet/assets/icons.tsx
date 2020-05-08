@@ -14,7 +14,7 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import SaveAltIcon from '@material-ui/icons/SaveAlt'
 import SearchIcon from '@material-ui/icons/Search'
 import ViewColumnIcon from '@material-ui/icons/ViewColumn'
-import { SvgIconProps } from '@material-ui/core'
+import { SvgIconProps } from '@material-ui/core/SvgIcon'
 
 export const tableIcons = {
   Add: forwardRef<any, SvgIconProps>(function AddBox(props: SvgIconProps, ref) {

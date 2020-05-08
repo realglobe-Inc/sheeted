@@ -64,6 +64,19 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     return doc?.toJSON() || null
   }
 
+  async findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }> {
+    const docs = await this.model.find({
+      $or: ids.map((id) => ({
+        id,
+      })),
+    })
+    const map = Object.fromEntries(
+      docs.map((doc) => [doc.id, doc.toJSON()] as [string, Entity]),
+    )
+    const entities = Object.fromEntries(ids.map((id) => [id, map[id] || null]))
+    return entities
+  }
+
   async findOne(filter: Partial<Entity>): Promise<Entity | null> {
     const doc = await this.model.findOne(filter)
     return doc?.toJSON() || null

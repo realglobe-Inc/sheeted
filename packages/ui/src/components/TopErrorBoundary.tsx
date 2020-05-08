@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import Dialog from '@material-ui/core/Dialog'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
-import { makeStyles, createStyles } from '@material-ui/core'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() =>
   createStyles({
