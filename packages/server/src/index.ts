@@ -20,6 +20,11 @@ import { createRepositories } from './server/Repositories'
 
 export type { ApplicationConfig }
 
+/**
+ * Create a Sheeted application server.
+ * @param application Application settings which includes sheets
+ * @param config Configuration of the server
+ */
 export const createApp = (
   application: Application<string>,
   config: ApplicationConfig,

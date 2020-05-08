@@ -3,6 +3,10 @@ import { buildIAMUserSchema } from '@sheeted/core/build/sheets/IAMUserSheet/IAMU
 
 import { compileModel } from './MongooseModel'
 
-const schema = buildIAMUserSchema([] as string[])
+/** @internal */
+const iamUserSchema = buildIAMUserSchema([] as string[])
 
-export const IAMUserModel = compileModel(IAM_USER_SHEET, schema)
+/**
+ * A Mongoose Model for IAM user.
+ */
+export const IAMUserModel = compileModel(IAM_USER_SHEET, iamUserSchema)
