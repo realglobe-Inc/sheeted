@@ -143,11 +143,12 @@ const DatePickerCell = (
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
+  const value = props.value || null
   return (
     <MuiPickersUtilsProvider utils={DayjsUtils}>
       <DatePicker
         format={props.format}
-        value={props.value}
+        value={value}
         views={props.views}
         onChange={(date) => props.onChange(date?.format(props.format))}
         error={Boolean(error)}
@@ -172,9 +173,12 @@ const TimePickerCell = (
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
-  const now = dayjs()
-  const [hours, minutes] = (props.value || '00:00').split(':').map(Number)
-  const value = now.hour(hours).minute(minutes)
+  let value: dayjs.Dayjs | null = null
+  if (props.value) {
+    const now = dayjs()
+    const [hours, minutes] = props.value.split(':').map(Number)
+    value = now.hour(hours).minute(minutes)
+  }
   return (
     <MuiPickersUtilsProvider utils={DayjsUtils}>
       <TimePicker
