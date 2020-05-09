@@ -1,3 +1,4 @@
+import './typings/express.d'
 import jwt from 'jsonwebtoken'
 import { IAMUserEntity } from '@sheeted/core'
 import { Request, Response, NextFunction } from 'express'
