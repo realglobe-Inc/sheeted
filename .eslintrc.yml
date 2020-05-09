@@ -8,6 +8,7 @@ extends:
   - prettier
   - plugin:prettier/recommended
   - prettier/@typescript-eslint
+  - plugin:react-hooks/recommended
   # Extension for "import": https://github.com/benmosher/eslint-plugin-import
   - plugin:import/errors
   - plugin:import/warnings
@@ -38,6 +39,3 @@ rules:
   "@typescript-eslint/unbound-method": off
   "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
   "@typescript-eslint/interface-name-prefix": off
-  # React
-  "react-hooks/rules-of-hooks": "error"
-  "react-hooks/exhaustive-deps": "warn"
