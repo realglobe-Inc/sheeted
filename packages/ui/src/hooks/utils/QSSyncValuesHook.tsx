@@ -1,23 +1,21 @@
-import qs from 'qs'
+import qs, { ParsedQs } from 'qs'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { useValues } from './ValuesHook'
 import { useMountEffect } from './MountEffectHook'
 
-export type ParsedQuery = { [key: string]: string }
-
 /**
  * Use values with syncing query strings
  */
 export const useQSSyncValues = <T extends { [key: string]: any }>(
-  restore: (query: ParsedQuery) => T,
+  restore: (query: ParsedQs) => T,
 ): [T, (values: Partial<T>) => void, boolean] => {
   const [values, setValues] = useValues(restore({}))
   const history = useHistory()
   const [ready, setReady] = useState(false)
   useMountEffect(() => {
-    const query: ParsedQuery = qs.parse(window.location.search.slice(1))
+    const query: ParsedQs = qs.parse(window.location.search.slice(1))
     const values = restore(query)
     setValues(values)
     setReady(true)
