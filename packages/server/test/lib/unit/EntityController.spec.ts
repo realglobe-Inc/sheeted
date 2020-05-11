@@ -1,3 +1,4 @@
+import '../../tools/typings'
 import mongoose from 'mongoose'
 import { DefaultIAMRoles, IAM_USER_SHEET, IAMUserEntity } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'

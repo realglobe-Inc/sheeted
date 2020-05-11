@@ -1,3 +1,4 @@
+import '../../tools/typings'
 import { Schema, Types, ValidationResult, Validate } from '@sheeted/core'
 
 import { EntityValidator } from '../../../src/controllers/concern/EntityValidator'

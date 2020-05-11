@@ -1,3 +1,4 @@
+import '../../tools/typings'
 import { JWT } from '../../../src/JWT'
 
 test('JWT', async () => {
