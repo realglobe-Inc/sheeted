@@ -1,4 +1,4 @@
-import { Schema } from '@sheeted/core'
+import { Schema, Context } from '@sheeted/core'
 import { WithEntityMetaField } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 
@@ -13,6 +13,7 @@ export class EntityConverter {
     private schema: Schema,
     private accessPolicy: UserAccessPolicy,
     private displays: DisplayFunctions,
+    private ctx: Context<any>,
   ) {}
 
   beforeSave(changes: any) {
@@ -133,17 +134,17 @@ export class EntityConverter {
   }
 
   private getPermissions(entity: any) {
-    const { accessPolicy } = this
+    const { accessPolicy, ctx } = this
     const updatePolicy = accessPolicy.ofUpdate
     const updates = updatePolicy
       ? updatePolicy.condition
-        ? updatePolicy.condition(entity)
+        ? updatePolicy.condition(entity, ctx)
         : true
       : false
     const deletePolicy = accessPolicy.ofDelete
     const deletes = deletePolicy
       ? deletePolicy.condition
-        ? deletePolicy.condition(entity)
+        ? deletePolicy.condition(entity, ctx)
         : true
       : false
     const permissions = {

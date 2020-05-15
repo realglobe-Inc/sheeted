@@ -60,7 +60,7 @@ export class EntityController {
   private readonly hook: HookTrigger
 
   constructor(
-    private readonly sheet: Sheet,
+    private readonly sheet: Sheet<any, any>,
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
@@ -76,6 +76,7 @@ export class EntityController {
       Schema,
       this.userAccessPolicy,
       displays,
+      ctx,
     )
     this.hook = new HookTrigger(ctx, sheet.Hook)
     this.validator = new EntityValidator(
@@ -210,7 +211,7 @@ export class EntityController {
     if (!current) {
       throw new HttpError(`Entity not found "${id}"`, HttpStatuses.NOT_FOUND)
     }
-    if (updatePolicy.condition?.(current) === false) {
+    if (updatePolicy.condition?.(current, this.ctx as Context<any>) === false) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
     await this.validator.validate(changes, current)
@@ -233,7 +234,11 @@ export class EntityController {
     const entities = await this.repository.findByIds(ids)
     const forbiddenIds = Object.values(entities)
       .filter((entity): entity is EntityBase =>
-        Boolean(entity && deletePolicy.condition?.(entity) === false),
+        Boolean(
+          entity &&
+            deletePolicy.condition?.(entity, this.ctx as Context<any>) ===
+              false,
+        ),
       )
       .map(({ id }) => id)
     if (forbiddenIds.length > 0) {

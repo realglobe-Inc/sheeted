@@ -25,7 +25,13 @@ test('EntityConverter.spec.ts', () => {
     },
   ]
   const userAccessPolicy = new UserAccessPolicy(['default'], accessPolicies)
-  const converter = new EntityConverter('sheet', schema, userAccessPolicy, {})
+  const converter = new EntityConverter(
+    'sheet',
+    schema,
+    userAccessPolicy,
+    {},
+    { user: null as any },
+  )
   expect(
     converter.beforeSend({
       id: '00000000',

@@ -1,3 +1,5 @@
+import { Context } from './Context.type'
+
 export type ReadAccessPolicy<Entity = any, Role extends string = string> = {
   action: 'read'
   role: Role
@@ -15,13 +17,13 @@ export type UpdateAccessPolicy<Entity = any, Role extends string = string> = {
   action: 'update'
   role: Role
   uneditableColumns?: (keyof Entity)[]
-  condition?: (entity: Entity) => boolean
+  condition?: (entity: Entity, context?: Context<Role>) => boolean
 }
 
 export type DeleteAccessPolicy<Entity = any, Role extends string = string> = {
   action: 'delete'
   role: Role
-  condition?: (entity: Entity) => boolean
+  condition?: (entity: Entity, context?: Context<Role>) => boolean
 }
 
 export type AccessPolicy<Entity = any, Role extends string = string> =

@@ -26,7 +26,7 @@ export type { ApplicationConfig }
  * @param config Configuration of the server
  */
 export const createApp = (
-  application: Application<string>,
+  application: Application<any>,
   config: ApplicationConfig,
 ) => {
   validateSheets(application.Sheets)
