@@ -18,7 +18,7 @@ $ npm add @sheeted/core @sheeted/server @sheeted/mongoose
 
 ## Usage
 
-Take a look at [examples](https://github.com/realglobe-Inc/sheeted/tree/master/examples).
+Take a look at [examples](./examples).
 
 To create a sheet, define some type and objects as below.
 
@@ -62,18 +62,17 @@ const app = createApp(
 )
 ```
 
+For more information, please visit:
+
+* [examples/](./examples)
+* [API Documentation](https://realglobe-inc.github.io/sheeted/)
+
 ## Development
 
 Install. This project uses [yarn workspaces](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/).
 
 ```console
 $ yarn install
-```
-
-Run npm scripts to build packages and examples.
-
-```console
-$ yarn build
 ```
 
 Run docker containers.
