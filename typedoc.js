@@ -12,6 +12,7 @@ const base = {
   excludePrivate: true,
   stripInternal: true,
   includeDeclarations: true,
+  includeVersion: true,
 }
 
 const configs = {
