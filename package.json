@@ -18,7 +18,6 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.0.0",
-    "gh-pages": "^2.2.0",
     "jest": "^26.0.1",
     "mongodb-memory-server": "^6.5.0",
     "mongoose": "^5.9.3",
@@ -41,7 +40,6 @@
   },
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/example build",
-    "deploy:doc": "./misc/scripts/doc.sh && gh-pages -d doc --dotfiles",
     "lint": "eslint --ext .ts,.tsx packages",
     "prepare": "yarn build",
     "test": "yarn w/core test && yarn w/server test && yarn w/mongoose test",

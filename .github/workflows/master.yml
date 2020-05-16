@@ -22,9 +22,14 @@ jobs:
         yarn test
     - name: Release
       run: |
+        ./misc/scripts/doc.sh
         ./misc/scripts/release.sh
-        yarn deploy:doc
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy documentation
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./doc
