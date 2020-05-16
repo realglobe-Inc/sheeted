@@ -21,7 +21,9 @@ jobs:
         yarn lint
         yarn test
     - name: Release
-      run: ./misc/scripts/release.sh
+      run: |
+        ./misc/scripts/release.sh
+        yarn deploy:doc
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
