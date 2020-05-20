@@ -3,6 +3,7 @@ import { View } from './View.type'
 import { AccessPolicy } from './AccessPolicy.type'
 import { Hook } from './Hook.type'
 import { Validator } from './Validator.type'
+import { Action } from './Action.type'
 
 /**
  * Sheet definition.
@@ -37,6 +38,11 @@ export type Sheet<Entity = any, Role extends string = string> = {
    * Access policies.
    */
   AccessPolicies: AccessPolicy<Entity, Role>[]
+
+  /**
+   * Custom actions.
+   */
+  Actions?: Action<Entity>[]
 
   /**
    * Hook is executed on mutating entity.
