@@ -86,6 +86,7 @@ test('EntityController with IAMUser with admin', async () => {
       },
     ],
     permissions: { creates: true, updates: true, deletes: true },
+    actions: [],
   }
   expect(await controller.info()).toEqual(expected)
 

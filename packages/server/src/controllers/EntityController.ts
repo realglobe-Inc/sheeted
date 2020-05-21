@@ -12,6 +12,7 @@ import {
   ListQuery,
   ListResult,
   Column,
+  ActionInfo,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
@@ -80,7 +81,7 @@ export class EntityController {
   }
 
   async info(): Promise<SheetInfo> {
-    const { name: sheetName, View, Schema } = this.sheet
+    const { name: sheetName, View, Schema, Actions = [] } = this.sheet
     const { userAccessPolicy } = this
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -124,21 +125,16 @@ export class EntityController {
       updates: Boolean(userAccessPolicy.ofUpdate),
       deletes: Boolean(userAccessPolicy.ofDelete),
     }
+    const actions: ActionInfo[] = Actions.map(({ id, title, icon }) => ({
+      id,
+      title,
+      icon,
+    }))
     return {
       sheetName,
       columns,
       permissions,
-      // FIXME:
-      actions: [
-        {
-          id: 'approve',
-          title: '承認',
-        },
-        {
-          id: 'reject',
-          title: '却下',
-        },
-      ],
+      actions,
     }
   }
 
@@ -279,7 +275,9 @@ export class EntityController {
     ) {
       throw new HttpError('Invalid body', HttpStatuses.BAD_REQUEST)
     }
-    const actionPolicy = this.userAccessPolicy.ofAction
+    const actionPolicy = (this.userAccessPolicy.ofActions || []).find(
+      (policy) => policy.customActionId === actionId,
+    )
     if (!actionPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }

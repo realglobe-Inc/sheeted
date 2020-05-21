@@ -23,6 +23,17 @@ test('EntityConverter.spec.ts', () => {
       action: 'update',
       role: 'default',
     },
+    {
+      action: 'custom',
+      role: 'default',
+      customActionId: 'approve',
+    },
+    {
+      action: 'custom',
+      role: 'default',
+      customActionId: 'reject',
+      condition: () => false,
+    },
   ]
   const userAccessPolicy = new UserAccessPolicy(['default'], accessPolicies)
   const converter = new EntityConverter(
@@ -46,7 +57,6 @@ test('EntityConverter.spec.ts', () => {
       permissions: {
         deletes: false,
         updates: true,
-        // FIXME:
         customActions: {
           approve: true,
           reject: false,
@@ -64,7 +74,6 @@ test('EntityConverter.spec.ts', () => {
         permissions: {
           deletes: false,
           updates: true,
-          // FIXME:
           customActions: {
             approve: true,
             reject: false,

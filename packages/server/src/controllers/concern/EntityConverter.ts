@@ -147,14 +147,23 @@ export class EntityConverter {
         ? deletePolicy.condition(entity, ctx)
         : true
       : false
+    const actionPolicies = accessPolicy.ofActions || []
+    const customActions: {
+      [actionId: string]: boolean
+    } = Object.fromEntries(
+      actionPolicies.map((policy) => [
+        policy.customActionId,
+        policy
+          ? policy.condition
+            ? policy.condition(entity, ctx)
+            : true
+          : false,
+      ]),
+    )
     const permissions = {
       updates,
       deletes,
-      // TODO:
-      customActions: {
-        approve: true,
-        reject: false,
-      },
+      customActions,
     }
     return permissions
   }

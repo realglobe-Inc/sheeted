@@ -13,7 +13,7 @@ export class UserAccessPolicy {
   readonly ofCreate?: CreateAccessPolicy
   readonly ofUpdate?: UpdateAccessPolicy
   readonly ofDelete?: DeleteAccessPolicy
-  readonly ofAction?: ActionAccessPolicy
+  readonly ofActions?: ActionAccessPolicy[]
 
   constructor(userRoles: string[], accessPolicies: AccessPolicy[]) {
     const userAccessPolicies = accessPolicies
@@ -37,10 +37,8 @@ export class UserAccessPolicy {
         (policy): policy is DeleteAccessPolicy => policy.action === 'delete',
       )
       .pop()
-    this.ofAction = userAccessPolicies
-      .filter(
-        (policy): policy is ActionAccessPolicy => policy.action === 'custom',
-      )
-      .pop()
+    this.ofActions = userAccessPolicies.filter(
+      (policy): policy is ActionAccessPolicy => policy.action === 'custom',
+    )
   }
 }
