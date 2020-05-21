@@ -134,7 +134,7 @@ export class ApiRequest {
       this.apiPaths.actionOnePath({ sheetName, actionId }),
       {
         method: 'POST',
-        body: JSON.stringify(entityIds),
+        body: JSON.stringify({ ids: entityIds }),
       },
     )
     if (!resp.ok) {
