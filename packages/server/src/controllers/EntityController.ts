@@ -7,7 +7,6 @@ import {
   SortQuery,
   EntityBase,
 } from '@sheeted/core'
-import { Request } from 'express'
 import {
   SheetInfo,
   ListQuery,
@@ -33,17 +32,11 @@ export class EntityController {
    * Factory method from request
    */
   static from(
-    req: Request<{
-      sheetName: string
-    }>,
+    sheetName: string,
+    ctx: Context<string>,
     sheets: Sheet[],
     repositories: Repositories,
   ) {
-    const ctx = req.context
-    if (!ctx) {
-      throw new HttpError('No context', HttpStatuses.BAD_REQUEST)
-    }
-    const { sheetName } = req.params
     const sheet = sheets.find((sheet) => sheet.name === sheetName)
     if (!sheet) {
       throw new HttpError(`Sheet "${name}" not found`, HttpStatuses.BAD_REQUEST)
