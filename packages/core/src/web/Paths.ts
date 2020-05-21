@@ -16,7 +16,6 @@ export const ApiPaths = {
   CURRENT_USER: '/api/currentUser',
   SHEETS: '/api/sheets',
   SHEET_ONE: '/api/sheets/:sheetName',
-  ACTIONS: '/api/sheets/:sheetName/actions',
   ACTION_ONE: '/api/sheets/:sheetName/actions/:actionId',
   ENTITIES: '/api/sheets/:sheetName/entities',
   ENTITIES_DELETE: '/api/sheets/:sheetName/entities/delete',
@@ -39,8 +38,6 @@ export const ApiPathBuilder = (base?: string) => {
     sheetsPath: () => based(ApiPaths.SHEETS),
     sheetOnePath: ({ sheetName }: SheetPathParams) =>
       based(ApiPaths.SHEET_ONE.replace(':sheetName', sheetName)),
-    actionsPath: ({ sheetName }: SheetPathParams) =>
-      based(ApiPaths.ACTIONS.replace(':sheetName', sheetName)),
     actionOnePath: ({ sheetName, actionId }: ActionPathParams) =>
       based(
         ApiPaths.ACTION_ONE.replace(':sheetName', sheetName).replace(

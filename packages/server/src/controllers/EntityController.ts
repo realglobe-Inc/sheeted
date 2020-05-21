@@ -135,6 +135,17 @@ export class EntityController {
       sheetName,
       columns,
       permissions,
+      // FIXME:
+      actions: [
+        {
+          id: 'approve',
+          title: '承認',
+        },
+        {
+          id: 'reject',
+          title: '却下',
+        },
+      ],
     }
   }
 

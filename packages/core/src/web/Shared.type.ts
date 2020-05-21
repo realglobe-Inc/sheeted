@@ -52,6 +52,7 @@ export type SheetInfo = {
   sheetName: string
   columns: Column[]
   permissions: Permissions
+  actions: ActionInfo[]
 }
 
 export type ListQuery = {
