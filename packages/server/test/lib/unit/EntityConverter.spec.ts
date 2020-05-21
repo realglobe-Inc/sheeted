@@ -43,7 +43,15 @@ test('EntityConverter.spec.ts', () => {
     time: '01:40',
     [ENTITY_META_FIELD]: {
       displayText: '00000000',
-      permissions: { deletes: false, updates: true },
+      permissions: {
+        deletes: false,
+        updates: true,
+        // FIXME:
+        customActions: {
+          approve: true,
+          reject: false,
+        },
+      },
     },
   })
 
@@ -53,7 +61,15 @@ test('EntityConverter.spec.ts', () => {
       time: '01:23',
       [ENTITY_META_FIELD]: {
         displayText: '00000000',
-        permissions: { deletes: false, updates: true },
+        permissions: {
+          deletes: false,
+          updates: true,
+          // FIXME:
+          customActions: {
+            approve: true,
+            reject: false,
+          },
+        },
       },
     }),
   ).toEqual({

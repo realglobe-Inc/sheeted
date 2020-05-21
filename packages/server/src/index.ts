@@ -10,6 +10,7 @@ import { SignRoute } from './routes/SignRoute'
 import { EntityRoute } from './routes/EntityRoute'
 import { CurrentUserRoute } from './routes/CurrentUserRoute'
 import { ContentRoute } from './routes/ContentRoute'
+import { ActionRoute } from './routes/ActionRoute'
 import { handleNotFound } from './middlewares/NotFoundMiddleware'
 import { handleError } from './middlewares/ErrorMiddleware'
 import { ApplicationConfig } from './types/ApplicationConfig.type'
@@ -49,6 +50,7 @@ export const createApp = (
     SheetRoute,
     EntityRoute,
     CurrentUserRoute,
+    ActionRoute,
     !config.contentServer?.externalUrl && ContentRoute,
   ]
     .filter((Route): Route is RouterBuilder => Boolean(Route))

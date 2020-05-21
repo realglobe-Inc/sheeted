@@ -150,6 +150,11 @@ export class EntityConverter {
     const permissions = {
       updates,
       deletes,
+      // TODO:
+      customActions: {
+        approve: true,
+        reject: false,
+      },
     }
     return permissions
   }
