@@ -262,4 +262,42 @@ export class EntityController {
       }),
     )
   }
+
+  async performAction(actionId: string, ids: string[]) {
+    const ctx = this.ctx as Context<any>
+    const action = (this.sheet.Actions || []).find(
+      (action) => action.id === actionId,
+    )
+    if (!action) {
+      throw new HttpError(
+        `Action "${actionId}" not found`,
+        HttpStatuses.BAD_REQUEST,
+      )
+    }
+    if (
+      !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
+    ) {
+      throw new HttpError('Invalid body', HttpStatuses.BAD_REQUEST)
+    }
+    const actionPolicy = this.userAccessPolicy.ofAction
+    if (!actionPolicy) {
+      throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
+    }
+    const entityMap = await this.repository.findByIds(ids)
+    const forbiddenIds = Object.values(entityMap)
+      .filter((entity): entity is EntityBase =>
+        Boolean(entity && actionPolicy.condition?.(entity, ctx) === false),
+      )
+      .map(({ id }) => id)
+    if (forbiddenIds.length > 0) {
+      throw new HttpError(
+        `Permission denied for entities: ${forbiddenIds.join(', ')}`,
+        HttpStatuses.FORBIDDEN,
+      )
+    }
+    const entities = Object.values(
+      entityMap,
+    ).filter((entity): entity is EntityBase => Boolean(entity))
+    await action.perform(entities, ctx)
+  }
 }

@@ -30,7 +30,7 @@ export type ActionAccessPolicy<Entity = any, Role extends string = string> = {
   action: 'custom'
   customActionId: string
   role: Role
-  condition?: (entity: Entity[], context?: Context<Role>) => boolean
+  condition?: (entity: Entity, context?: Context<Role>) => boolean
 }
 
 export type AccessPolicy<Entity = any, Role extends string = string> =
