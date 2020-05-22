@@ -80,10 +80,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="sheet" class="tsd-anchor"></a>
 					<h3>Sheet</h3>
-					<div class="tsd-signature tsd-kind-icon">Sheet&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>AccessPolicies<span class="tsd-signature-symbol">: </span><a href="_accesspolicy_type_.html#accesspolicy" class="tsd-signature-type">AccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Hook<span class="tsd-signature-symbol">?: </span><a href="_sheet_type_.html#sheet.__type.hook" class="tsd-signature-type">Hook</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>Schema<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.schema" class="tsd-signature-type">Schema</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>Validator<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.validator" class="tsd-signature-type">Validator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>View<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.view" class="tsd-signature-type">View</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>group<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Sheet&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>AccessPolicies<span class="tsd-signature-symbol">: </span><a href="_accesspolicy_type_.html#accesspolicy" class="tsd-signature-type">AccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Actions<span class="tsd-signature-symbol">?: </span><a href="_action_type_.html#action" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Hook<span class="tsd-signature-symbol">?: </span><a href="_sheet_type_.html#sheet.__type.hook" class="tsd-signature-type">Hook</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>Schema<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.schema" class="tsd-signature-type">Schema</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>Validator<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.validator" class="tsd-signature-type">Validator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>View<span class="tsd-signature-symbol">: </span><a href="_sheet_type_.html#sheet.__type.view" class="tsd-signature-type">View</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>group<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/1da54b0/packages/core/src/Sheet.type.ts#L10">Sheet.type.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2cb32a7/packages/core/src/Sheet.type.ts#L11">Sheet.type.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -108,6 +108,14 @@
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p>Access policies.</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> Actions<span class="tsd-signature-symbol">?: </span><a href="_action_type_.html#action" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Custom actions.</p>
 									</div>
 								</div>
 							</li>
@@ -170,80 +178,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="_accesspolicy_type_.html">&quot;<wbr>Access<wbr>Policy.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_application_type_.html">&quot;<wbr>Application.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_const_.html">&quot;<wbr>Const&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_context_type_.html">&quot;<wbr>Context.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_entitybase_type_.html">&quot;<wbr>Entity<wbr>Base.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_hook_type_.html">&quot;<wbr>Hook.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptor_type_.html">&quot;<wbr>Interceptor.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_repository_type_.html">&quot;<wbr>Repository.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_schema_type_.html">&quot;<wbr>Schema.type&quot;</a>
-					</li>
 					<li class="current tsd-kind-module">
 						<a href="_sheet_type_.html">&quot;<wbr>Sheet.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_sheetgroup_type_.html">&quot;<wbr>Sheet<wbr>Group.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_type_type_.html">&quot;<wbr>Type.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_types_.html">&quot;<wbr>Types&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_validationresult_.html">&quot;<wbr>Validation<wbr>Result&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_validator_type_.html">&quot;<wbr>Validator.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_view_type_.html">&quot;<wbr>View.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_entities_iamuserentity_type_.html">&quot;entities/IAMUser<wbr>Entity.type&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_entities_index_.html">&quot;entities/index&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_index_.html">&quot;index&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_calendardateinterceptor_.html">&quot;interceptors/<wbr>Calendar<wbr>Date<wbr>Interceptor&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_calendarmonthinterceptor_.html">&quot;interceptors/<wbr>Calendar<wbr>Month<wbr>Interceptor&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_calendaryearinterceptor_.html">&quot;interceptors/<wbr>Calendar<wbr>Year<wbr>Interceptor&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_objectidinterceptor_.html">&quot;interceptors/<wbr>Object<wbr>IdInterceptor&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_timeinterceptor_.html">&quot;interceptors/<wbr>Time<wbr>Interceptor&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_interceptors_index_.html">&quot;interceptors/index&quot;</a>
 					</li>
 				</ul>
 			</nav>
