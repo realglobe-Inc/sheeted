@@ -3,6 +3,7 @@ import {
   CreateAccessPolicy,
   UpdateAccessPolicy,
   DeleteAccessPolicy,
+  ActionAccessPolicy,
   AccessPolicy,
   AdminAccessPolicies,
 } from '@sheeted/core'
@@ -12,6 +13,7 @@ export class UserAccessPolicy {
   readonly ofCreate?: CreateAccessPolicy
   readonly ofUpdate?: UpdateAccessPolicy
   readonly ofDelete?: DeleteAccessPolicy
+  readonly ofActions?: ActionAccessPolicy[]
 
   constructor(userRoles: string[], accessPolicies: AccessPolicy[]) {
     const userAccessPolicies = accessPolicies
@@ -35,5 +37,8 @@ export class UserAccessPolicy {
         (policy): policy is DeleteAccessPolicy => policy.action === 'delete',
       )
       .pop()
+    this.ofActions = userAccessPolicies.filter(
+      (policy): policy is ActionAccessPolicy => policy.action === 'custom',
+    )
   }
 }

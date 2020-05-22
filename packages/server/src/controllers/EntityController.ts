@@ -7,12 +7,12 @@ import {
   SortQuery,
   EntityBase,
 } from '@sheeted/core'
-import { Request } from 'express'
 import {
   SheetInfo,
   ListQuery,
   ListResult,
   Column,
+  ActionInfo,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
@@ -33,17 +33,11 @@ export class EntityController {
    * Factory method from request
    */
   static from(
-    req: Request<{
-      sheetName: string
-    }>,
+    sheetName: string,
+    ctx: Context<string>,
     sheets: Sheet[],
     repositories: Repositories,
   ) {
-    const ctx = req.context
-    if (!ctx) {
-      throw new HttpError('No context', HttpStatuses.BAD_REQUEST)
-    }
-    const { sheetName } = req.params
     const sheet = sheets.find((sheet) => sheet.name === sheetName)
     if (!sheet) {
       throw new HttpError(`Sheet "${name}" not found`, HttpStatuses.BAD_REQUEST)
@@ -87,7 +81,7 @@ export class EntityController {
   }
 
   async info(): Promise<SheetInfo> {
-    const { name: sheetName, View, Schema } = this.sheet
+    const { name: sheetName, View, Schema, Actions = [] } = this.sheet
     const { userAccessPolicy } = this
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -131,10 +125,16 @@ export class EntityController {
       updates: Boolean(userAccessPolicy.ofUpdate),
       deletes: Boolean(userAccessPolicy.ofDelete),
     }
+    const actions: ActionInfo[] = Actions.map(({ id, title, icon }) => ({
+      id,
+      title,
+      icon,
+    }))
     return {
       sheetName,
       columns,
       permissions,
+      actions,
     }
   }
 
@@ -257,5 +257,45 @@ export class EntityController {
         return this.hook.triggerDestroy(entity)
       }),
     )
+  }
+
+  async performAction(actionId: string, ids: string[]) {
+    const ctx = this.ctx as Context<any>
+    const action = (this.sheet.Actions || []).find(
+      (action) => action.id === actionId,
+    )
+    if (!action) {
+      throw new HttpError(
+        `Action "${actionId}" not found`,
+        HttpStatuses.BAD_REQUEST,
+      )
+    }
+    if (
+      !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
+    ) {
+      throw new HttpError('Invalid body', HttpStatuses.BAD_REQUEST)
+    }
+    const actionPolicy = (this.userAccessPolicy.ofActions || []).find(
+      (policy) => policy.customActionId === actionId,
+    )
+    if (!actionPolicy) {
+      throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
+    }
+    const entityMap = await this.repository.findByIds(ids)
+    const forbiddenIds = Object.values(entityMap)
+      .filter((entity): entity is EntityBase =>
+        Boolean(entity && actionPolicy.condition?.(entity, ctx) === false),
+      )
+      .map(({ id }) => id)
+    if (forbiddenIds.length > 0) {
+      throw new HttpError(
+        `Permission denied for entities: ${forbiddenIds.join(', ')}`,
+        HttpStatuses.FORBIDDEN,
+      )
+    }
+    const entities = Object.values(
+      entityMap,
+    ).filter((entity): entity is EntityBase => Boolean(entity))
+    await action.perform(entities, ctx)
   }
 }

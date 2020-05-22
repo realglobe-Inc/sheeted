@@ -11,6 +11,7 @@ import { RouterParams } from '../types/Router.type'
 const { version } = require('../../package.json') // import にすると build/ に package.json が含まれてしまう
 
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
+// TODO: 設定から読み込む
 const TITLE = 'Sheeted App'
 
 export const ContentRoute = (_params: RouterParams) => {

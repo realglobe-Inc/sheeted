@@ -76,6 +76,7 @@ it('should succeed to get IAMUser sheet info', async () => {
       },
     ],
     permissions: { creates: true, updates: true, deletes: true },
+    actions: [],
   }
   await request(app)
     .get(ApiPathBuilder().sheetOnePath({ sheetName: IAM_USER_SHEET }))

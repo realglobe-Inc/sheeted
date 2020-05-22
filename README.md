@@ -8,9 +8,12 @@ Sheeted aims to make it extremely easy to develop Sheet-based web applications f
 
 * REST API and UI is auto generated
 * Support SAML Authentication
+* Easy to deploy
 * and more
 
 ## Installation
+
+Install the core library (@sheeted/core), the server library (@sheeted/server), and the database driver library (@sheeted/mongoose).
 
 ```console
 $ npm add @sheeted/core @sheeted/server @sheeted/mongoose
@@ -18,21 +21,21 @@ $ npm add @sheeted/core @sheeted/server @sheeted/mongoose
 
 ## Usage
 
-Take a look at [examples](https://github.com/realglobe-Inc/sheeted/tree/master/examples).
-
 To create a sheet, define some type and objects as below.
 
-[EntityBase]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/EntityBase.type.ts
-[Schema]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Schema.type.ts
-[AccessPolicy]: https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/AccessPolicy.type.ts
-[Hook]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Hook.type.ts
-[Validator]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Validator.type.ts
-[View]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/View.type.ts
-[Sheet]:https://github.com/realglobe-Inc/sheeted/blob/master/packages/core/src/Sheet.type.ts
+[EntityBase]:https://realglobe-inc.github.io/sheeted/core/interfaces/_entitybase_type_.entitybase.html
+[Schema]:https://realglobe-inc.github.io/sheeted/core/modules/_schema_type_.html#schema
+[AccessPolicy]: https://realglobe-inc.github.io/sheeted/core/modules/_accesspolicy_type_.html#accesspolicy
+[Action]: https://realglobe-inc.github.io/sheeted/core/modules/_action_type_.html#action
+[Hook]:https://realglobe-inc.github.io/sheeted/core/modules/_hook_type_.html#hook
+[Validator]:https://realglobe-inc.github.io/sheeted/core/modules/_validator_type_.html#validator
+[View]:https://realglobe-inc.github.io/sheeted/core/modules/_view_type_.html#view
+[Sheet]:https://realglobe-inc.github.io/sheeted/core/modules/_sheet_type_.html#sheet
 
 * Entity: a raw data shape. Interface which extends [EntityBase][EntityBase].
 * [Schema][Schema]: defines properties of each field in Entity.
 * AccessPolicies: Access policies based on roles. Array of [AccessPolicy][AccessPolicy].
+* Actions: Custom operations to entities. Array of [Action][Action].
 * [Hook][Hook]: functions which will be executed after creating / updating / destroying entities.
 * [Validator][Validator]: defines validations on creating / updating entities.
 * [View][View]: about UI such as column titles.
@@ -62,18 +65,17 @@ const app = createApp(
 )
 ```
 
+For more information, please visit:
+
+* [examples/](./examples)
+* [API Documentation](https://realglobe-inc.github.io/sheeted/)
+
 ## Development
 
 Install. This project uses [yarn workspaces](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/).
 
 ```console
 $ yarn install
-```
-
-Run npm scripts to build packages and examples.
-
-```console
-$ yarn build
 ```
 
 Run docker containers.

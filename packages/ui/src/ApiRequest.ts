@@ -125,6 +125,24 @@ export class ApiRequest {
     }
   }
 
+  async performAction(
+    sheetName: string,
+    actionId: string,
+    entityIds: string[],
+  ) {
+    const resp = await this.fetch(
+      this.apiPaths.actionOnePath({ sheetName, actionId }),
+      {
+        method: 'POST',
+        body: JSON.stringify({ ids: entityIds }),
+      },
+    )
+    if (!resp.ok) {
+      const { error } = await resp.json()
+      throw new HttpError(error?.message || error, resp.status)
+    }
+  }
+
   getSignInUrl() {
     return new URL(this.apiPaths.signInPath(), this.apiUrl).toString()
   }

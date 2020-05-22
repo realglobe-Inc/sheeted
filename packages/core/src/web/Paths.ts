@@ -7,10 +7,16 @@ export type EntityPathParams = {
   entityId: string
 }
 
+export type ActionPathParams = {
+  sheetName: string
+  actionId: string
+}
+
 export const ApiPaths = {
   CURRENT_USER: '/api/currentUser',
   SHEETS: '/api/sheets',
   SHEET_ONE: '/api/sheets/:sheetName',
+  ACTION_ONE: '/api/sheets/:sheetName/actions/:actionId',
   ENTITIES: '/api/sheets/:sheetName/entities',
   ENTITIES_DELETE: '/api/sheets/:sheetName/entities/delete',
   ENTITY_ONE: '/api/sheets/:sheetName/entities/:entityId',
@@ -32,6 +38,13 @@ export const ApiPathBuilder = (base?: string) => {
     sheetsPath: () => based(ApiPaths.SHEETS),
     sheetOnePath: ({ sheetName }: SheetPathParams) =>
       based(ApiPaths.SHEET_ONE.replace(':sheetName', sheetName)),
+    actionOnePath: ({ sheetName, actionId }: ActionPathParams) =>
+      based(
+        ApiPaths.ACTION_ONE.replace(':sheetName', sheetName).replace(
+          ':actionId',
+          actionId,
+        ),
+      ),
     entitiesPath: ({ sheetName }: SheetPathParams) =>
       based(ApiPaths.ENTITIES.replace(':sheetName', sheetName)),
     entitiesDeletePath: ({ sheetName }: SheetPathParams) =>

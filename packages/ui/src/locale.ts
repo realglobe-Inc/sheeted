@@ -34,6 +34,8 @@ export const locale = {
     emptyList: 'データがありません',
   },
   snackbars: {
+    actionComplete: '操作が完了しました',
+    actionFailed: '操作が失敗しました',
     createComplete: '作成しました',
     createFailed: '作成できませんでした',
     deleteComplete: '削除しました',

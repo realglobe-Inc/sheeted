@@ -19,4 +19,9 @@ export const Sheet1AccessPolicies: AccessPolicy<Sheet1Entity, Role>[] = [
     role: Roles.EDITOR_ROLE,
     uneditableColumns: ['plan'],
   },
+  {
+    action: 'custom',
+    role: Roles.DEFAULT_ROLE,
+    customActionId: 'increment',
+  },
 ]

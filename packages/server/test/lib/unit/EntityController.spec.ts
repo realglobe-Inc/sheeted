@@ -86,6 +86,7 @@ test('EntityController with IAMUser with admin', async () => {
       },
     ],
     permissions: { creates: true, updates: true, deletes: true },
+    actions: [],
   }
   expect(await controller.info()).toEqual(expected)
 
@@ -186,4 +187,28 @@ test('EntityController with a sheet', async () => {
   await expect(controller.update(entity.id, { n: 20 })).resolves.toMatchObject({
     n: 20,
   })
+})
+
+test('EntityController.performAction()', async () => {
+  const controller = new EntityController(
+    App1Sheet,
+    {
+      user: defaultUser,
+    },
+    {},
+    app1Repository,
+  )
+  const entity = await app1Model.create({
+    id: 'entity',
+    n: 10,
+  })
+  // n が10以下なら100にするアクション
+  await controller.performAction('set100', [entity.id])
+  expect(await app1Model.findOne({ id: entity.id })).toMatchObject({
+    n: 100,
+  })
+  // n がすでに100なら失敗する
+  await expect(() =>
+    controller.performAction('set100', [entity.id]),
+  ).rejects.toBeTruthy()
 })

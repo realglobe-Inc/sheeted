@@ -26,8 +26,16 @@ export type DeleteAccessPolicy<Entity = any, Role extends string = string> = {
   condition?: (entity: Entity, context?: Context<Role>) => boolean
 }
 
+export type ActionAccessPolicy<Entity = any, Role extends string = string> = {
+  action: 'custom'
+  customActionId: string
+  role: Role
+  condition?: (entity: Entity, context?: Context<Role>) => boolean
+}
+
 export type AccessPolicy<Entity = any, Role extends string = string> =
   | ReadAccessPolicy<Entity, Role>
   | CreateAccessPolicy<Entity, Role>
   | UpdateAccessPolicy<Entity, Role>
   | DeleteAccessPolicy<Entity, Role>
+  | ActionAccessPolicy<Entity, Role>

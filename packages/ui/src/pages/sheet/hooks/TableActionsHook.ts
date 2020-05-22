@@ -52,9 +52,66 @@ export const useTableActions = (
         })
       },
     }
-  }, [l, api, sheet, entities, enqueueSnackbar, startAction, refreshTable])
+  }, [
+    l,
+    api,
+    sheet?.sheetName,
+    sheet?.permissions.deletes,
+    entities,
+    enqueueSnackbar,
+    startAction,
+    refreshTable,
+  ])
+  const customActions: TableAction<Entity>[] = useMemo(() => {
+    return (sheet?.actions || []).map((action) => {
+      const { title } = action
+      const disabled = !entities.every(
+        (entity) => entity.$meta.permissions.customActions[action.id],
+      )
+      const entityIds = entities.map(({ id }) => id)
+      const onClick = () => {
+        startAction({
+          title,
+          entities,
+          doAction: async () => {
+            try {
+              await api.performAction(
+                sheet?.sheetName || '',
+                action.id,
+                entityIds,
+              )
+              enqueueSnackbar(l.snackbars.actionComplete, {
+                variant: 'success',
+              })
+              refreshTable()
+            } catch (e) {
+              console.error(e)
+              enqueueSnackbar(l.snackbars.actionFailed, {
+                variant: 'error',
+              })
+            }
+          },
+        })
+      }
+      return {
+        tooltip: title,
+        icon: action.icon || 'list-alt',
+        disabled,
+        onClick,
+      }
+    })
+  }, [
+    sheet?.actions,
+    sheet?.sheetName,
+    entities,
+    startAction,
+    api,
+    enqueueSnackbar,
+    l,
+    refreshTable,
+  ])
   return {
-    actions: [deletionAction],
+    actions: [...customActions, deletionAction],
     onSelectionChange: setEntities,
   }
 }

@@ -41,6 +41,9 @@ export type WithEntityMetaField = {
     permissions: {
       updates: boolean
       deletes: boolean
+      customActions: {
+        [actionId: string]: boolean
+      }
     }
   }
 }
@@ -49,6 +52,7 @@ export type SheetInfo = {
   sheetName: string
   columns: Column[]
   permissions: Permissions
+  actions: ActionInfo[]
 }
 
 export type ListQuery = {
@@ -79,4 +83,10 @@ export type SheetOverview = {
 
 export type InputValidationErrors = {
   errors: { message: string; field: string }[]
+}
+
+export type ActionInfo = {
+  id: string
+  title: string
+  icon?: string
 }
