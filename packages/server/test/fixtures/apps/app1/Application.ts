@@ -37,7 +37,25 @@ export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
     display: () => '',
     columns: {},
   },
-  AccessPolicies: [],
+  AccessPolicies: [
+    {
+      role: 'default',
+      action: 'custom',
+      customActionId: 'set100',
+      condition: (entity) => entity.n < 100,
+    },
+  ],
+  Actions: [
+    {
+      id: 'set100',
+      title: 'SET 100',
+      perform: async (entities: App1Entity[]) => {
+        for (const entity of entities) {
+          await app1Model.updateOne({ id: entity.id }, { n: 100 })
+        }
+      },
+    },
+  ],
 }
 
 const config: ApplicationConfig = {
