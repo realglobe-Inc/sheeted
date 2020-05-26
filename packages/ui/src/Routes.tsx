@@ -19,6 +19,7 @@ import { SignInPage } from './pages/sign-in/SignInPage'
 import { SignInCallbackPage } from './pages/sign-in-callback/SignInCallbackPage'
 import { SignOutPage } from './pages/sign-out/SignOutPage'
 import { useUserContext } from './hooks/UserContextHook'
+import { EntityDetailPage } from './pages/entity/EntityDetailPage'
 
 const PrivateRoute: FC<RouteProps> = ({ children, ...rest }) => {
   const { ready, user } = useUserContext()
@@ -53,6 +54,9 @@ export const Routes: FC<{ base: string }> = ({ base }) => (
       </PrivateRoute>
       <PrivateRoute path={UIPaths.SHEET} exact>
         <SheetPage />
+      </PrivateRoute>
+      <PrivateRoute path={UIPaths.ENTITY_DETAIL} exact>
+        <EntityDetailPage />
       </PrivateRoute>
     </Switch>
     <PrivateRoute path={UIPaths.SHEET_HOME}>
