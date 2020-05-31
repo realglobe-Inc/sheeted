@@ -14,8 +14,8 @@ export const parseListQuery = async (
   const { query } = req
   const page = Number(query.page ?? 1)
   const limit = Number(query.limit ?? 20)
-  const search = query.search ?? ''
-  const sort = query.sort ?? []
+  const search = (query.search || '') as string
+  const sort = query.sort || []
 
   const errors: string[] = []
   if (!Number.isInteger(page)) {
