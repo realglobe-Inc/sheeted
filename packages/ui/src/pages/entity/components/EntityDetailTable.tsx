@@ -26,26 +26,20 @@ export const EntityDetailTable: FC<{
   if (!entity) {
     return null
   }
-  const rows = Object.entries(entity)
-    .filter(
-      ([field]) =>
-        !field.startsWith('_') && !field.startsWith('$') && field !== 'id',
-    )
-    .map(([field, value]) => ({
-      name: field,
-      value,
-      column: columns.find((c) => c.field === field),
-    }))
+  const publicColumns = columns.filter(
+    ({ field }) =>
+      !field.startsWith('_') && !field.startsWith('$') && field !== 'id',
+  )
   return (
     <Table className={classes.table}>
       <TableBody>
-        {rows.map((row) => {
-          const Value = row.column
-            ? EntityFieldValueHoc(row.column)
-            : () => null
+        {publicColumns.map((column) => {
+          const Value = EntityFieldValueHoc(column)
           return (
-            <TableRow key={row.name}>
-              <TableCell className={classes.fieldName}>{row.name}</TableCell>
+            <TableRow key={column.field}>
+              <TableCell className={classes.fieldName}>
+                {column.title}
+              </TableCell>
               <TableCell align="right">
                 <Value entity={entity} />
               </TableCell>
