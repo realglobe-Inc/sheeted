@@ -5,6 +5,7 @@ import { Sheet1Entity } from './sheet1.entity'
 export const Sheet1View: View<Sheet1Entity> = {
   title: 'シート1',
   display: (entity) => entity.name,
+  enableDetail: true,
   columns: {
     name: {
       title: 'NAME',

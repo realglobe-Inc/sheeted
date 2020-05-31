@@ -82,7 +82,13 @@ export const UIPathBuilder = (base?: string) => {
     sheetPath: ({ sheetName }: SheetPathParams) =>
       based(UIPaths.SHEET.replace(':sheetName', sheetName)),
     sheetHomePath: () => based(UIPaths.SHEET_HOME),
-    entityDetailPath: () => based(UIPaths.ENTITY_DETAIL),
+    entityDetailPath: ({ sheetName, entityId }: EntityPathParams) =>
+      based(
+        UIPaths.ENTITY_DETAIL.replace(':sheetName', sheetName).replace(
+          ':entityId',
+          entityId,
+        ),
+      ),
   }
 }
 

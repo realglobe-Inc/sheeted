@@ -121,6 +121,7 @@ export class EntityController {
     })
 
     const title = View.title
+    const enableDetail = Boolean(View.enableDetail)
     const permissions: SheetInfo['permissions'] = {
       creates: Boolean(userAccessPolicy.ofCreate),
       updates: Boolean(userAccessPolicy.ofUpdate),
@@ -134,6 +135,7 @@ export class EntityController {
     return {
       sheetName,
       title,
+      enableDetail,
       columns,
       permissions,
       actions,

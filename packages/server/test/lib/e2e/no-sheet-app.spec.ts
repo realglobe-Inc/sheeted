@@ -49,6 +49,7 @@ it('should succeed to get IAMUser sheet info', async () => {
   const expected: SheetInfo = {
     sheetName: IAM_USER_SHEET,
     title: 'IAM User',
+    enableDetail: false,
     columns: [
       {
         field: 'name',

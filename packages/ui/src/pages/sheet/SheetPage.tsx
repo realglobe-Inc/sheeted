@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useCallback } from 'react'
 import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
+import { useHistory } from 'react-router-dom'
 
 import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
@@ -11,6 +12,7 @@ import {
   useSheetInfoContext,
   SheetInfoContextProvider,
 } from '../../hooks/SheetInfoContextHook'
+import { useUIPaths } from '../../hooks/UIPathHook'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
@@ -71,12 +73,23 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
     info,
     tableRef.current?.onQueryChange!,
   )
+  const uiPaths = useUIPaths()
   useEffect(() => {
     trigger(sheet.sheetName)
   }, [sheet.sheetName, trigger])
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
   const localization = useTableLocalization({ forbidden })
+  const history = useHistory()
+  const onRowClick = info?.enableDetail
+    ? (event: any, entity: any) => {
+        const path = uiPaths.entityDetailPath({
+          sheetName: sheet.sheetName,
+          entityId: entity.id,
+        })
+        history.push(path)
+      }
+    : undefined
   return (
     <MaterialTable
       title={sheet.title}
@@ -89,6 +102,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         onRowUpdate,
       }}
       actions={actions}
+      onRowClick={onRowClick}
       onSelectionChange={onSelectionChange}
       localization={localization}
       components={{
