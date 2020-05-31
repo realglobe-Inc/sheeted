@@ -33,6 +33,9 @@ export const locale = {
     permissionDenied: 'アクセス権限がありません',
     emptyList: 'データがありません',
   },
+  titles: {
+    error: 'エラー',
+  },
   snackbars: {
     actionComplete: '操作が完了しました',
     actionFailed: '操作が失敗しました',

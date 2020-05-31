@@ -11,11 +11,14 @@ import { EntityFieldValueHoc } from '../../../hoc/EntityFieldValueHoc'
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    maxWidth: 650,
+  },
+  fieldName: {
+    color: '#666',
   },
 })
 
-export const EntityDetailBody: FC<{
+export const EntityDetailTable: FC<{
   entity: Entity | null
   columns: Column[]
 }> = ({ entity, columns }) => {
@@ -42,7 +45,7 @@ export const EntityDetailBody: FC<{
             : () => null
           return (
             <TableRow key={row.name}>
-              <TableCell>{row.name}</TableCell>
+              <TableCell className={classes.fieldName}>{row.name}</TableCell>
               <TableCell align="right">
                 <Value entity={entity} />
               </TableCell>
