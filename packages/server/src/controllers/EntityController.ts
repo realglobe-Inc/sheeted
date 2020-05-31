@@ -40,7 +40,10 @@ export class EntityController {
   ) {
     const sheet = sheets.find((sheet) => sheet.name === sheetName)
     if (!sheet) {
-      throw new HttpError(`Sheet "${name}" not found`, HttpStatuses.BAD_REQUEST)
+      throw new HttpError(
+        `Sheet "${sheetName}" not found`,
+        HttpStatuses.BAD_REQUEST,
+      )
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
     const repository = repositories.get<any>(sheetName)

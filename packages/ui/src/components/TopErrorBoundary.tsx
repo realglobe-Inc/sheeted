@@ -4,10 +4,10 @@ import Dialog from '@material-ui/core/Dialog'
 import { ErrorAlert } from './ErrorAlert'
 
 export class TopErrorBoundary extends React.Component<
-  {},
+  any,
   { error: Error | null }
 > {
-  constructor(props: {}) {
+  constructor(props: any) {
     super(props)
     this.state = { error: null }
   }

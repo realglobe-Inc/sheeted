@@ -10,8 +10,8 @@ import { Sheet1Entity } from './sheets/sheet1/sheet1.entity'
 
 const users = Array.from({ length: 60 }).map((_, i) => ({
   _id: Types.ObjectId.createFromTime(100 + i),
-  id: 'user' + i,
-  name: 'guest' + i,
+  id: 'user' + String(i),
+  name: 'guest' + String(i),
   email: `guest${i}@example.com`,
   roles: [Roles.DEFAULT_ROLE],
 }))

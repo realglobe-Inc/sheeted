@@ -34,9 +34,10 @@ export const handleError = (
     }
     res.status(err.status).json(error)
   } else {
+    const message: string = err.message || ''
     res.status(HttpStatuses.INTERNAL_SERVER_ERROR).json({
       error: {
-        message: `Internal Server Error: ${err.message}`,
+        message: `Internal Server Error: ${message}`,
       },
     })
   }

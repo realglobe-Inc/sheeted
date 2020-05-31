@@ -8,7 +8,7 @@ import template from 'lodash.template'
 import { RouterParams } from '../types/Router.type'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require('../../package.json') // import にすると build/ に package.json が含まれてしまう
+const { version } = require('../../package.json') as { version: string } // import にすると build/ に package.json が含まれてしまう
 
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
 // TODO: 設定から読み込む
@@ -23,6 +23,9 @@ export const ContentRoute = (_params: RouterParams) => {
   return Router().get('*', async (req: Request, res: Response) => {
     const { protocol } = req
     const host = req.get('host')
+    if (!host) {
+      throw new Error(`Empty host`)
+    }
     const apiUrl = `${protocol}://${host}`
     const html = compiled({ title: TITLE, apiUrl, jsUrl })
     res.send(html)
