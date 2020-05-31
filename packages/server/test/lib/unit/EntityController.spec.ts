@@ -53,6 +53,7 @@ test('EntityController with IAMUser with admin', async () => {
 
   const expected: SheetInfo = {
     sheetName: IAM_USER_SHEET,
+    title: sheet.View.title,
     columns: [
       {
         field: 'name',

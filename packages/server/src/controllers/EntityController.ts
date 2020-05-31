@@ -120,6 +120,7 @@ export class EntityController {
       return column
     })
 
+    const title = View.title
     const permissions: SheetInfo['permissions'] = {
       creates: Boolean(userAccessPolicy.ofCreate),
       updates: Boolean(userAccessPolicy.ofUpdate),
@@ -132,6 +133,7 @@ export class EntityController {
     }))
     return {
       sheetName,
+      title,
       columns,
       permissions,
       actions,
