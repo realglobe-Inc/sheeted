@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Loader: FC<{ loading: boolean }> = ({ loading }) => {
   const classes = useStyles()
-  if (loading) {
+  if (!loading) {
     return null
   }
   return (
