@@ -1,6 +1,11 @@
 import '../../tools/typings'
 import mongoose from 'mongoose'
-import { DefaultIAMRoles, IAM_USER_SHEET, IAMUserEntity } from '@sheeted/core'
+import {
+  DefaultIAMRoles,
+  IAM_USER_SHEET,
+  IAMUserEntity,
+  EntityBase,
+} from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
@@ -179,7 +184,7 @@ test('EntityController with a sheet', async () => {
     app1Repository,
   )
 
-  const entity = await controller.create({
+  const entity: EntityBase = await controller.create({
     n: 10,
   })
   expect(entity).toMatchObject({
@@ -200,7 +205,7 @@ test('EntityController.performAction()', async () => {
     {},
     app1Repository,
   )
-  const entity = await app1Model.create({
+  const entity: EntityBase = await app1Model.create({
     id: 'entity',
     n: 10,
   })

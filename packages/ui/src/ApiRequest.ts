@@ -12,6 +12,17 @@ import { HttpError } from '@sheeted/core/build/web/Errors'
 import { Entity } from './types/Entity.type'
 import { bind } from './utils/ObjectUtil'
 
+// TODO: server 側と共通化
+type ErrorResponse = {
+  error: {
+    message: string
+  }
+  errors?: {
+    message: string
+    field: string
+  }[]
+}
+
 export class ApiRequest {
   token = ''
   apiPaths: ApiPathFuncs
@@ -30,8 +41,8 @@ export class ApiRequest {
   async fetchSheets(): Promise<Sheets> {
     const resp = await this.fetch(this.apiPaths.sheetsPath())
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
     const sheets: Sheets = await resp.json()
     return sheets
@@ -40,8 +51,8 @@ export class ApiRequest {
   async fetchSheetInfo(sheetName: string): Promise<SheetInfo> {
     const resp = await this.fetch(this.apiPaths.sheetOnePath({ sheetName }))
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
     const info: SheetInfo = await resp.json()
     return info
@@ -55,8 +66,8 @@ export class ApiRequest {
       this.apiPaths.entitiesPath({ sheetName }) + '?' + qs.stringify(query),
     )
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
     const result: ListResult = await resp.json()
     return result
@@ -67,8 +78,8 @@ export class ApiRequest {
       this.apiPaths.entityOnePath({ sheetName, entityId }),
     )
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
     const entity: Entity = await resp.json()
     return entity
@@ -80,17 +91,14 @@ export class ApiRequest {
       body: JSON.stringify(entity),
     })
     if (!resp.ok) {
-      const { error, errors } = await resp.json()
+      const { error, errors }: ErrorResponse = await resp.json()
       if (errors) {
         // validation errors
-        const err: any = new Error()
-        err.errors = errors
+        const err = new Error()
+        Object.assign(err, { errors })
         throw err
       } else {
-        throw new HttpError(
-          error?.message || error || 'Unexpected error',
-          resp.status,
-        )
+        throw new HttpError(error.message, resp.status)
       }
     }
     const result: Entity = await resp.json()
@@ -110,17 +118,14 @@ export class ApiRequest {
       },
     )
     if (!resp.ok) {
-      const { error, errors } = await resp.json()
+      const { error, errors }: ErrorResponse = await resp.json()
       if (errors) {
         // validation errors
-        const err: any = new Error()
-        err.errors = errors
+        const err = new Error()
+        Object.assign(err, { errors })
         throw err
       } else {
-        throw new HttpError(
-          error?.message || error || 'Unexpected error',
-          resp.status,
-        )
+        throw new HttpError(error.message, resp.status)
       }
     }
     const result: Entity = await resp.json()
@@ -136,8 +141,8 @@ export class ApiRequest {
       },
     )
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error?.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
   }
 
@@ -154,8 +159,8 @@ export class ApiRequest {
       },
     )
     if (!resp.ok) {
-      const { error } = await resp.json()
-      throw new HttpError(error?.message || error, resp.status)
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
     }
   }
 

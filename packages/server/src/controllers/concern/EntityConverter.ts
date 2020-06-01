@@ -5,7 +5,7 @@ import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { DisplayFunctions } from './DisplayFunctions'
 import { UserAccessPolicy } from './UserAccessPolicy'
 
-const displayDefault = (entity: any) => String(entity.id)
+const displayDefault = (entity: { id: string }) => String(entity.id)
 
 export class EntityConverter {
   constructor(
@@ -16,14 +16,14 @@ export class EntityConverter {
     private ctx: Context<any>,
   ) {}
 
-  beforeSave(changes: unknown): any {
+  beforeSave(changes: Record<string, any>): any {
     return [changes]
       .map((changes) => this.parseFieldsByInterceptors(changes))
       .map((changes) => this.dropMetaFields(changes))
       .pop()
   }
 
-  beforeSend(entity: unknown): any {
+  beforeSend(entity: Record<string, any>): any {
     return [entity]
       .map((entity) => this.withEntityMetaField(entity))
       .map((entity) => this.dropPrivateFields(entity))
@@ -32,7 +32,7 @@ export class EntityConverter {
       .pop()
   }
 
-  private parseFieldsByInterceptors(entity: any) {
+  private parseFieldsByInterceptors(entity: Record<string, any>) {
     const copy = { ...entity }
     const { schema } = this
     // partial entity なので entity の filed を見る
@@ -45,7 +45,7 @@ export class EntityConverter {
     return copy
   }
 
-  private stringifyFieldsByInterceptors(entity: any) {
+  private stringifyFieldsByInterceptors(entity: Record<string, any>) {
     const copy = { ...entity }
     const { schema } = this
     for (const field of Object.keys(schema)) {
@@ -60,7 +60,7 @@ export class EntityConverter {
     return copy
   }
 
-  private withEntityMetaField(entity: any) {
+  private withEntityMetaField(entity: Record<string, any>) {
     const { sheetName, schema, displays } = this
     const copy = { ...entity }
     // Set meta field in sub entities
@@ -95,7 +95,7 @@ export class EntityConverter {
     return copy
   }
 
-  private dropMetaFields(entity: any) {
+  private dropMetaFields(entity: Record<string, any>) {
     const copy = { ...entity }
     for (const field of Object.keys(copy)) {
       if (field === ENTITY_META_FIELD) {
@@ -105,7 +105,7 @@ export class EntityConverter {
     return copy
   }
 
-  private dropPrivateFields(entity: any) {
+  private dropPrivateFields(entity: Record<string, any>) {
     const copy = { ...entity }
     for (const field of Object.keys(copy)) {
       // __v などを消す。_id は ref のために残す
@@ -116,7 +116,7 @@ export class EntityConverter {
     return copy
   }
 
-  private dropExcludedColumns(entity: any) {
+  private dropExcludedColumns(entity: Record<string, any>) {
     const { accessPolicy } = this
     const readPolicy = accessPolicy.ofRead
     if (!readPolicy) {
@@ -133,7 +133,7 @@ export class EntityConverter {
     return copy
   }
 
-  private getPermissions(entity: any) {
+  private getPermissions(entity: Record<string, any>) {
     const { accessPolicy, ctx } = this
     const updatePolicy = accessPolicy.ofUpdate
     const updates = updatePolicy

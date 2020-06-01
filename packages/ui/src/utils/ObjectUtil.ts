@@ -19,8 +19,12 @@ export const bind = (self: unknown): void => {
       self.constructor.prototype,
       key,
     )
-    if (descriptor && typeof descriptor.value === 'function') {
-      Reflect.set(self, key, descriptor.value.bind(self))
+    if (!descriptor) {
+      continue
+    }
+    const value = descriptor.value as unknown
+    if (typeof value === 'function') {
+      Reflect.set(self, key, value.bind(self))
     }
   }
 }

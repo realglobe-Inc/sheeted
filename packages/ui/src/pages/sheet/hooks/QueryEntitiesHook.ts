@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { Query as MQuery, QueryResult } from 'material-table'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
+import { HttpError } from '@sheeted/core/build/web/Errors'
 
 import { convertQuery } from '../converters/QueryConverter'
 import { useApi } from '../../../hooks/ApiHook'
@@ -20,7 +21,10 @@ export const useQueryEntities = (
           totalCount: list.total,
         }
       } catch (error) {
-        if (error.status === HttpStatuses.FORBIDDEN) {
+        if (
+          error instanceof HttpError &&
+          error.status === HttpStatuses.FORBIDDEN
+        ) {
           // info でエラーハンドルするのでこっちでは無視
           console.log(error)
           return {

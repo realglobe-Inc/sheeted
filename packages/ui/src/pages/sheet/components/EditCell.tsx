@@ -174,9 +174,10 @@ const TimePickerCell = (
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
   let value: dayjs.Dayjs | null = null
-  if (props.value) {
+  const rawValue = props.value
+  if (typeof rawValue === 'string') {
     const now = dayjs()
-    const [hours, minutes] = props.value.split(':').map(Number)
+    const [hours, minutes] = (props.value as string).split(':').map(Number)
     value = now.hour(hours).minute(minutes)
   }
   return (
@@ -213,7 +214,7 @@ const EntitySelectCell = (
   const { sheetName, columnDef, onChange } = props
   const { field } = columnDef
   const error = useInputErrorFromContext(field)
-  const entity = props.value
+  const entity: Partial<Entity> = props.value
   const { openDialog } = useEntityDialogContext()
   return (
     <TextField

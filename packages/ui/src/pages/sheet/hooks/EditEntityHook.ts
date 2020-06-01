@@ -52,7 +52,7 @@ export const useEditEntity = (
         enqueueSnackbar(l.snackbars.editFaield, {
           variant: 'warning',
         })
-        if (e.errors) {
+        if (Object.getOwnPropertyDescriptor(e, 'errors')) {
           setErrors(e as InputValidationErrors)
         }
         throw e
@@ -79,7 +79,7 @@ export const useEditEntity = (
           variant: 'error',
         })
         console.log(e)
-        if (e.errors) {
+        if (Object.getOwnPropertyDescriptor(e, 'errors')) {
           setErrors(e as InputValidationErrors)
         }
         throw e

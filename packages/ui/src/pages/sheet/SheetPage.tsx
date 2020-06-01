@@ -13,6 +13,7 @@ import {
   SheetInfoContextProvider,
 } from '../../hooks/SheetInfoContextHook'
 import { useUIPaths } from '../../hooks/UIPathHook'
+import { Entity } from '../../types/Entity.type'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
@@ -83,11 +84,13 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   const history = useHistory()
   const onRowClick = info?.enableDetail
     ? (event: any, entity: any) => {
-        const path = uiPaths.entityDetailPath({
-          sheetName: sheet.sheetName,
-          entityId: entity.id,
-        })
-        history.push(path)
+        if (Object.getOwnPropertyDescriptor(entity, 'id')) {
+          const path = uiPaths.entityDetailPath({
+            sheetName: sheet.sheetName,
+            entityId: (entity as Entity).id,
+          })
+          history.push(path)
+        }
       }
     : undefined
   return (

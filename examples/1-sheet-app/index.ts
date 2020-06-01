@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-require('dotenv').config()
+;(require('dotenv') as { config: () => void }).config()
 
 import { createApp } from '@sheeted/server'
 import { MongoDriver } from '@sheeted/mongoose'

@@ -61,7 +61,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
 
   async findById(id: EntityId): Promise<Entity | null> {
     const doc = await this.model.findOne({ id })
-    return doc?.toJSON() || null
+    return (doc?.toJSON() as Entity) || null
   }
 
   async findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }> {
@@ -79,17 +79,17 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
 
   async findOne(filter: Partial<Entity>): Promise<Entity | null> {
     const doc = await this.model.findOne(filter)
-    return doc?.toJSON() || null
+    return (doc?.toJSON() as Entity) || null
   }
 
   async create(input: Partial<Entity>): Promise<Entity> {
     const doc = await this.model.create(input)
-    return doc.toJSON()
+    return doc.toJSON() as Entity
   }
 
   async createBulk(inputs: Partial<Entity>[]): Promise<Entity[]> {
     const docs = await this.model.create(inputs)
-    return docs.map((doc) => doc.toJSON())
+    return docs.map((doc) => doc.toJSON() as Entity)
   }
 
   async update(id: EntityId, input: Partial<Entity>): Promise<Entity> {
@@ -111,7 +111,11 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const docs = await this.model.find({ id: { $in: ids } })
     const entities = docs.map((doc) => doc.toJSON() as Entity)
     return ids.map(
-      (id) => entities.find((entity) => (entity as any).id === id) || null,
+      (id) =>
+        entities.find(
+          (entity) =>
+            Object.getOwnPropertyDescriptor(entity, 'id')?.value === id,
+        ) || null,
     )
   }
 
