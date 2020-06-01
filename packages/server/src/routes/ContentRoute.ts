@@ -20,7 +20,7 @@ export const ContentRoute = (_params: RouterParams): IRouter => {
   const htmlPath = join(__dirname, '../../assets/index.html.template')
   const htmlTemplate = fs.readFileSync(htmlPath, 'utf-8')
   const compiled = template(htmlTemplate)
-  return Router().get('*', async (req: Request, res: Response) => {
+  return Router().get('*', (req: Request, res: Response) => {
     const { protocol } = req
     const host = req.get('host')
     if (!host) {

@@ -95,7 +95,7 @@ test('EntityController with IAMUser with admin', async () => {
     permissions: { creates: true, updates: true, deletes: true },
     actions: [],
   }
-  expect(await controller.info()).toEqual(expected)
+  expect(controller.info()).toEqual(expected)
 
   // FIXME: 本当は IAMUserEntity の拡張型
   const user: IAMUserEntity = await controller.create({
