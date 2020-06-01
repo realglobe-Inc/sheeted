@@ -1,5 +1,5 @@
 import Router from 'express-promise-router'
-import { Request, Response } from 'express'
+import { Request, Response, Router as IRouter } from 'express'
 import {
   ApiPaths,
   SheetPathParams,
@@ -13,7 +13,11 @@ import { parseListQuery } from '../middlewares/QueryMiddleware'
 import { RouterParams } from '../types/Router.type'
 import { assertContext } from '../utils/assertionUtil'
 
-export const EntityRoute = ({ sheets, jwt, repositories }: RouterParams) => {
+export const EntityRoute = ({
+  sheets,
+  jwt,
+  repositories,
+}: RouterParams): IRouter => {
   return (
     Router()
       // list

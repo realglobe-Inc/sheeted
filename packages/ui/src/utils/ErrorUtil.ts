@@ -1,4 +1,6 @@
-export function handleGlobalError(handler: (err: string | Event) => void) {
+export function handleGlobalError(
+  handler: (err: string | Event) => void,
+): void {
   window.addEventListener('unhandledrejection', handler)
   const { onerror } = window
   window.onerror = (e) => {

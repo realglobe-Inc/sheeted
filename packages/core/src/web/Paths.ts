@@ -31,34 +31,35 @@ const Based = (base?: string) => {
   return (path: string) => basePath + path
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const ApiPathBuilder = (base?: string) => {
   const based = Based(base)
   return {
-    currentUserPath: () => based(ApiPaths.CURRENT_USER),
-    sheetsPath: () => based(ApiPaths.SHEETS),
-    sheetOnePath: ({ sheetName }: SheetPathParams) =>
+    currentUserPath: (): string => based(ApiPaths.CURRENT_USER),
+    sheetsPath: (): string => based(ApiPaths.SHEETS),
+    sheetOnePath: ({ sheetName }: SheetPathParams): string =>
       based(ApiPaths.SHEET_ONE.replace(':sheetName', sheetName)),
-    actionOnePath: ({ sheetName, actionId }: ActionPathParams) =>
+    actionOnePath: ({ sheetName, actionId }: ActionPathParams): string =>
       based(
         ApiPaths.ACTION_ONE.replace(':sheetName', sheetName).replace(
           ':actionId',
           actionId,
         ),
       ),
-    entitiesPath: ({ sheetName }: SheetPathParams) =>
+    entitiesPath: ({ sheetName }: SheetPathParams): string =>
       based(ApiPaths.ENTITIES.replace(':sheetName', sheetName)),
-    entitiesDeletePath: ({ sheetName }: SheetPathParams) =>
+    entitiesDeletePath: ({ sheetName }: SheetPathParams): string =>
       based(ApiPaths.ENTITIES_DELETE.replace(':sheetName', sheetName)),
-    entityOnePath: ({ sheetName, entityId }: EntityPathParams) =>
+    entityOnePath: ({ sheetName, entityId }: EntityPathParams): string =>
       based(
         ApiPaths.ENTITY_ONE.replace(':sheetName', sheetName).replace(
           ':entityId',
           entityId,
         ),
       ),
-    signInPath: () => based(ApiPaths.SIGN_IN),
-    signInCallbackPath: () => based(ApiPaths.SIGN_IN_CALLBACK),
-    signOutPath: () => based(ApiPaths.SIGN_OUT),
+    signInPath: (): string => based(ApiPaths.SIGN_IN),
+    signInCallbackPath: (): string => based(ApiPaths.SIGN_IN_CALLBACK),
+    signOutPath: (): string => based(ApiPaths.SIGN_OUT),
   }
 }
 
@@ -72,17 +73,18 @@ export const UIPaths = {
   ENTITY_DETAIL: '/sheets/:sheetName/entities/:entityId',
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const UIPathBuilder = (base?: string) => {
   const based = Based(base)
   return {
-    homePath: () => based(UIPaths.HOME),
-    signInPath: () => based(UIPaths.SIGN_IN),
-    signInCallbackPath: () => based(UIPaths.SIGN_IN_CALLBACK),
-    signOutPath: () => based(UIPaths.SIGN_OUT),
-    sheetPath: ({ sheetName }: SheetPathParams) =>
+    homePath: (): string => based(UIPaths.HOME),
+    signInPath: (): string => based(UIPaths.SIGN_IN),
+    signInCallbackPath: (): string => based(UIPaths.SIGN_IN_CALLBACK),
+    signOutPath: (): string => based(UIPaths.SIGN_OUT),
+    sheetPath: ({ sheetName }: SheetPathParams): string =>
       based(UIPaths.SHEET.replace(':sheetName', sheetName)),
-    sheetHomePath: () => based(UIPaths.SHEET_HOME),
-    entityDetailPath: ({ sheetName, entityId }: EntityPathParams) =>
+    sheetHomePath: (): string => based(UIPaths.SHEET_HOME),
+    entityDetailPath: ({ sheetName, entityId }: EntityPathParams): string =>
       based(
         UIPaths.ENTITY_DETAIL.replace(':sheetName', sheetName).replace(
           ':entityId',

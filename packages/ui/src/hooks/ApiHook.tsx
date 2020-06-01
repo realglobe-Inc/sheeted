@@ -17,6 +17,6 @@ class ApiContainer {
 
 const container = new ApiContainer()
 
-export const useApi = () => {
+export const useApi = (): ApiRequest => {
   return container.getInstance()
 }

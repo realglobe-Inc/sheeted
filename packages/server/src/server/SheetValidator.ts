@@ -56,7 +56,7 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
   return details
 }
 
-export const validateSheets = (sheets: readonly Sheet[]) => {
+export const validateSheets = (sheets: readonly Sheet[]): void => {
   const sheetNames = sheets.map((sheet) => sheet.name)
   const duplicateNames = sheetNames.filter(
     (name, i) => sheetNames.indexOf(name) !== i,

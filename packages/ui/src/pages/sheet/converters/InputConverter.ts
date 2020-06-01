@@ -2,7 +2,7 @@ import { Column } from '@sheeted/core/build/web/Shared.type'
 
 import { Entity } from '../../../types/Entity.type'
 
-const diff = (newEntity: Entity, oldEntity?: Entity) => {
+const diff = (newEntity: Entity, oldEntity: Entity | null) => {
   const changes: any = {}
   for (const field of Object.keys(newEntity)) {
     if (field.startsWith('$')) {
@@ -19,10 +19,10 @@ const diff = (newEntity: Entity, oldEntity?: Entity) => {
 }
 
 export const convertInput = (
-  newEntity: any,
-  oldEntity: any,
+  newEntity: Entity,
+  oldEntity: Entity | null,
   columns: Column[],
-) => {
+): any => {
   const changes = diff(newEntity, oldEntity)
   for (const field of Object.keys(changes)) {
     const column = columns.find((column) => column.field === field)

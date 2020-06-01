@@ -3,11 +3,20 @@ import { useCallback } from 'react'
 import { useValues } from './ValuesHook'
 import { useMountEffect } from './MountEffectHook'
 
+type AsyncHookState<T> = {
+  ready: boolean
+  busy: boolean
+  result: T
+  error: Error | null
+}
+
 export type AsyncHookValues<T> = {
   ready: boolean
   busy: boolean
   result: T
   error: Error | null
+  trigger: () => void
+  reset: () => void
 }
 
 export type AsyncHookOptions<Default = null> = {
@@ -18,11 +27,11 @@ export type AsyncHookOptions<Default = null> = {
 export const useAsync = <Result, Default = null>(
   fn: () => Promise<Result>,
   options: AsyncHookOptions<Default> = {},
-) => {
+): AsyncHookValues<Result | Default> => {
   const { immediate } = options
   const defaultResult = (options.defaultResult ?? null) as Default
   const [{ ready, busy, result, error }, set] = useValues<
-    AsyncHookValues<Result | Default>
+    AsyncHookState<Result | Default>
   >({
     ready: false,
     busy: false,

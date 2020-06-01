@@ -1,24 +1,26 @@
+type ValidationError = {
+  field: string
+  message: string
+}
+
 /**
  * Validation result
  */
 export class ValidationResult<Entity = any> {
-  private _errors: {
-    field: string
-    message: string
-  }[] = []
+  private _errors: ValidationError[] = []
 
-  get isOk() {
+  get isOk(): boolean {
     return this._errors.length === 0
   }
 
-  get errors() {
+  get errors(): ValidationError[] {
     return [...this._errors]
   }
 
   appendError(error: {
     field: Exclude<keyof Entity, 'id' | number | symbol>
     message: string
-  }) {
+  }): void {
     this._errors.push(error)
   }
 }

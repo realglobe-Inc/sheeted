@@ -9,7 +9,7 @@ export const dropUndef = <T>(obj: T): T => {
   return obj
 }
 
-export const equals = (a: any, b: any): boolean => {
+export const equals = (a: unknown, b: unknown): boolean => {
   try {
     assert.deepEqual(a, b)
     return true

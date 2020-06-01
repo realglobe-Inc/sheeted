@@ -1,4 +1,4 @@
-import React, { createContext, ReactChild, useContext } from 'react'
+import React, { createContext, ReactChild, useContext, FC } from 'react'
 
 import { locale } from '../locale'
 
@@ -7,12 +7,12 @@ const LocaleContext = createContext(locale)
 /**
  * Get locale from context
  */
-export const useLocale = () => useContext(LocaleContext)
+export const useLocale = (): typeof locale => useContext(LocaleContext)
 
-export const LocaleContextProvider = (props: { children: ReactChild }) => {
+export const LocaleContextProvider: FC<{ children: ReactChild }> = ({
+  children,
+}) => {
   return (
-    <LocaleContext.Provider value={locale}>
-      {props.children}
-    </LocaleContext.Provider>
+    <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
   )
 }

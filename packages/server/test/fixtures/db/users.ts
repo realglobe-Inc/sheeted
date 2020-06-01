@@ -23,7 +23,7 @@ export const userModel = compileModel(IAM_USER_SHEET, schema)
 
 export const userRepository = new MongoDriver(IAM_USER_SHEET, schema)
 
-export const seedUsers = async () => {
+export const seedUsers = async (): Promise<void> => {
   for (const user of users) {
     const found = await userModel.findOne({ id: user.id })
     if (!found) {

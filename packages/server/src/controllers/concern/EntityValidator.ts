@@ -9,7 +9,10 @@ export class EntityValidator {
     private readonly repository: Repository<any>,
   ) {}
 
-  async validate(changes: any, currentEntity: any) {
+  async validate(
+    changes: Record<string, any>,
+    currentEntity: Record<string, any> | null,
+  ): Promise<void> {
     const { schema, validateEntity } = this
     const result = await validateEntity(changes, currentEntity)
     for (const field of Object.keys(schema)) {

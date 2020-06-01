@@ -12,13 +12,13 @@ export class HttpValidationError extends Error
 }
 
 export const handleError = (
-  err: any,
+  err: Error,
   req: Request,
   res: Response,
   // NOTE: Correct express error handler has 4 arguments.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
-) => {
+): void => {
   if (err instanceof HttpError) {
     res.status(err.status).json({
       error: {

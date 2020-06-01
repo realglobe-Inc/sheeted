@@ -1,11 +1,14 @@
 import Router from 'express-promise-router'
 import { ApiPaths } from '@sheeted/core/build/web/Paths'
-import { Request, Response } from 'express'
+import { Request, Response, Router as IRouter } from 'express'
 import { IAM_USER_SHEET, IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
 
-export const CurrentUserRoute = ({ jwt, repositories }: RouterParams) =>
+export const CurrentUserRoute = ({
+  jwt,
+  repositories,
+}: RouterParams): IRouter =>
   Router().get(
     ApiPaths.CURRENT_USER,
     jwt.guard,

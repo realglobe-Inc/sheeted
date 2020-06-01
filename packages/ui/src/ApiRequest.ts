@@ -62,7 +62,7 @@ export class ApiRequest {
     return result
   }
 
-  async fetchEntity(sheetName: string, entityId: string) {
+  async fetchEntity(sheetName: string, entityId: string): Promise<Entity> {
     const resp = await this.fetch(
       this.apiPaths.entityOnePath({ sheetName, entityId }),
     )
@@ -74,7 +74,7 @@ export class ApiRequest {
     return entity
   }
 
-  async createEntity(sheetName: string, entity: any) {
+  async createEntity(sheetName: string, entity: unknown): Promise<Entity> {
     const resp = await this.fetch(this.apiPaths.entitiesPath({ sheetName }), {
       method: 'POST',
       body: JSON.stringify(entity),
@@ -97,7 +97,11 @@ export class ApiRequest {
     return result
   }
 
-  async updateEntity(sheetName: string, entityId: string, changes: any) {
+  async updateEntity(
+    sheetName: string,
+    entityId: string,
+    changes: unknown,
+  ): Promise<Entity> {
     const resp = await this.fetch(
       this.apiPaths.entityOnePath({ sheetName, entityId }),
       {
@@ -123,7 +127,7 @@ export class ApiRequest {
     return result
   }
 
-  async deleteEntities(sheetName: string, entityIds: string[]) {
+  async deleteEntities(sheetName: string, entityIds: string[]): Promise<void> {
     const resp = await this.fetch(
       this.apiPaths.entitiesDeletePath({ sheetName }),
       {
@@ -141,7 +145,7 @@ export class ApiRequest {
     sheetName: string,
     actionId: string,
     entityIds: string[],
-  ) {
+  ): Promise<void> {
     const resp = await this.fetch(
       this.apiPaths.actionOnePath({ sheetName, actionId }),
       {
@@ -155,7 +159,7 @@ export class ApiRequest {
     }
   }
 
-  getSignInUrl() {
+  getSignInUrl(): string {
     return new URL(this.apiPaths.signInPath(), this.apiUrl).toString()
   }
 

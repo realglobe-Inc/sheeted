@@ -2,7 +2,7 @@ import fs from 'fs'
 import { join } from 'path'
 
 import Router from 'express-promise-router'
-import { Request, Response } from 'express'
+import { Request, Response, Router as IRouter } from 'express'
 import template from 'lodash.template'
 
 import { RouterParams } from '../types/Router.type'
@@ -14,7 +14,7 @@ const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
 // TODO: 設定から読み込む
 const TITLE = 'Sheeted App'
 
-export const ContentRoute = (_params: RouterParams) => {
+export const ContentRoute = (_params: RouterParams): IRouter => {
   // TODO: UI と共通化
   const jsUrl = new URL(`/${version}/js/sheeted.js`, JS_CDN_URL).toString()
   const htmlPath = join(__dirname, '../../assets/index.html.template')

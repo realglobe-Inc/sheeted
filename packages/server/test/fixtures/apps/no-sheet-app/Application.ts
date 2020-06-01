@@ -1,3 +1,4 @@
+import { Express } from 'express'
 import { DefaultIAMRoles, Application, DefaultIAMRole } from '@sheeted/core'
 import { MongoDriver } from '@sheeted/mongoose'
 
@@ -11,7 +12,7 @@ export const config: ApplicationConfig = {
   saml: {},
 }
 
-export function App(config: ApplicationConfig) {
+export function App(config: ApplicationConfig): Express {
   const application: Application<DefaultIAMRole> = {
     Sheets: [],
     Roles: [

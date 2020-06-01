@@ -4,6 +4,7 @@ import React, {
   ReactChild,
   useState,
   useCallback,
+  FC,
 } from 'react'
 import { InputValidationErrors } from '@sheeted/core/build/web/Shared.type'
 
@@ -19,14 +20,17 @@ export type InputErrorContextValues = {
 
 const InputErrorContext = createContext<InputErrorContextValues>(null as any)
 
-export const useInputErrorContext = () => useContext(InputErrorContext)
+export const useInputErrorContext = (): InputErrorContextValues =>
+  useContext(InputErrorContext)
 
-export const useInputErrorFromContext = (field: string) => {
+export const useInputErrorFromContext = (field: string): string | undefined => {
   const { errors } = useInputErrorContext()
   return errors[field]
 }
 
-export const InputErrorContextProvider = (props: { children: ReactChild }) => {
+export const InputErrorContextProvider: FC<{ children: ReactChild }> = (
+  props,
+) => {
   const [errors, set] = useState<InputErrors>({})
   const setErrors = useCallback(
     (err: InputValidationErrors) =>

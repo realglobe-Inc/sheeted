@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import {
   makeStyles,
   useTheme,
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-export const DrawerMenu = () => {
+export const DrawerMenu: FC = () => {
   const l = useLocale()
   const classes = useStyles()
   const theme = useTheme()

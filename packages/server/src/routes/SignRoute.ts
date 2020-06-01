@@ -1,5 +1,6 @@
 import Router from 'express-promise-router'
 import bodyParser from 'body-parser'
+import { Router as IRouter } from 'express'
 import qs from 'qs'
 import {
   ApiPaths,
@@ -10,7 +11,7 @@ import { IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
 
-export const SignRoute = ({ passport, jwt, config }: RouterParams) => {
+export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
   const apiPaths = ApiPathBuilder()
   const uiPaths = UIPathBuilder()
   const { externalUrl } = config.contentServer || {}

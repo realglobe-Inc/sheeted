@@ -29,7 +29,7 @@ export type { ApplicationConfig }
 export const createApp = (
   application: Application<any>,
   config: ApplicationConfig,
-) => {
+): Express.Express => {
   validateSheets(application.Sheets)
   const groups = [...(application.Groups || [])]
   const IAMUserSheet = buildIAMUserSheet(application.Roles)

@@ -1,4 +1,4 @@
-import React, { createContext, ReactChild, useContext } from 'react'
+import React, { createContext, ReactChild, useContext, FC } from 'react'
 import { IAMUserEntity } from '@sheeted/core'
 
 import { useApi } from '../hooks/ApiHook'
@@ -19,9 +19,9 @@ const UserContext = createContext<UserContextValues>(null as any)
 /**
  * Get login user from context
  */
-export const useUserContext = () => useContext(UserContext)
+export const useUserContext = (): UserContextValues => useContext(UserContext)
 
-export const UserContextProvider = (props: { children: ReactChild }) => {
+export const UserContextProvider: FC<{ children: ReactChild }> = (props) => {
   const api = useApi()
   const { busy, ready, result: user, trigger, error, reset } = useAsync(
     api.fetchCurrentUser,
