@@ -121,12 +121,12 @@ it('should be able to create IAMUser', async () => {
     email: 'new@example.com',
     roles: ['admin'],
   }
-  const created: EntityBase = await request(app)
+  const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
   expect(created).toMatchObject(user)
 
   await request(app)
@@ -155,7 +155,7 @@ it('should drop unnecessary field on creating IAMUser', async () => {
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
   expect(created).not.toHaveProperty('expectToBeDropped')
 })
 
@@ -184,12 +184,12 @@ it('should succeed to update IAMUser', async () => {
     email: 'new3@example.com',
     roles: [DefaultIAMRoles.DEFAULT_ROLE],
   }
-  const created: EntityBase = await request(app)
+  const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
 
   await request(app)
     .post(
@@ -229,12 +229,12 @@ it('should be able to delete IAMUser', async () => {
     email: 'new4@example.com',
     roles: [DefaultIAMRoles.DEFAULT_ROLE],
   }
-  const created: EntityBase = await request(app)
+  const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
 
   // check to be created
   await request(app)

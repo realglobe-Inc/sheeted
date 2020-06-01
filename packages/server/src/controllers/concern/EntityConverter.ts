@@ -16,20 +16,20 @@ export class EntityConverter {
     private ctx: Context<any>,
   ) {}
 
-  beforeSave(changes: Record<string, any>): any {
+  beforeSave(changes: Record<string, any>): Record<string, any> {
     return [changes]
       .map((changes) => this.parseFieldsByInterceptors(changes))
       .map((changes) => this.dropMetaFields(changes))
-      .pop()
+      .pop()!
   }
 
-  beforeSend(entity: Record<string, any>): any {
+  beforeSend(entity: Record<string, any>): Record<string, any> {
     return [entity]
       .map((entity) => this.withEntityMetaField(entity))
       .map((entity) => this.dropPrivateFields(entity))
       .map((entity) => this.stringifyFieldsByInterceptors(entity))
       .map((entity) => this.dropExcludedColumns(entity))
-      .pop()
+      .pop()!
   }
 
   private parseFieldsByInterceptors(entity: Record<string, any>) {
