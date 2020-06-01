@@ -4,7 +4,7 @@ import { ValidationResult } from '../../ValidationResult'
 
 export const IAMUserValidator: Validator<IAMUserEntity> = () => (
   input: Partial<IAMUserEntity>,
-) => {
+): ValidationResult => {
   const result = new ValidationResult<IAMUserEntity>()
   if (input.name && input.name.length <= 1) {
     result.appendError({ field: 'name', message: 'Too short name' })

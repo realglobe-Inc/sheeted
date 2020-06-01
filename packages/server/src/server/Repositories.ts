@@ -8,7 +8,7 @@ import {
 export const createRepositories = (
   sheets: Sheet[],
   RepositoryClass: RepositoryDriver,
-) => {
+): Repositories => {
   const map = new Map(
     sheets.map((sheet) => [
       sheet.name,

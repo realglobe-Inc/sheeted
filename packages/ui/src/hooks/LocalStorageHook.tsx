@@ -16,6 +16,6 @@ class Storage {
 
 const storage = new Storage()
 
-export const useLocalStorage = () => {
+export const useLocalStorage = (): Storage => {
   return storage
 }

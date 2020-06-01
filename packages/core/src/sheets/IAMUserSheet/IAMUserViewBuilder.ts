@@ -1,7 +1,9 @@
 import { IAMUserEntity } from '../../entities/IAMUserEntity.type'
 import { View } from '../../View.type'
 
-export const buildIAMUserView = (roleLabels: { [role: string]: string }) => {
+export const buildIAMUserView = (roleLabels: {
+  [role: string]: string
+}): View<IAMUserEntity<string>> => {
   const IAMUserView: View<IAMUserEntity<string>> = {
     title: 'IAM User',
     display: (user) => user.name,

@@ -10,7 +10,7 @@ export const parseListQuery = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   const { query } = req
   const page = Number(query.page ?? 1)
   const limit = Number(query.limit ?? 20)

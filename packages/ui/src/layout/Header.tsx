@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 // 使ってない
-export const Header = ({ title }: { title: string }) => {
+export const Header: FC<{ title: string }> = ({ title }) => {
   const classes = useStyles()
   const { isOpen, openMenu } = useMenuContext()
 

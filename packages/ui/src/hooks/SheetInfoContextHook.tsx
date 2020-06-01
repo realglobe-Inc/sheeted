@@ -5,6 +5,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  FC,
 } from 'react'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { HttpError } from '@sheeted/core/build/web/Errors'
@@ -22,9 +23,12 @@ export type SheetInfoContextValues = {
 
 const SheetInfoContext = createContext<SheetInfoContextValues>(null as any)
 
-export const useSheetInfoContext = () => useContext(SheetInfoContext)
+export const useSheetInfoContext = (): SheetInfoContextValues =>
+  useContext(SheetInfoContext)
 
-export const SheetInfoContextProvider = (props: { children: ReactChild }) => {
+export const SheetInfoContextProvider: FC<{ children: ReactChild }> = (
+  props,
+) => {
   const api = useApi()
   const [sheetName, setSheetName] = useState('')
   const fetchInfo = useCallback(() => api.fetchSheetInfo(sheetName), [

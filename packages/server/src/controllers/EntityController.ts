@@ -37,7 +37,7 @@ export class EntityController {
     ctx: Context<string>,
     sheets: Sheet[],
     repositories: Repositories,
-  ) {
+  ): EntityController {
     const sheet = sheets.find((sheet) => sheet.name === sheetName)
     if (!sheet) {
       throw new HttpError(
@@ -181,7 +181,7 @@ export class EntityController {
     }
   }
 
-  async one(id: string) {
+  async one(id: string): Promise<any> {
     const readPolicy = this.userAccessPolicy.ofRead
     if (!readPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -197,7 +197,7 @@ export class EntityController {
     return this.converter.beforeSend(entity)
   }
 
-  async create(input: any) {
+  async create(input: Record<string, any>): Promise<any> {
     const createPolicy = this.userAccessPolicy.ofCreate
     if (!createPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -209,7 +209,7 @@ export class EntityController {
     return this.converter.beforeSend(entity)
   }
 
-  async update(id: string, changes: any) {
+  async update(id: string, changes: Record<string, any>): Promise<any> {
     const updatePolicy = this.userAccessPolicy.ofUpdate
     if (!updatePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -228,7 +228,7 @@ export class EntityController {
     return this.converter.beforeSend(entity)
   }
 
-  async delete(ids: string[]) {
+  async delete(ids: string[]): Promise<any> {
     if (
       !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
     ) {
@@ -266,7 +266,7 @@ export class EntityController {
     )
   }
 
-  async performAction(actionId: string, ids: string[]) {
+  async performAction(actionId: string, ids: string[]): Promise<any> {
     const ctx = this.ctx as Context<any>
     const action = (this.sheet.Actions || []).find(
       (action) => action.id === actionId,

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactChild } from 'react'
+import React, { createContext, useContext, ReactChild, FC } from 'react'
 import { Sheets } from '@sheeted/core/build/web/Shared.type'
 
 import { useApi } from './ApiHook'
@@ -18,12 +18,13 @@ const SheetContext = createContext<SheetContextValues>(null as any)
 /**
  * Get sheets info from context
  */
-export const useSheetContext = () => useContext(SheetContext)
+export const useSheetContext = (): SheetContextValues =>
+  useContext(SheetContext)
 
 /**
  * Sync sheet context on mounting component
  */
-export const useSheetContextSyncOnMount = () => {
+export const useSheetContextSyncOnMount = (): void => {
   const { trigger } = useSheetContext()
   useMountEffect(() => {
     trigger()
@@ -35,7 +36,7 @@ const defaultResult: Sheets = {
   sheets: [],
 }
 
-export const SheetContextProvider = (props: { children: ReactChild }) => {
+export const SheetContextProvider: FC<{ children: ReactChild }> = (props) => {
   const api = useApi()
   const { busy, ready, result: sheets, trigger, error } = useAsync(
     api.fetchSheets,

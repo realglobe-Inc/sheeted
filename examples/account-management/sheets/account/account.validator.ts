@@ -2,7 +2,9 @@ import { Validator, ValidationResult } from '@sheeted/core'
 
 import { AccountEntity } from './account.entity'
 
-export const AccountValidator: Validator<AccountEntity> = (_ctx) => (input) => {
+export const AccountValidator: Validator<AccountEntity> = (_ctx) => (
+  input: Partial<AccountEntity>,
+): ValidationResult => {
   const result = new ValidationResult<AccountEntity>()
   const nameLength = input?.name?.length ?? 0
   if (nameLength <= 1) {

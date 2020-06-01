@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, Router as IRouter } from 'express'
 import Router from 'express-promise-router'
 import { ApiPaths, SheetPathParams } from '@sheeted/core/build/web/Paths'
 import { Sheets } from '@sheeted/core/build/web/Shared.type'
@@ -12,7 +12,7 @@ export const SheetRoute = ({
   groups,
   jwt,
   repositories,
-}: RouterParams) => {
+}: RouterParams): IRouter => {
   return (
     Router()
       // one

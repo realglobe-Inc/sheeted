@@ -16,14 +16,14 @@ export class EntityConverter {
     private ctx: Context<any>,
   ) {}
 
-  beforeSave(changes: any) {
+  beforeSave(changes: unknown): any {
     return [changes]
       .map((changes) => this.parseFieldsByInterceptors(changes))
       .map((changes) => this.dropMetaFields(changes))
       .pop()
   }
 
-  beforeSend(entity: any) {
+  beforeSend(entity: unknown): any {
     return [entity]
       .map((entity) => this.withEntityMetaField(entity))
       .map((entity) => this.dropPrivateFields(entity))

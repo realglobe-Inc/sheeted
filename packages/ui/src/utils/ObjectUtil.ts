@@ -6,7 +6,11 @@ export const omit = <T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> => {
   return copy
 }
 
-export const bind = (self: any): void => {
+export const bind = (self: unknown): void => {
+  if (typeof self !== 'object' || self === null) {
+    console.warn('Cannot bind:', self)
+    return
+  }
   for (const key of Reflect.ownKeys(self.constructor.prototype)) {
     if (key === 'constructor') {
       continue
@@ -16,7 +20,7 @@ export const bind = (self: any): void => {
       key,
     )
     if (descriptor && typeof descriptor.value === 'function') {
-      self[key] = self[key].bind(self)
+      Reflect.set(self, key, descriptor.value.bind(self))
     }
   }
 }

@@ -13,7 +13,16 @@ import { convertInput } from '../converters/InputConverter'
 
 import { useInputErrorContext } from './InputErrorContextHook'
 
-export const useEditEntity = (sheet: SheetInfo | null) => {
+export const useEditEntity = (
+  sheet: SheetInfo | null,
+): {
+  isEditable: (entity: Entity) => boolean
+  onRowAdd?: (newEntityRaw: Entity) => Promise<void>
+  onRowUpdate: (
+    newEntity: Entity,
+    oldEntity?: Entity | undefined,
+  ) => Promise<void>
+} => {
   const l = useLocale()
   const api = useApi()
   const { enqueueSnackbar } = useSnackbar()
@@ -25,7 +34,7 @@ export const useEditEntity = (sheet: SheetInfo | null) => {
         entity[ENTITY_META_FIELD].permissions.updates
       )
     },
-    [sheet],
+    [sheet?.permissions?.updates],
   )
   const onRowUpdate = useCallback(
     async (newEntity: Entity, oldEntity?: Entity) => {

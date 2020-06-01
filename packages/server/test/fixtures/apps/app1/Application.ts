@@ -8,6 +8,7 @@ import {
   DefaultIAMRole,
   Schema,
 } from '@sheeted/core'
+import { Express } from 'express'
 import { MongoDriver, compileModel } from '@sheeted/mongoose'
 
 import { createApp, ApplicationConfig } from '../../../../src'
@@ -28,13 +29,13 @@ export const app1Repository = new MongoDriver('App1', App1Schema)
 export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
   name: 'App1',
   Schema: App1Schema,
-  Validator: (_ctx) => (_input) => {
+  Validator: (_ctx) => (_input: Partial<App1Entity>): ValidationResult => {
     const result = new ValidationResult()
     return result
   },
   View: {
     title: '',
-    display: () => '',
+    display: (): string => '',
     columns: {},
   },
   AccessPolicies: [
@@ -42,14 +43,14 @@ export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
       role: 'default',
       action: 'custom',
       customActionId: 'set100',
-      condition: (entity) => entity.n < 100,
+      condition: (entity: App1Entity): boolean => entity.n < 100,
     },
   ],
   Actions: [
     {
       id: 'set100',
       title: 'SET 100',
-      perform: async (entities: App1Entity[]) => {
+      perform: async (entities: App1Entity[]): Promise<void> => {
         for (const entity of entities) {
           await app1Model.updateOne({ id: entity.id }, { n: 100 })
         }
@@ -66,7 +67,7 @@ const config: ApplicationConfig = {
   saml: {},
 }
 
-export function App() {
+export function App(): Express {
   const application: Application<DefaultIAMRole> = {
     Sheets: [App1Sheet],
     Roles: [

@@ -8,7 +8,7 @@ export const SheetActions: Action<Sheet1Entity>[] = [
     id: 'increment',
     title: 'Increment integer',
     icon: 'exposure_plus_1',
-    perform: async (entities) => {
+    perform: async (entities: Sheet1Entity[]): Promise<void> => {
       await Sheet1Model.updateMany(
         {
           id: {

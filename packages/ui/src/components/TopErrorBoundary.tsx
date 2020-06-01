@@ -7,16 +7,16 @@ export class TopErrorBoundary extends React.Component<
   any,
   { error: Error | null }
 > {
-  constructor(props: any) {
+  constructor(props: unknown) {
     super(props)
     this.state = { error: null }
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error: Error): { error: Error } {
     return { error }
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.error) {
       const { error } = this.state
       return (

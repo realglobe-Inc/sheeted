@@ -4,6 +4,7 @@ import React, {
   ReactChild,
   useState,
   useCallback,
+  FC,
 } from 'react'
 
 type SheetProp = {
@@ -22,11 +23,12 @@ const EntityDialogContext = createContext<EntityDialogContextValues>(
   null as any,
 )
 
-export const useEntityDialogContext = () => useContext(EntityDialogContext)
+export const useEntityDialogContext = (): EntityDialogContextValues =>
+  useContext(EntityDialogContext)
 
-export const EntityDialogContextProvider = (props: {
+export const EntityDialogContextProvider: FC<{
   children: ReactChild
-}) => {
+}> = (props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [sheetProp, setSheetProp] = useState<SheetProp | null>(null)
   const openDialog = useCallback(

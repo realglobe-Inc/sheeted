@@ -4,6 +4,7 @@ import React, {
   ReactChild,
   useState,
   useCallback,
+  FC,
 } from 'react'
 
 import { Entity } from '../../../types/Entity.type'
@@ -25,9 +26,10 @@ export type ActionContextValues = {
 
 const ActionContext = createContext<ActionContextValues>(null as any)
 
-export const useActionContext = () => useContext(ActionContext)
+export const useActionContext = (): ActionContextValues =>
+  useContext(ActionContext)
 
-export const ActionContextProvider = (props: { children: ReactChild }) => {
+export const ActionContextProvider: FC<{ children: ReactChild }> = (props) => {
   const [action, setAction] = useState<EntitiesAction | null>(null)
   const [busy, setBusy] = useState(false)
   const [confirming, setConfirming] = useState(false)

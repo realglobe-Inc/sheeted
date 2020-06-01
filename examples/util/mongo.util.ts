@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export const connect = async (database: string) => {
+export const connect = async (database: string): Promise<void> => {
   const port = process.env.MONGO_PORT
   if (!port) {
     throw new Error(`Environment variable MONGO_PORT is required`)

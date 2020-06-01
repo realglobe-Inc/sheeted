@@ -236,7 +236,7 @@ const EntitySelectCell = (
 }
 
 export const EditCellFor = (column: SColumn) =>
-  function EditCell(props: EditComponentProps<Entity>) {
+  function EditCell(props: EditComponentProps<Entity>): JSX.Element {
     switch (column.form) {
       case 'text':
         return <TextInputCell {...props} />

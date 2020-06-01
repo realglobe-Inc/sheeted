@@ -8,7 +8,7 @@ import { IAMUserValidator } from './IAMUserValidator'
 
 export const buildIAMUserSheet = <Role extends string>(
   roles: readonly { value: Role; label: string }[],
-) => {
+): Sheet<IAMUserEntity<Role>, Role> => {
   const roleValues: Role[] = roles.map((role) => role.value)
   const labels: { [role: string]: string } = Object.fromEntries(
     roles.map(({ value, label }) => [value, label]),

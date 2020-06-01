@@ -2,7 +2,9 @@ import { Validator, ValidationResult } from '@sheeted/core'
 
 import { PlanEntity } from './plan.entity'
 
-export const PlanValidator: Validator<PlanEntity> = (_ctx) => (input) => {
+export const PlanValidator: Validator<PlanEntity> = (_ctx) => (
+  input: Partial<PlanEntity>,
+): ValidationResult => {
   const result = new ValidationResult<PlanEntity>()
   if (input?.price ?? Infinity < 0) {
     result.appendError({

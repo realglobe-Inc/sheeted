@@ -13,7 +13,7 @@ export const locale = {
   },
   dialogs: {
     EntitySelectDialog: {
-      title: (name: string) => `${name}を選択`,
+      title: (name: string): string => `${name}を選択`,
     },
   },
   errors: {
