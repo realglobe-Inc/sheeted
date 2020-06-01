@@ -7,7 +7,8 @@ export const Sheet1Validator: Validator<Sheet1Entity> = (_ctx) => (
   _current,
 ) => {
   const result = new ValidationResult<Sheet1Entity>()
-  if (input?.name?.length! <= 1) {
+  const nameLength = input?.name?.length ?? 0
+  if (nameLength <= 1) {
     result.appendError({
       field: 'name',
       message: 'Too short',

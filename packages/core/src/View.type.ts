@@ -43,6 +43,11 @@ export type View<Entity = any> = {
   display: (entity: Entity) => string
 
   /**
+   * Enable entity detail page
+   */
+  enableDetail?: boolean
+
+  /**
    * Column views
    */
   columns: {

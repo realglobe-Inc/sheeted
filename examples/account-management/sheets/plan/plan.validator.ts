@@ -4,7 +4,7 @@ import { PlanEntity } from './plan.entity'
 
 export const PlanValidator: Validator<PlanEntity> = (_ctx) => (input) => {
   const result = new ValidationResult<PlanEntity>()
-  if (input?.price! < 0) {
+  if (input?.price ?? Infinity < 0) {
     result.appendError({
       field: 'price',
       message: 'Invalid price',

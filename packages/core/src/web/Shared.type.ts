@@ -50,6 +50,8 @@ export type WithEntityMetaField = {
 
 export type SheetInfo = {
   sheetName: string
+  title: string
+  enableDetail: boolean
   columns: Column[]
   permissions: Permissions
   actions: ActionInfo[]

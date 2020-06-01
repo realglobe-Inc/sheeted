@@ -4,7 +4,8 @@ import { AccountEntity } from './account.entity'
 
 export const AccountValidator: Validator<AccountEntity> = (_ctx) => (input) => {
   const result = new ValidationResult<AccountEntity>()
-  if (input?.name?.length! <= 1) {
+  const nameLength = input?.name?.length ?? 0
+  if (nameLength <= 1) {
     result.appendError({
       field: 'name',
       message: 'Too short',

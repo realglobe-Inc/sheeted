@@ -62,6 +62,18 @@ export class ApiRequest {
     return result
   }
 
+  async fetchEntity(sheetName: string, entityId: string) {
+    const resp = await this.fetch(
+      this.apiPaths.entityOnePath({ sheetName, entityId }),
+    )
+    if (!resp.ok) {
+      const { error } = await resp.json()
+      throw new HttpError(error.message || error, resp.status)
+    }
+    const entity: Entity = await resp.json()
+    return entity
+  }
+
   async createEntity(sheetName: string, entity: any) {
     const resp = await this.fetch(this.apiPaths.entitiesPath({ sheetName }), {
       method: 'POST',

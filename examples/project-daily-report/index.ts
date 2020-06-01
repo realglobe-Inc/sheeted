@@ -13,7 +13,7 @@ import { ReportSheet } from './sheets/report/report.sheet'
 import { AggregationSheet } from './sheets/aggregation/aggregation.sheet'
 import { seeders } from './seeder'
 
-main()
+void main()
 
 async function main() {
   await connect('project-daily-report')

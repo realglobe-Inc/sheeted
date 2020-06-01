@@ -48,16 +48,10 @@ export const ActionContextProvider = (props: { children: ReactChild }) => {
       return
     }
     setBusy(true)
-    action
-      .doAction()
-      .catch((e) => {
-        console.error(e)
-        // TODO: snackbar でメッセージ表示
-      })
-      .finally(() => {
-        setBusy(false)
-        setConfirming(false)
-      })
+    void action.doAction().finally(() => {
+      setBusy(false)
+      setConfirming(false)
+    })
   }, [action, setBusy, setConfirming])
   return (
     <ActionContext.Provider

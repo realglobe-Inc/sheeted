@@ -9,8 +9,8 @@ import React, {
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
-import { useApi } from '../../../hooks/ApiHook'
-import { useAsync } from '../../../hooks/utils/AsyncHook'
+import { useApi } from './ApiHook'
+import { useAsync } from './utils/AsyncHook'
 
 export type SheetInfoContextValues = {
   busy: boolean

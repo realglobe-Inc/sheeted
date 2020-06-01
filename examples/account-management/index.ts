@@ -13,7 +13,7 @@ import { AccountSheet } from './sheets/account/account.sheet'
 import { AccountPlanSheet } from './sheets/account-plan/account-plan.sheet'
 import { PlanSheet } from './sheets/plan/plan.sheet'
 
-main()
+void main()
 
 async function main() {
   await connect('account-management')

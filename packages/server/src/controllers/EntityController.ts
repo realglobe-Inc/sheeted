@@ -40,7 +40,10 @@ export class EntityController {
   ) {
     const sheet = sheets.find((sheet) => sheet.name === sheetName)
     if (!sheet) {
-      throw new HttpError(`Sheet "${name}" not found`, HttpStatuses.BAD_REQUEST)
+      throw new HttpError(
+        `Sheet "${sheetName}" not found`,
+        HttpStatuses.BAD_REQUEST,
+      )
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
     const repository = repositories.get<any>(sheetName)
@@ -120,6 +123,8 @@ export class EntityController {
       return column
     })
 
+    const title = View.title
+    const enableDetail = Boolean(View.enableDetail)
     const permissions: SheetInfo['permissions'] = {
       creates: Boolean(userAccessPolicy.ofCreate),
       updates: Boolean(userAccessPolicy.ofUpdate),
@@ -132,6 +137,8 @@ export class EntityController {
     }))
     return {
       sheetName,
+      title,
+      enableDetail,
       columns,
       permissions,
       actions,

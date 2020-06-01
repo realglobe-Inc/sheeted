@@ -11,7 +11,7 @@ import { Roles } from './constants'
 import { Sheet1Sheet } from './sheets/sheet1/sheet1.sheet'
 import { seeders } from './seeder'
 
-main()
+void main()
 
 async function main() {
   await connect('sheet1')

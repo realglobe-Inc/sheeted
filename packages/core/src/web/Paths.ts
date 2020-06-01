@@ -69,6 +69,7 @@ export const UIPaths = {
   SIGN_OUT: '/sign/out',
   SHEET: '/sheets/:sheetName',
   SHEET_HOME: '/sheets',
+  ENTITY_DETAIL: '/sheets/:sheetName/entities/:entityId',
 }
 
 export const UIPathBuilder = (base?: string) => {
@@ -81,6 +82,13 @@ export const UIPathBuilder = (base?: string) => {
     sheetPath: ({ sheetName }: SheetPathParams) =>
       based(UIPaths.SHEET.replace(':sheetName', sheetName)),
     sheetHomePath: () => based(UIPaths.SHEET_HOME),
+    entityDetailPath: ({ sheetName, entityId }: EntityPathParams) =>
+      based(
+        UIPaths.ENTITY_DETAIL.replace(':sheetName', sheetName).replace(
+          ':entityId',
+          entityId,
+        ),
+      ),
   }
 }
 

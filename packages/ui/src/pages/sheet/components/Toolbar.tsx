@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 
 import { useMenuContext } from '../../../hooks/MenuContextHook'
-import { useSheetInfoContext } from '../hooks/SheetInfoContextHook'
+import { useSheetInfoContext } from '../../../hooks/SheetInfoContextHook'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

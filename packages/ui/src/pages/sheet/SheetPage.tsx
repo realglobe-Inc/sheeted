@@ -3,16 +3,18 @@ import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
+import { useHistory } from 'react-router-dom'
 
 import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
 import { useUserContext } from '../../hooks/UserContextHook'
-
-import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import {
   useSheetInfoContext,
   SheetInfoContextProvider,
-} from './hooks/SheetInfoContextHook'
+} from '../../hooks/SheetInfoContextHook'
+import { useUIPaths } from '../../hooks/UIPathHook'
+
+import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
 import { TableHeader } from './components/TableHeader'
 import { EditRow } from './components/EditRow'
@@ -69,14 +71,25 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
   const { actions, onSelectionChange } = useTableActions(
     info,
-    tableRef.current?.onQueryChange!,
+    tableRef.current?.onQueryChange ?? (() => null),
   )
+  const uiPaths = useUIPaths()
   useEffect(() => {
     trigger(sheet.sheetName)
   }, [sheet.sheetName, trigger])
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
   const localization = useTableLocalization({ forbidden })
+  const history = useHistory()
+  const onRowClick = info?.enableDetail
+    ? (event: any, entity: any) => {
+        const path = uiPaths.entityDetailPath({
+          sheetName: sheet.sheetName,
+          entityId: entity.id,
+        })
+        history.push(path)
+      }
+    : undefined
   return (
     <MaterialTable
       title={sheet.title}
@@ -89,6 +102,7 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         onRowUpdate,
       }}
       actions={actions}
+      onRowClick={onRowClick}
       onSelectionChange={onSelectionChange}
       localization={localization}
       components={{
