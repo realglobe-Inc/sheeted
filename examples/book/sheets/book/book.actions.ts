@@ -10,7 +10,7 @@ export const BookActions: Action<BookEntity>[] = [
     id: ActionIds.LIKE,
     title: 'Increment like count',
     icon: 'exposure_plus_1',
-    perform: async (entities) => {
+    perform: async (entities: BookEntity[]): Promise<void> => {
       await BookModel.updateMany(
         {
           id: {

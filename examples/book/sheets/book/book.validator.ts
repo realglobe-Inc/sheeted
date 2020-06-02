@@ -3,9 +3,9 @@ import { Validator, ValidationResult } from '@sheeted/core'
 import { BookEntity } from './book.entity'
 
 export const BookValidator: Validator<BookEntity> = (_ctx) => (
-  input,
-  _current,
-) => {
+  input: Partial<BookEntity>,
+  _current: BookEntity | null,
+): ValidationResult<BookEntity> => {
   const result = new ValidationResult<BookEntity>()
   if (input.price) {
     if (!Number.isInteger(input.price)) {

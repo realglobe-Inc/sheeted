@@ -207,7 +207,7 @@ export class EntityController {
     const entity = await this.repository.create(creating)
     await this.hook.triggerCreate(entity)
     // hook により entity が変化したかもしれない
-    const final = await this.repository.findById(entity.id)
+    const final = (await this.repository.findById(entity.id))!
     return this.converter.beforeSend(final)
   }
 
@@ -228,7 +228,7 @@ export class EntityController {
     const entity = await this.repository.update(id, updating)
     await this.hook.triggerUpdate(entity)
     // hook により entity が変化したかもしれない
-    const final = await this.repository.findById(entity.id)
+    const final = (await this.repository.findById(entity.id))!
     return this.converter.beforeSend(final)
   }
 

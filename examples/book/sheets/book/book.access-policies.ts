@@ -1,4 +1,4 @@
-import { AccessPolicy } from '@sheeted/core'
+import { AccessPolicy, Context } from '@sheeted/core'
 
 import { Roles, Role, ActionIds } from '../../constants'
 
@@ -18,12 +18,14 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
     action: 'update',
     role: Roles.EDITOR_ROLE,
     uneditableColumns: [],
-    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'delete',
     role: Roles.EDITOR_ROLE,
-    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'custom',
