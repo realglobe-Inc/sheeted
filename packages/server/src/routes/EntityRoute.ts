@@ -5,7 +5,6 @@ import {
   SheetPathParams,
   EntityPathParams,
 } from '@sheeted/core/build/web/Paths'
-import { ListQuery } from '@sheeted/core/build/web/Shared.type'
 import bodyParser from 'body-parser'
 
 import { EntityController } from '../controllers/EntityController'
@@ -37,8 +36,8 @@ export const EntityRoute = ({
             sheets,
             repositories,
           )
-          const { page = 1, limit = 20, search = '', sort = [] } = (req as any)
-            .listQuery as ListQuery // parseListQuery により作られた値
+          const { page = 1, limit = 20, search = '', sort = [] } =
+            req.listQuery || {} // parseListQuery により作られた値
           const list = await controller.list({ page, limit, search, sort })
           res.json(list)
         },

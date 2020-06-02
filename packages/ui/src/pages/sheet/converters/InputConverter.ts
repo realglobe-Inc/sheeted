@@ -3,7 +3,7 @@ import { Column } from '@sheeted/core/build/web/Shared.type'
 import { Entity } from '../../../types/Entity.type'
 
 const diff = (newEntity: Entity, oldEntity: Entity | null) => {
-  const changes: any = {}
+  const changes: Record<string, any> = {}
   for (const field of Object.keys(newEntity)) {
     if (field.startsWith('$')) {
       // meta fields

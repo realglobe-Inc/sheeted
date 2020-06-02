@@ -6,11 +6,11 @@ import { HttpError } from '@sheeted/core/build/web/Errors'
 /**
  * Overwrite query by ListQuery type
  */
-export const parseListQuery = async (
+export const parseListQuery = (
   req: Request,
   res: Response,
   next: NextFunction,
-): Promise<void> => {
+): void => {
   const { query } = req
   const page = Number(query.page ?? 1)
   const limit = Number(query.limit ?? 20)

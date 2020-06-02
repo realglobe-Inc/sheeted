@@ -83,7 +83,7 @@ export class EntityController {
     )
   }
 
-  async info(): Promise<SheetInfo> {
+  info(): SheetInfo {
     const { name: sheetName, View, Schema, Actions = [] } = this.sheet
     const { userAccessPolicy } = this
     if (!userAccessPolicy.ofRead) {

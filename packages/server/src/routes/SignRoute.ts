@@ -22,7 +22,7 @@ export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
         failureRedirect: apiPaths.signInPath(),
         failureFlash: true,
       }),
-      async (req, res) => {
+      (req, res) => {
         const signInPath = uiPaths.signInPath()
         const signInUrl = externalUrl
           ? new URL(signInPath, externalUrl).toString()

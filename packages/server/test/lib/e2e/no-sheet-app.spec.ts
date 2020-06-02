@@ -3,7 +3,7 @@ import express from 'express'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import { ApiPathBuilder } from '@sheeted/core/build/web/Paths'
-import { IAM_USER_SHEET, DefaultIAMRoles } from '@sheeted/core'
+import { IAM_USER_SHEET, DefaultIAMRoles, EntityBase } from '@sheeted/core'
 import qs from 'qs'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 
@@ -126,7 +126,7 @@ it('should be able to create IAMUser', async () => {
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
   expect(created).toMatchObject(user)
 
   await request(app)
@@ -155,7 +155,7 @@ it('should drop unnecessary field on creating IAMUser', async () => {
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
   expect(created).not.toHaveProperty('expectToBeDropped')
 })
 
@@ -189,7 +189,7 @@ it('should succeed to update IAMUser', async () => {
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
 
   await request(app)
     .post(
@@ -234,7 +234,7 @@ it('should be able to delete IAMUser', async () => {
     .send(user)
     .set(...authHeader)
     .expect(200)
-    .then((resp) => resp.body)
+    .then((resp) => resp.body as EntityBase)
 
   // check to be created
   await request(app)

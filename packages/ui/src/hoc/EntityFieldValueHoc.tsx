@@ -8,7 +8,7 @@ import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { ExternalLink } from '../components/ExternalLink'
 
 type FieldValueProps = {
-  entity: any
+  entity?: Record<string, any>
 }
 
 const PlainValueHoc = (column: Column): FC<FieldValueProps> => {

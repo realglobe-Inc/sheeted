@@ -19,7 +19,7 @@ export const SheetRoute = ({
       .get<SheetPathParams>(
         ApiPaths.SHEET_ONE,
         jwt.guard,
-        async (req: Request<SheetPathParams>, res: Response) => {
+        (req: Request<SheetPathParams>, res: Response) => {
           const {
             context,
             params: { sheetName },
@@ -31,12 +31,12 @@ export const SheetRoute = ({
             sheets,
             repositories,
           )
-          const info = await controller.info()
+          const info = controller.info()
           res.json(info)
         },
       )
       // list
-      .get(ApiPaths.SHEETS, jwt.guard, async (req, res) => {
+      .get(ApiPaths.SHEETS, jwt.guard, (req, res) => {
         const resp: Sheets = {
           groups,
           sheets: sheets.map(({ name, group, View }) => ({

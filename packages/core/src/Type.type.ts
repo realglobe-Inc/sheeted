@@ -18,6 +18,9 @@ export type RawType = 'text' | 'text_list' | 'number' | 'entity'
 export type Type<Raw> = {
   rawType: RawType
   form: InputForm
-  formOptions?: any
+  formOptions?: {
+    format: string
+    views?: string[]
+  }
   interceptor?: Interceptor<Raw>
 }
