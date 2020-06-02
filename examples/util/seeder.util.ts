@@ -1,5 +1,5 @@
 import { Model, Document, Types } from 'mongoose'
-import { EntityBase } from '@sheeted/core'
+import { EntityBase, DefaultIAMRoles } from '@sheeted/core'
 
 export interface ISeeder {
   seed(): Promise<void>
@@ -32,3 +32,20 @@ export const reduce = (seederList: Seeder<any>[]): ISeeder => ({
 
 export const generateId = (num: number): Types.ObjectId =>
   Types.ObjectId.createFromTime(num)
+
+export const defaultUsers = [
+  {
+    _id: Types.ObjectId.createFromTime(1000),
+    id: 'demo',
+    name: 'demo',
+    email: `demo@example.com`,
+    roles: [DefaultIAMRoles.DEFAULT_ROLE],
+  },
+  {
+    _id: Types.ObjectId.createFromTime(1001),
+    id: 'admin',
+    name: 'admin',
+    email: `admin@example.com`,
+    roles: [DefaultIAMRoles.ADMIN_ROLE],
+  },
+]

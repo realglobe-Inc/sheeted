@@ -6,7 +6,7 @@
     "incremental": true
   },
   "include": [
-    "1-sheet-app",
+    "book",
     "account-management",
     "project-daily-report"
   ]
