@@ -18,19 +18,19 @@ const base = {
 const configs = {
   core: {
     mode: 'modules',
-    out: 'doc/core',
+    out: 'doc-dist/core',
     readme: 'packages/core/README.doc.md',
     inputFiles: ['packages/core/src'],
     exclude: ['packages/core/src/web', 'packages/core/src/sheets'],
   },
   server: {
-    out: 'doc/server',
+    out: 'doc-dist/server',
     readme: 'packages/server/README.doc.md',
     inputFiles: ['packages/server/src/index.ts', 'packages/server/src/types/ApplicationConfig.type.ts', 'packages/server/src/typings'],
     externalPattern: ['packages/server/src/typings/*.d.ts'],
   },
   mongoose: {
-    out: 'doc/mongoose',
+    out: 'doc-dist/mongoose',
     readme: 'packages/server/README.doc.md',
     inputFiles: ['packages/mongoose/src']
   },

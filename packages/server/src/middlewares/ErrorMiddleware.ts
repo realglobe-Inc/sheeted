@@ -34,6 +34,7 @@ export const handleError = (
     }
     res.status(err.status).json(error)
   } else {
+    console.error(err)
     const message: string = err.message || ''
     res.status(HttpStatuses.INTERNAL_SERVER_ERROR).json({
       error: {

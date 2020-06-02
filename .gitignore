@@ -100,4 +100,4 @@ dist
 build/
 
 var/
-/doc/
+/doc-dist/

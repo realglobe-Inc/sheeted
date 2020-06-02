@@ -1,3 +1,5 @@
+<!-- README.md is generated automatically. DO NOT edit manually. -->
+
 # Sheeted
 
 Table UI web application development framework.
@@ -43,6 +45,294 @@ To create a sheet, define some type and objects as below.
 
 After defining sheets, you can create application server with `createApp()` of `@sheeted/server`. This function just returns [express](https://expressjs.com/) app.
 
+Here are examples.
+
+Entity:
+
+```ts
+import { EntityBase, IAMUserEntity } from '@sheeted/core'
+
+import { Genre, Format } from '../../constants'
+
+export interface BookEntity extends EntityBase {
+  title: string
+  like: number
+  price: number
+  genre: Genre
+  formats: Format[]
+  url?: string
+  buyer: IAMUserEntity
+  buyDate: number
+  publicationYear: number
+  comment?: string
+}
+```
+
+Schema:
+
+```ts
+import { Types, IAM_USER_SHEET, Schema } from '@sheeted/core'
+
+import { Genres, Formats } from '../../constants'
+
+import { BookEntity } from './book.entity'
+
+export const BookSchema: Schema<BookEntity> = {
+  title: {
+    type: Types.Text,
+    searchable: true,
+    unique: true,
+  },
+  like: {
+    type: Types.Numeric,
+    readonly: true,
+  },
+  price: {
+    type: Types.Numeric,
+  },
+  genre: {
+    type: Types.Enum,
+    enumProperties: {
+      values: Genres,
+    },
+  },
+  formats: {
+    type: Types.EnumList,
+    enumProperties: {
+      values: Formats,
+    },
+  },
+  url: {
+    type: Types.Text,
+    optional: true,
+  },
+  buyer: {
+    type: Types.Entity,
+    readonly: true,
+    entityProperties: {
+      sheetName: IAM_USER_SHEET,
+    },
+  },
+  buyDate: {
+    type: Types.CalendarDate,
+  },
+  publicationYear: {
+    type: Types.CalendarYear,
+  },
+  comment: {
+    type: Types.LongText,
+    optional: true,
+  },
+}
+```
+
+AccessPolicies:
+
+```ts
+import { AccessPolicy } from '@sheeted/core'
+
+import { Roles, Role, ActionIds } from '../../constants'
+
+import { BookEntity } from './book.entity'
+
+export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
+  {
+    action: 'read',
+    role: Roles.DEFAULT_ROLE,
+  },
+  {
+    action: 'create',
+    role: Roles.EDITOR_ROLE,
+    uneditableColumns: [],
+  },
+  {
+    action: 'update',
+    role: Roles.EDITOR_ROLE,
+    uneditableColumns: [],
+    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+  },
+  {
+    action: 'delete',
+    role: Roles.EDITOR_ROLE,
+    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+  },
+  {
+    action: 'custom',
+    role: Roles.DEFAULT_ROLE,
+    customActionId: ActionIds.LIKE,
+  },
+]
+```
+
+Actions:
+
+```ts
+import { Action } from '@sheeted/core'
+
+import { ActionIds } from '../../constants'
+
+import { BookEntity } from './book.entity'
+import { BookModel } from './book.model'
+
+export const BookActions: Action<BookEntity>[] = [
+  {
+    id: ActionIds.LIKE,
+    title: 'Increment like count',
+    icon: 'exposure_plus_1',
+    perform: async (entities) => {
+      await BookModel.updateMany(
+        {
+          id: {
+            $in: entities.map(({ id }) => id),
+          },
+        },
+        {
+          $inc: {
+            like: 1,
+          },
+        },
+      )
+    },
+  },
+]
+```
+
+Hook:
+
+```ts
+import { Hook } from '@sheeted/core'
+import { IAMUserModel } from '@sheeted/mongoose'
+
+import { BookEntity } from './book.entity'
+import { BookModel } from './book.model'
+
+export const BookHook: Hook<BookEntity> = {
+  async onCreate(book, ctx) {
+    const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
+    await BookModel.updateOne(
+      { id: book.id },
+      {
+        buyer: user,
+      },
+    )
+    console.log('success')
+  },
+}
+```
+
+Validator:
+
+```ts
+import { Validator, ValidationResult } from '@sheeted/core'
+
+import { BookEntity } from './book.entity'
+
+export const BookValidator: Validator<BookEntity> = (_ctx) => (
+  input,
+  _current,
+) => {
+  const result = new ValidationResult<BookEntity>()
+  if (input.price) {
+    if (!Number.isInteger(input.price)) {
+      result.appendError({
+        field: 'price',
+        message: 'Must be integer',
+      })
+    }
+    if (input.price < 0) {
+      result.appendError({
+        field: 'price',
+        message: 'Must be greater than or equal to 0',
+      })
+    }
+  }
+  return result
+}
+```
+
+View:
+
+```ts
+import { View } from '@sheeted/core'
+
+import { BookEntity } from './book.entity'
+
+export const BookView: View<BookEntity> = {
+  title: 'Books',
+  display: (entity) => entity.title,
+  // enableDetail: true,
+  columns: {
+    title: {
+      title: 'TITLE',
+    },
+    like: {
+      title: 'LIKE',
+    },
+    price: {
+      title: 'PRICE',
+    },
+    genre: {
+      title: 'GENRE',
+      enumLabels: {
+        comic: 'COMIC',
+        novel: 'NOVEL',
+      },
+    },
+    formats: {
+      title: 'FORMATS',
+      enumLabels: {
+        paper: 'PAPER',
+        kindle: 'KINDLE',
+      },
+    },
+    url: {
+      title: 'URL',
+      textOptions: {
+        isLink: true,
+      },
+    },
+    buyer: {
+      title: 'BUYER',
+    },
+    buyDate: {
+      title: 'BUY DATE',
+    },
+    publicationYear: {
+      title: 'YEAR OF PUBLICATION',
+    },
+    comment: {
+      title: 'COMMENT',
+    },
+  },
+}
+```
+
+Sheet:
+
+```ts
+import { Sheet } from '@sheeted/core'
+
+import { Role, SheetNames } from '../../constants'
+
+import { BookEntity } from './book.entity'
+import { BookSchema } from './book.schema'
+import { BookValidator } from './book.validator'
+import { BookView } from './book.view'
+import { BookAccessPolicies } from './book.access-policies'
+import { BookActions } from './book.actions'
+import { BookHook } from './book.hook'
+
+export const BookSheet: Sheet<BookEntity, Role> = {
+  name: SheetNames.BOOK,
+  Schema: BookSchema,
+  Validator: BookValidator,
+  View: BookView,
+  AccessPolicies: BookAccessPolicies,
+  Actions: BookActions,
+  Hook: BookHook,
+}
+```
+
 Function `createApp()` needs arguments as below.
 
 * Sheets: sheets array.
@@ -53,14 +343,19 @@ Function `createApp()` needs arguments as below.
 import { createApp } from '@sheeted/server'
 import { MongoDriver } from '@sheeted/mongoose'
 
-const app = createApp(
+import { config } from '../util/config.util'
+
+import { RoleLabels } from './constants'
+import { BookSheet } from './sheets/book/book.sheet'
+
+export const app = createApp(
   {
-    Sheets: [ /* Sheets here */ ],
-    Roles: [ /* ... */ ],
+    Sheets: [BookSheet],
+    Roles: RoleLabels,
     DatabaseDriver: MongoDriver,
   },
-  config: {
-    /* ... */
+  {
+    ...config,
   },
 )
 ```

@@ -18,6 +18,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "include-file-cli": "^1.0.1",
     "jest": "^26.0.1",
     "mongodb-memory-server": "^6.5.0",
     "mongoose": "^5.9.3",
@@ -40,6 +41,7 @@
   },
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/example build",
+    "doc": "include-file doc/readme.md README.md",
     "lint": "eslint --ext .ts,.tsx packages examples",
     "prepare": "yarn build",
     "test": "yarn w/core test && yarn w/server test && yarn w/mongoose test",

@@ -5,7 +5,8 @@ import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { DisplayFunctions } from './DisplayFunctions'
 import { UserAccessPolicy } from './UserAccessPolicy'
 
-const displayDefault = (entity: { id: string }) => String(entity.id)
+const displayDefault = (entity: { id: string } | null) =>
+  entity ? String(entity.id) : ''
 
 export class EntityConverter {
   constructor(
