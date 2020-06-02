@@ -7,7 +7,7 @@ import { BookSchema } from './book.schema'
 import { BookValidator } from './book.validator'
 import { BookView } from './book.view'
 import { BookAccessPolicies } from './book.access-policies'
-import { BookActions } from './book.action'
+import { BookActions } from './book.actions'
 import { BookHook } from './book.hook'
 
 export const BookSheet: Sheet<BookEntity, Role> = {
