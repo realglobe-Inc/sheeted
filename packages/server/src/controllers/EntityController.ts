@@ -206,7 +206,9 @@ export class EntityController {
     const creating = this.converter.beforeSave(input)
     const entity = await this.repository.create(creating)
     await this.hook.triggerCreate(entity)
-    return this.converter.beforeSend(entity)
+    // hook により entity が変化したかもしれない
+    const final = await this.repository.findById(entity.id)
+    return this.converter.beforeSend(final)
   }
 
   async update(id: string, changes: Record<string, any>): Promise<any> {
@@ -225,7 +227,9 @@ export class EntityController {
     const updating = this.converter.beforeSave(changes)
     const entity = await this.repository.update(id, updating)
     await this.hook.triggerUpdate(entity)
-    return this.converter.beforeSend(entity)
+    // hook により entity が変化したかもしれない
+    const final = await this.repository.findById(entity.id)
+    return this.converter.beforeSend(final)
   }
 
   async delete(ids: string[]): Promise<any> {
