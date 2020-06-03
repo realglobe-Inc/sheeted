@@ -12,7 +12,7 @@ import { useActionContext } from './ActionContextHook'
 
 export const useTableActions = (
   sheet: SheetInfo | null,
-  refreshTable: () => void,
+  refreshTable: (page?: number) => void,
 ): {
   actions: TableAction<Entity>[]
   onSelectionChange: (entities: Entity[]) => void
@@ -41,7 +41,7 @@ export const useTableActions = (
               enqueueSnackbar(l.snackbars.deleteComplete, {
                 variant: 'success',
               })
-              refreshTable()
+              refreshTable(0)
             } catch (e) {
               console.error(e)
               enqueueSnackbar(l.snackbars.deleteFailed, {
