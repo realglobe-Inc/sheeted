@@ -4,11 +4,11 @@
 
 Table UI web application development framework.
 
-Sheeted aims to make it extremely easy to develop Sheet-based web applications for organizations internal use. You have only to write data models, bissiness rules, validations, and access policies, then REST API and UI will be generated automatically. You can develop practical Table UI web applications 10x faster with Sheeted.
+Sheeted aims to make it extremely easy to develop sheet-based web applications which are often used for organizations internal use and for some management use. With Sheeted, you will be released from boring coding not concerned with business rules. You can develop practical Table UI web applications 10x faster with Sheeted.
 
 ## Features
 
-* REST API and UI is auto generated
+* REST API and UI are auto generated
 * Support SAML Authentication
 * Easy to deploy
 * and more
