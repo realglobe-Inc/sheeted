@@ -31,6 +31,7 @@ import { useTableLocalization } from './hooks/TableLocalizationHook'
 import { ActionContextProvider } from './hooks/ActionContextHook'
 import { ActionDialog } from './components/ActionDialog'
 import { useTableActions } from './hooks/TableActionsHook'
+import { useRefreshTable } from './hooks/RefreshTableHook'
 
 const tableOptions: TableOptions = {
   pageSize: 10,
@@ -63,17 +64,20 @@ export const SheetPage: FC = () => {
   )
 }
 
+type TableRef = {
+  onChangePage: (event: any, page: number) => void
+  onQueryChange: () => void
+}
+
 const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   sheet,
 }) => {
-  const tableRef = useRef<{ onQueryChange: () => void }>()
+  const tableRef = useRef<TableRef>()
   const { result: info, trigger, error } = useSheetInfoContext()
   const queryEntities = useQueryEntities(sheet.sheetName)
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
-  const { actions, onSelectionChange } = useTableActions(
-    info,
-    tableRef.current?.onQueryChange ?? (() => null),
-  )
+  const refreshTable = useRefreshTable(tableRef.current)
+  const { actions, onSelectionChange } = useTableActions(info, refreshTable)
   const uiPaths = useUIPaths()
   useEffect(() => {
     trigger(sheet.sheetName)
