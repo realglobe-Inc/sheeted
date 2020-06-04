@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/ui",
   "description": "UI of Sheeted framework",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "babel": {
     "presets": [
       "react-app"
