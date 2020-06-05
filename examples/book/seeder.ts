@@ -30,6 +30,7 @@ const books: BookEntity[] = [
     formats: [Formats[i % Formats.length]],
     buyer: users[i % users.length],
     buyDate: 20200303,
+    readMinutes: 121,
     publicationYear: 2018,
   })),
 ]

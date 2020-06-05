@@ -7,6 +7,7 @@ export const locale = {
   buttons: {
     ok: 'OK',
     cancel: 'キャンセル',
+    clear: 'クリア',
     deselect: '選択を解除',
     signIn: 'SIGN IN',
     signOut: 'SIGN OUT',

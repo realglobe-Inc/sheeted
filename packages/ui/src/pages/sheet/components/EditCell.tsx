@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Column as SColumn } from '@sheeted/core/build/web/Shared.type'
 import { EditComponentProps } from 'material-table'
 import TextField from '@material-ui/core/TextField'
@@ -10,13 +10,15 @@ import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import dayjs from 'dayjs'
 import {
-  TimePicker,
-  DatePicker,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
   MuiPickersUtilsProvider,
   DatePickerView,
 } from '@material-ui/pickers'
 import DayjsUtils from '@date-io/dayjs'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { Entity } from '../../../types/Entity.type'
 import { useInputErrorFromContext } from '../hooks/InputErrorContextHook'
@@ -27,6 +29,19 @@ type DatePickerOptions = {
   format: string
   views?: DatePickerView[]
 }
+
+const useStyles = makeStyles(() => ({
+  datePicker: {
+    display: 'inline-block',
+    fontSize: 13,
+    minWidth: '11em',
+  },
+  timePicker: {
+    display: 'inline-block',
+    fontSize: 13,
+    minWidth: '8em',
+  },
+}))
 
 const TextInputCell = (
   props: EditComponentProps<Entity> & { multiline?: boolean },
@@ -144,27 +159,33 @@ const DatePickerCell = (
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
   const value = props.value || null
+  const l = useLocale()
+  const classes = useStyles()
+  const onChange = useCallback(
+    (date: MaterialUiPickersDate) => {
+      props.onChange(date?.format(props.format))
+    },
+    [props],
+  )
   return (
-    <MuiPickersUtilsProvider utils={DayjsUtils}>
-      <DatePicker
-        format={props.format}
-        value={value}
-        views={props.views}
-        onChange={(date) => props.onChange(date?.format(props.format))}
-        error={Boolean(error)}
-        helperText={error}
-        TextFieldComponent={(props) => (
-          <TextField
-            {...props}
-            InputProps={{
-              style: {
-                fontSize: 13,
-              },
-            }}
-          />
-        )}
-      />
-    </MuiPickersUtilsProvider>
+    <span className={classes.datePicker}>
+      <MuiPickersUtilsProvider utils={DayjsUtils}>
+        <KeyboardDatePicker
+          format={props.format}
+          value={value}
+          views={props.views}
+          onChange={onChange}
+          error={Boolean(error)}
+          helperText={error}
+          // Modal props
+          autoOk
+          clearable
+          okLabel={l.buttons.ok}
+          cancelLabel={l.buttons.cancel}
+          clearLabel={l.buttons.clear}
+        />
+      </MuiPickersUtilsProvider>
+    </span>
   )
 }
 
@@ -173,6 +194,14 @@ const TimePickerCell = (
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
+  const l = useLocale()
+  const classes = useStyles()
+  const onChange = useCallback(
+    (_date: MaterialUiPickersDate, value?: string | null) => {
+      props.onChange(value)
+    },
+    [props],
+  )
   let value: dayjs.Dayjs | null = null
   const rawValue = props.value
   if (typeof rawValue === 'string') {
@@ -181,27 +210,24 @@ const TimePickerCell = (
     value = now.hour(hours).minute(minutes)
   }
   return (
-    <MuiPickersUtilsProvider utils={DayjsUtils}>
-      <TimePicker
-        format={props.format}
-        value={value}
-        onChange={(date) => {
-          props.onChange(date?.format(props.format))
-        }}
-        error={Boolean(error)}
-        helperText={error}
-        TextFieldComponent={(props) => (
-          <TextField
-            {...props}
-            InputProps={{
-              style: {
-                fontSize: 13,
-              },
-            }}
-          />
-        )}
-      />
-    </MuiPickersUtilsProvider>
+    <span className={classes.timePicker}>
+      <MuiPickersUtilsProvider utils={DayjsUtils}>
+        <KeyboardTimePicker
+          format={props.format}
+          value={value}
+          onChange={onChange}
+          error={Boolean(error)}
+          helperText={error}
+          ampm={false}
+          // Modal props
+          autoOk
+          clearable
+          okLabel={l.buttons.ok}
+          cancelLabel={l.buttons.cancel}
+          clearLabel={l.buttons.clear}
+        />
+      </MuiPickersUtilsProvider>
+    </span>
   )
 }
 

@@ -43,6 +43,9 @@ export const BookSchema: Schema<BookEntity> = {
   buyDate: {
     type: Types.CalendarDate,
   },
+  readMinutes: {
+    type: Types.Time,
+  },
   publicationYear: {
     type: Types.CalendarYear,
   },
