@@ -30,6 +30,10 @@ type DatePickerOptions = {
   views?: DatePickerView[]
 }
 
+type CommonOptions = {
+  autoFocus: boolean
+}
+
 const useStyles = makeStyles(() => ({
   datePicker: {
     display: 'inline-block',
@@ -44,13 +48,14 @@ const useStyles = makeStyles(() => ({
 }))
 
 const TextInputCell = (
-  props: EditComponentProps<Entity> & { multiline?: boolean },
+  props: EditComponentProps<Entity> & CommonOptions & { multiline?: boolean },
 ) => {
   const { field, title } = props.columnDef
   const error = useInputErrorFromContext(field)
   return (
     <TextField
       type="text"
+      autoFocus={props.autoFocus}
       multiline={props.multiline}
       placeholder={title}
       value={props.value || ''}
@@ -66,12 +71,13 @@ const TextInputCell = (
   )
 }
 
-const NumberInputCell = (props: EditComponentProps<Entity>) => {
+const NumberInputCell = (props: EditComponentProps<Entity> & CommonOptions) => {
   const { field, title } = props.columnDef
   const error = useInputErrorFromContext(field)
   return (
     <TextField
       type="number"
+      autoFocus={props.autoFocus}
       style={{ float: 'right' }}
       placeholder={title}
       value={props.value || ''}
@@ -88,15 +94,17 @@ const NumberInputCell = (props: EditComponentProps<Entity>) => {
 }
 
 const SelectInputCell = (
-  props: EditComponentProps<Entity> & {
-    labels: { label: string; value: string }[]
-  },
+  props: EditComponentProps<Entity> &
+    CommonOptions & {
+      labels: { label: string; value: string }[]
+    },
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
   return (
     <FormControl error={Boolean(error)}>
       <Select
+        autoFocus={props.autoFocus}
         value={props.value || ''}
         onChange={(event) => props.onChange(event.target.value)}
         error={Boolean(error)}
@@ -116,9 +124,10 @@ const SelectInputCell = (
 }
 
 const MultipleSelectInputCell = (
-  props: EditComponentProps<Entity> & {
-    labels: { label: string; value: string }[]
-  },
+  props: EditComponentProps<Entity> &
+    CommonOptions & {
+      labels: { label: string; value: string }[]
+    },
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
@@ -132,6 +141,7 @@ const MultipleSelectInputCell = (
   return (
     <FormControl error={Boolean(error)}>
       <Select
+        autoFocus={props.autoFocus}
         value={values}
         onChange={(event) => props.onChange(event.target.value)}
         multiple
@@ -154,7 +164,7 @@ const MultipleSelectInputCell = (
 }
 
 const DatePickerCell = (
-  props: EditComponentProps<Entity> & DatePickerOptions,
+  props: EditComponentProps<Entity> & CommonOptions & DatePickerOptions,
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
@@ -171,6 +181,7 @@ const DatePickerCell = (
     <span className={classes.datePicker}>
       <MuiPickersUtilsProvider utils={DayjsUtils}>
         <KeyboardDatePicker
+          autoFocus={props.autoFocus}
           format={props.format}
           value={value}
           views={props.views}
@@ -190,7 +201,7 @@ const DatePickerCell = (
 }
 
 const TimePickerCell = (
-  props: EditComponentProps<Entity> & DatePickerOptions,
+  props: EditComponentProps<Entity> & CommonOptions & DatePickerOptions,
 ) => {
   const { field } = props.columnDef
   const error = useInputErrorFromContext(field)
@@ -213,6 +224,7 @@ const TimePickerCell = (
     <span className={classes.timePicker}>
       <MuiPickersUtilsProvider utils={DayjsUtils}>
         <KeyboardTimePicker
+          autoFocus={props.autoFocus}
           format={props.format}
           value={value}
           onChange={onChange}
@@ -232,9 +244,10 @@ const TimePickerCell = (
 }
 
 const EntitySelectCell = (
-  props: EditComponentProps<Entity> & {
-    sheetName: string
-  },
+  props: EditComponentProps<Entity> &
+    CommonOptions & {
+      sheetName: string
+    },
 ) => {
   const l = useLocale()
   const { sheetName, columnDef, onChange } = props
@@ -244,6 +257,7 @@ const EntitySelectCell = (
   const { openDialog } = useEntityDialogContext()
   return (
     <TextField
+      autoFocus={props.autoFocus}
       type="text"
       value={
         entity?.[ENTITY_META_FIELD]?.displayText || l.placeholders.pleaseSelect
@@ -264,34 +278,48 @@ const EntitySelectCell = (
 
 export const EditCellFor = (column: SColumn) =>
   function EditCell(props: EditComponentProps<Entity>): JSX.Element {
+    // 最初のカラムが readonly のときは無視されるが仕方ない
+    const autoFocus = column.index === 0
     switch (column.form) {
       case 'text':
-        return <TextInputCell {...props} />
+        return <TextInputCell autoFocus={autoFocus} {...props} />
       case 'text-multiline':
-        return <TextInputCell {...props} multiline />
+        return <TextInputCell autoFocus={autoFocus} {...props} multiline />
       case 'number':
-        return <NumberInputCell {...props} />
+        return <NumberInputCell autoFocus={autoFocus} {...props} />
       case 'select': {
         const { labels = [] } = column.enumColumnProperties || {}
-        return <SelectInputCell {...props} labels={labels} />
+        return (
+          <SelectInputCell autoFocus={autoFocus} {...props} labels={labels} />
+        )
       }
       case 'select-multiple': {
         const { labels = [] } = column.enumColumnProperties || {}
-        return <MultipleSelectInputCell {...props} labels={labels} />
+        return (
+          <MultipleSelectInputCell
+            autoFocus={autoFocus}
+            {...props}
+            labels={labels}
+          />
+        )
       }
       case 'entity':
         return (
-          <EntitySelectCell {...props} {...column.entityColumnProperties!} />
+          <EntitySelectCell
+            autoFocus={autoFocus}
+            {...props}
+            {...column.entityColumnProperties!}
+          />
         )
       case 'calendar': {
         const options: DatePickerOptions = column.formOptions
-        return <DatePickerCell {...props} {...options} />
+        return <DatePickerCell autoFocus={autoFocus} {...props} {...options} />
       }
       case 'time': {
         const options: DatePickerOptions = column.formOptions
-        return <TimePickerCell {...props} {...options} />
+        return <TimePickerCell autoFocus={autoFocus} {...props} {...options} />
       }
       default:
-        return <TextInputCell {...props} />
+        return <TextInputCell autoFocus={autoFocus} {...props} />
     }
   }

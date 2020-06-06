@@ -89,39 +89,42 @@ export class EntityController {
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const columns: SheetInfo['columns'] = Object.keys(Schema).map((field) => {
-      const schemaField = Schema[field]
-      const { title, enumLabels, textOptions } = View.columns[field] || {}
-      const column: Column = dropUndef({
-        field,
-        title: title || field,
-        form: schemaField.type.form,
-        formOptions: schemaField.type.formOptions,
-        searchable: schemaField.searchable || undefined,
-        // access policy で readonly になることがある
-        readonly: schemaField.readonly || undefined,
-        readonlyOnCreate: userAccessPolicy.ofCreate?.uneditableColumns?.includes(
+    const columns: SheetInfo['columns'] = Object.keys(Schema).map(
+      (field, index) => {
+        const schemaField = Schema[field]
+        const { title, enumLabels, textOptions } = View.columns[field] || {}
+        const column: Column = dropUndef({
           field,
-        ),
-        readonlyOnUpdate: userAccessPolicy.ofUpdate?.uneditableColumns?.includes(
-          field,
-        ),
-        entityColumnProperties: schemaField.entityProperties,
-        enumColumnProperties: enumLabels
-          ? {
-              multiple: schemaField.type.rawType === 'text_list',
-              labels: Object.entries(enumLabels).map(([value, label]) => ({
-                value,
-                label,
-              })),
-            }
-          : undefined,
-        textColumnProperties: textOptions
-          ? { isLink: Boolean(textOptions.isLink) }
-          : undefined,
-      })
-      return column
-    })
+          title: title || field,
+          form: schemaField.type.form,
+          formOptions: schemaField.type.formOptions,
+          index,
+          searchable: schemaField.searchable || undefined,
+          // access policy で readonly になることがある
+          readonly: schemaField.readonly || undefined,
+          readonlyOnCreate: userAccessPolicy.ofCreate?.uneditableColumns?.includes(
+            field,
+          ),
+          readonlyOnUpdate: userAccessPolicy.ofUpdate?.uneditableColumns?.includes(
+            field,
+          ),
+          entityColumnProperties: schemaField.entityProperties,
+          enumColumnProperties: enumLabels
+            ? {
+                multiple: schemaField.type.rawType === 'text_list',
+                labels: Object.entries(enumLabels).map(([value, label]) => ({
+                  value,
+                  label,
+                })),
+              }
+            : undefined,
+          textColumnProperties: textOptions
+            ? { isLink: Boolean(textOptions.isLink) }
+            : undefined,
+        })
+        return column
+      },
+    )
 
     const title = View.title
     const enableDetail = Boolean(View.enableDetail)
