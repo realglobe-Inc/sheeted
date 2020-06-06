@@ -4,8 +4,10 @@ import {
   CalendarDateInterceptor,
 } from '@sheeted/core/build/interceptors'
 import { v4 as uuid } from 'uuid'
+import { CreateQuery } from 'mongoose'
 
 import { AggregationModel } from '../aggregation/aggregation.model'
+import { AggregationEntity } from '../aggregation/aggregation.entity'
 
 import { ReportEntity } from './report.entity'
 import { ReportModel } from './report.model'
@@ -35,7 +37,7 @@ const updateAggregation = async (report: ReportEntity) => {
       project,
       month,
       hours,
-    })
+    } as CreateQuery<AggregationEntity>)
   }
 }
 
