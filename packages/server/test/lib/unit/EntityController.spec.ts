@@ -1,5 +1,5 @@
 import '../../tools/typings'
-import mongoose from 'mongoose'
+import mongoose, { CreateQuery } from 'mongoose'
 import {
   DefaultIAMRoles,
   IAM_USER_SHEET,
@@ -215,7 +215,7 @@ test('EntityController.performAction()', async () => {
   const entity: EntityBase = await app1Model.create({
     id: 'entity',
     n: 10,
-  })
+  } as CreateQuery<App1Entity>)
   // n が10以下なら100にするアクション
   await controller.performAction('set100', [entity.id])
   expect(await app1Model.findOne({ id: entity.id })).toMatchObject({
