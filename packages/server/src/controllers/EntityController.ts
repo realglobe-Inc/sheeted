@@ -165,15 +165,11 @@ export class EntityController {
     const words = search.split(/\s/).filter(Boolean)
     const searchQuery: SearchQuery<any> | undefined =
       searchFields.length > 0 ? { fields: searchFields, words } : undefined
-    const sortQuery: SortQuery<any>[] = sort.map((field) => ({
-      field, // FIXME: '' なら asc、 '-' なら desc
-      order: 'asc',
-    }))
     const result = await this.repository.find({
       page,
       limit,
       search: searchQuery,
-      sort: sortQuery,
+      sort: sort as SortQuery<any>[],
       filter: queryFilter,
     })
     const entities = result.entities.map((entity) =>

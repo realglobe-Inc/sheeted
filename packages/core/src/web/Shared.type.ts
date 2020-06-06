@@ -70,7 +70,10 @@ export type ListQuery = {
   page: number
   limit: number
   search: string
-  sort: string[]
+  sort: {
+    field: string
+    order: 'asc' | 'desc'
+  }[]
 }
 
 export type ListResult = {
