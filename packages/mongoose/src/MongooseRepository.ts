@@ -1,4 +1,4 @@
-import { Document, Model as MongoModel } from 'mongoose'
+import { Document, Model as MongoModel, CreateQuery } from 'mongoose'
 import {
   Repository,
   RepositoryDriver,
@@ -83,12 +83,12 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
   }
 
   async create(input: Partial<Entity>): Promise<Entity> {
-    const doc = await this.model.create(input)
+    const doc = await this.model.create(input as CreateQuery<Entity>)
     return doc.toJSON() as Entity
   }
 
   async createBulk(inputs: Partial<Entity>[]): Promise<Entity[]> {
-    const docs = await this.model.create(inputs)
+    const docs = await this.model.create(inputs as CreateQuery<Entity>[])
     return docs.map((doc) => doc.toJSON() as Entity)
   }
 

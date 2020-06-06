@@ -83,7 +83,7 @@ test('MongoDriver/02 complex queries', async () => {
   }
   const subModel = compileModel('Sub', subSchema)
   const [sub1, sub2] = (
-    await subModel.create([
+    await subModel.insertMany([
       {
         name: 'sub1',
       },
