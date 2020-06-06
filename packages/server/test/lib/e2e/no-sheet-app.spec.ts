@@ -55,13 +55,21 @@ it('should succeed to get IAMUser sheet info', async () => {
         field: 'name',
         title: 'User name',
         form: 'text',
+        index: 0,
         searchable: true,
       },
-      { field: 'email', title: 'Email', form: 'text', searchable: true },
+      {
+        field: 'email',
+        title: 'Email',
+        form: 'text',
+        index: 1,
+        searchable: true,
+      },
       {
         field: 'roles',
         title: 'Roles',
         form: 'select-multiple',
+        index: 2,
         enumColumnProperties: {
           multiple: true,
           labels: [

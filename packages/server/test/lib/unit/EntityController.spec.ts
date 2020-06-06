@@ -64,12 +64,14 @@ test('EntityController with IAMUser with admin', async () => {
       {
         field: 'name',
         title: 'User name',
+        index: 0,
         searchable: true,
         form: 'text',
       },
       {
         field: 'email',
         title: 'Email',
+        index: 1,
         searchable: true,
         form: 'text',
       },
@@ -77,6 +79,7 @@ test('EntityController with IAMUser with admin', async () => {
         field: 'roles',
         title: 'Roles',
         form: 'select-multiple',
+        index: 2,
         enumColumnProperties: {
           multiple: true,
           labels: [

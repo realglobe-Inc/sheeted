@@ -7,6 +7,7 @@ export type Column = {
   title: string
   form?: InputForm
   formOptions?: any
+  index: number
 
   searchable?: boolean
   readonly?: boolean
