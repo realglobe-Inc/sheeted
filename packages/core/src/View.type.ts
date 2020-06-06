@@ -15,10 +15,23 @@ export type ColumnView = {
   }
 
   /**
-   * Text options (only valid for text type)
+   * Options for text type
    */
   textOptions?: {
     isLink?: true
+  }
+
+  /**
+   * Options for numeric type
+   */
+  numericOptions?: {
+    /**
+     * Format number with [Intl.NumberFormat](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
+     */
+    formatWithIntl?: {
+      locales: string
+      options: Intl.NumberFormatOptions
+    }
   }
 }
 

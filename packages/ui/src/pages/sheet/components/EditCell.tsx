@@ -288,13 +288,13 @@ export const EditCellFor = (column: SColumn) =>
       case 'number':
         return <NumberInputCell autoFocus={autoFocus} {...props} />
       case 'select': {
-        const { labels = [] } = column.enumColumnProperties || {}
+        const { labels = [] } = column.custom.enum || {}
         return (
           <SelectInputCell autoFocus={autoFocus} {...props} labels={labels} />
         )
       }
       case 'select-multiple': {
-        const { labels = [] } = column.enumColumnProperties || {}
+        const { labels = [] } = column.custom.enum || {}
         return (
           <MultipleSelectInputCell
             autoFocus={autoFocus}
@@ -308,7 +308,7 @@ export const EditCellFor = (column: SColumn) =>
           <EntitySelectCell
             autoFocus={autoFocus}
             {...props}
-            {...column.entityColumnProperties!}
+            {...(column.custom.entity || { sheetName: 'NotFound' })}
           />
         )
       case 'calendar': {

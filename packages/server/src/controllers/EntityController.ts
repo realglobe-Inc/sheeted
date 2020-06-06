@@ -92,7 +92,8 @@ export class EntityController {
     const columns: SheetInfo['columns'] = Object.keys(Schema).map(
       (field, index) => {
         const schemaField = Schema[field]
-        const { title, enumLabels, textOptions } = View.columns[field] || {}
+        const { title, enumLabels, textOptions, numericOptions } =
+          View.columns[field] || {}
         const column: Column = dropUndef({
           field,
           title: title || field,
@@ -108,19 +109,22 @@ export class EntityController {
           readonlyOnUpdate: userAccessPolicy.ofUpdate?.uneditableColumns?.includes(
             field,
           ),
-          entityColumnProperties: schemaField.entityProperties,
-          enumColumnProperties: enumLabels
-            ? {
-                multiple: schemaField.type.rawType === 'text_list',
-                labels: Object.entries(enumLabels).map(([value, label]) => ({
-                  value,
-                  label,
-                })),
-              }
-            : undefined,
-          textColumnProperties: textOptions
-            ? { isLink: Boolean(textOptions.isLink) }
-            : undefined,
+          custom: {
+            entity: schemaField.entityProperties,
+            enum: enumLabels
+              ? {
+                  multiple: schemaField.type.rawType === 'text_list',
+                  labels: Object.entries(enumLabels).map(([value, label]) => ({
+                    value,
+                    label,
+                  })),
+                }
+              : undefined,
+            text: textOptions
+              ? { isLink: Boolean(textOptions.isLink) }
+              : undefined,
+            numeric: numericOptions,
+          },
         })
         return column
       },
