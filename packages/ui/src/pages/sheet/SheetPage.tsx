@@ -3,7 +3,6 @@ import { SheetOverview } from '@sheeted/core/build/web/Shared.type'
 import MaterialTable, { Options as TableOptions } from 'material-table'
 import { IAMUserEntity } from '@sheeted/core'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
-import { useHistory } from 'react-router-dom'
 
 import { PageLayout } from '../../layout/PageLayout'
 import { useCurrentSheet } from '../../hooks/CurrentSheetHook'
@@ -12,8 +11,6 @@ import {
   useSheetInfoContext,
   SheetInfoContextProvider,
 } from '../../hooks/SheetInfoContextHook'
-import { useUIPaths } from '../../hooks/UIPathHook'
-import { Entity } from '../../types/Entity.type'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
@@ -32,6 +29,7 @@ import { ActionContextProvider } from './hooks/ActionContextHook'
 import { ActionDialog } from './components/ActionDialog'
 import { useTableActions } from './hooks/TableActionsHook'
 import { useRefreshTable } from './hooks/RefreshTableHook'
+import { useDetailCallback } from './hooks/DetailCallbackHook'
 
 const tableOptions: TableOptions = {
   pageSize: 10,
@@ -72,31 +70,21 @@ type TableRef = {
 const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   sheet,
 }) => {
+  const { sheetName } = sheet
   const tableRef = useRef<TableRef>()
   const { result: info, trigger, error } = useSheetInfoContext()
-  const queryEntities = useQueryEntities(sheet.sheetName)
+  const queryEntities = useQueryEntities(sheetName)
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
   const refreshTable = useRefreshTable(tableRef.current)
   const { actions, onSelectionChange } = useTableActions(info, refreshTable)
-  const uiPaths = useUIPaths()
   useEffect(() => {
-    trigger(sheet.sheetName)
-  }, [sheet.sheetName, trigger])
+    trigger(sheetName)
+  }, [sheetName, trigger])
   const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
   const localization = useTableLocalization({ forbidden })
-  const history = useHistory()
-  const onRowClick = info?.enableDetail
-    ? (event: any, entity: any) => {
-        if (Object.getOwnPropertyDescriptor(entity, 'id')) {
-          const path = uiPaths.entityDetailPath({
-            sheetName: sheet.sheetName,
-            entityId: (entity as Entity).id,
-          })
-          history.push(path)
-        }
-      }
-    : undefined
+  const goToDetail = useDetailCallback(sheetName)
+  const onRowClick = info?.enableDetail ? goToDetail : undefined
   return (
     <MaterialTable
       title={sheet.title}
