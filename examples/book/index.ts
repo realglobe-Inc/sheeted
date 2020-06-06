@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 ;(require('dotenv') as { config: () => void }).config()
 
 import { connect } from '../util/mongo.util'
