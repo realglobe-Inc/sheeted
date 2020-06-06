@@ -2,6 +2,11 @@ import { InputForm } from '../Type.type'
 import { SheetGroup } from '../SheetGroup.type'
 
 import { ENTITY_META_FIELD } from './Consts'
+
+export type AppInfo = {
+  appTitle: string
+}
+
 export type Column = {
   field: string
   title: string

@@ -11,10 +11,8 @@ import { RouterParams } from '../types/Router.type'
 const { version } = require('../../package.json') as { version: string } // import にすると build/ に package.json が含まれてしまう
 
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
-// TODO: 設定から読み込む
-const TITLE = 'Sheeted App'
 
-export const ContentRoute = (_params: RouterParams): IRouter => {
+export const ContentRoute = ({ appTitle }: RouterParams): IRouter => {
   // TODO: UI と共通化
   const jsUrl = new URL(`/${version}/js/sheeted.js`, JS_CDN_URL).toString()
   const htmlPath = join(__dirname, '../../assets/index.html.template')
@@ -27,7 +25,8 @@ export const ContentRoute = (_params: RouterParams): IRouter => {
       throw new Error(`Empty host`)
     }
     const apiUrl = `${protocol}://${host}`
-    const html = compiled({ title: TITLE, apiUrl, jsUrl })
+    // TODO: consider to escape appTitle
+    const html = compiled({ appTitle, apiUrl, jsUrl })
     res.send(html)
   })
 }

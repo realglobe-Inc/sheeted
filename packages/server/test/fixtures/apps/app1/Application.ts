@@ -69,6 +69,7 @@ const config: ApplicationConfig = {
 
 export function App(): Express {
   const application: Application<DefaultIAMRole> = {
+    AppTitle: 'App',
     Sheets: [App1Sheet],
     Roles: [
       { label: DefaultIAMRoles.ADMIN_ROLE, value: DefaultIAMRoles.ADMIN_ROLE },

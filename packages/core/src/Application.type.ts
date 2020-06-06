@@ -8,6 +8,7 @@ export type RoleObject<Role extends string = string> = {
 }
 
 export type Application<Role extends string> = {
+  AppTitle: string
   Sheets: readonly Sheet<any, Role>[]
   Roles: readonly RoleObject[]
   Groups?: readonly SheetGroup[]

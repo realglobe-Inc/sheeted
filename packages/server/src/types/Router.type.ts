@@ -7,6 +7,7 @@ import { JWT } from '../JWT'
 import { ApplicationConfig } from './ApplicationConfig.type'
 
 export type RouterParams = {
+  appTitle: string
   sheets: Sheet[]
   groups: SheetGroup[]
   config: ApplicationConfig

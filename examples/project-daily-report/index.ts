@@ -21,6 +21,7 @@ async function main() {
 
   const app = createApp(
     {
+      AppTitle: 'Project Daily Report',
       Sheets: [ProjectSheet, ReportSheet, AggregationSheet],
       Roles: RoleLabels,
       DatabaseDriver: MongoDriver,
