@@ -64,7 +64,7 @@ const EnumValueHoc = (column: Column): FC<FieldValueProps> => {
       <>
         {values
           .map((value) => {
-            const label = column.enumColumnProperties!.labels.find(
+            const label = column.custom.enum?.labels.find(
               (l) => l.value === value,
             )
             return label ? label.label : value
@@ -87,9 +87,9 @@ const EntityValueHoc = (column: Column): FC<FieldValueProps> => {
 }
 
 export const EntityFieldValueHoc = (column: Column): FC<FieldValueProps> => {
-  const isEnum = Boolean(column.enumColumnProperties)
-  const isEntity = Boolean(column.entityColumnProperties)
-  const isLink = Boolean(column.textColumnProperties?.isLink)
+  const isEnum = Boolean(column.custom.enum)
+  const isEntity = Boolean(column.custom.entity)
+  const isLink = Boolean(column.custom.text?.isLink)
   const isMultilineText = column.form === 'text-multiline'
   if (isEnum) {
     return EnumValueHoc(column)

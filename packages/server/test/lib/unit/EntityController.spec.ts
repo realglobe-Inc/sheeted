@@ -67,6 +67,7 @@ test('EntityController with IAMUser with admin', async () => {
         index: 0,
         searchable: true,
         form: 'text',
+        custom: {},
       },
       {
         field: 'email',
@@ -74,24 +75,27 @@ test('EntityController with IAMUser with admin', async () => {
         index: 1,
         searchable: true,
         form: 'text',
+        custom: {},
       },
       {
         field: 'roles',
         title: 'Roles',
         form: 'select-multiple',
         index: 2,
-        enumColumnProperties: {
-          multiple: true,
-          labels: [
-            {
-              label: 'ADMIN',
-              value: DefaultIAMRoles.ADMIN_ROLE,
-            },
-            {
-              label: 'USER',
-              value: DefaultIAMRoles.DEFAULT_ROLE,
-            },
-          ],
+        custom: {
+          enum: {
+            multiple: true,
+            labels: [
+              {
+                label: 'ADMIN',
+                value: DefaultIAMRoles.ADMIN_ROLE,
+              },
+              {
+                label: 'USER',
+                value: DefaultIAMRoles.DEFAULT_ROLE,
+              },
+            ],
+          },
         },
       },
     ],

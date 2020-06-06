@@ -15,18 +15,20 @@ export type Column = {
   readonlyOnCreate?: boolean
   readonlyOnUpdate?: boolean
 
-  entityColumnProperties?: {
-    sheetName: string
-  }
-  enumColumnProperties?: {
-    multiple?: boolean
-    labels: {
-      label: string
-      value: string
-    }[]
-  }
-  textColumnProperties?: {
-    isLink?: boolean
+  custom: {
+    entity?: {
+      sheetName: string
+    }
+    enum?: {
+      multiple?: boolean
+      labels: {
+        label: string
+        value: string
+      }[]
+    }
+    text?: {
+      isLink?: boolean
+    }
   }
 }
 

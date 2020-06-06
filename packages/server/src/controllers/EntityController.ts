@@ -108,19 +108,21 @@ export class EntityController {
           readonlyOnUpdate: userAccessPolicy.ofUpdate?.uneditableColumns?.includes(
             field,
           ),
-          entityColumnProperties: schemaField.entityProperties,
-          enumColumnProperties: enumLabels
-            ? {
-                multiple: schemaField.type.rawType === 'text_list',
-                labels: Object.entries(enumLabels).map(([value, label]) => ({
-                  value,
-                  label,
-                })),
-              }
-            : undefined,
-          textColumnProperties: textOptions
-            ? { isLink: Boolean(textOptions.isLink) }
-            : undefined,
+          custom: {
+            entity: schemaField.entityProperties,
+            enum: enumLabels
+              ? {
+                  multiple: schemaField.type.rawType === 'text_list',
+                  labels: Object.entries(enumLabels).map(([value, label]) => ({
+                    value,
+                    label,
+                  })),
+                }
+              : undefined,
+            text: textOptions
+              ? { isLink: Boolean(textOptions.isLink) }
+              : undefined,
+          },
         })
         return column
       },

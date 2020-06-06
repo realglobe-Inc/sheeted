@@ -57,6 +57,7 @@ it('should succeed to get IAMUser sheet info', async () => {
         form: 'text',
         index: 0,
         searchable: true,
+        custom: {},
       },
       {
         field: 'email',
@@ -64,24 +65,27 @@ it('should succeed to get IAMUser sheet info', async () => {
         form: 'text',
         index: 1,
         searchable: true,
+        custom: {},
       },
       {
         field: 'roles',
         title: 'Roles',
         form: 'select-multiple',
         index: 2,
-        enumColumnProperties: {
-          multiple: true,
-          labels: [
-            {
-              label: DefaultIAMRoles.ADMIN_ROLE,
-              value: DefaultIAMRoles.ADMIN_ROLE,
-            },
-            {
-              label: DefaultIAMRoles.DEFAULT_ROLE,
-              value: DefaultIAMRoles.DEFAULT_ROLE,
-            },
-          ],
+        custom: {
+          enum: {
+            multiple: true,
+            labels: [
+              {
+                label: DefaultIAMRoles.ADMIN_ROLE,
+                value: DefaultIAMRoles.ADMIN_ROLE,
+              },
+              {
+                label: DefaultIAMRoles.DEFAULT_ROLE,
+                value: DefaultIAMRoles.DEFAULT_ROLE,
+              },
+            ],
+          },
         },
       },
     ],
