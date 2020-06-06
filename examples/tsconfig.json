@@ -8,6 +8,7 @@
   "include": [
     "book",
     "account-management",
-    "project-daily-report"
+    "project-daily-report",
+    "util"
   ]
 }

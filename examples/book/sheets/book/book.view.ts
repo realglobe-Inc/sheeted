@@ -42,6 +42,9 @@ export const BookView: View<BookEntity> = {
     buyDate: {
       title: 'BUY DATE',
     },
+    readMinutes: {
+      title: 'READ TIME',
+    },
     publicationYear: {
       title: 'YEAR OF PUBLICATION',
     },

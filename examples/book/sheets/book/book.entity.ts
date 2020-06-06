@@ -11,6 +11,7 @@ export interface BookEntity extends EntityBase {
   url?: string
   buyer: IAMUserEntity
   buyDate: number
+  readMinutes: number
   publicationYear: number
   comment?: string
 }
