@@ -1,5 +1,6 @@
 export type SheetedConfig = {
   apiUrl: string
+  appTitle: string
 }
 
 export class SheetedNotConfiguredError extends Error {
@@ -12,11 +13,13 @@ export class SheetedNotConfiguredError extends Error {
 
 class SheetedGlobalConfig {
   configured = false
+  appTitle = ''
   private _apiUrl = ''
 
-  config({ apiUrl }: SheetedConfig) {
+  config({ apiUrl, appTitle }: SheetedConfig) {
     this.configured = true
     this._apiUrl = apiUrl
+    this.appTitle = appTitle
   }
 
   get apiUrl() {

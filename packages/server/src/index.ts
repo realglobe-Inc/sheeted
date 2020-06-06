@@ -31,6 +31,7 @@ export const createApp = (
   config: ApplicationConfig,
 ): Express.Express => {
   validateSheets(application.Sheets)
+  const appTitle = application.AppTitle
   const groups = [...(application.Groups || [])]
   const IAMUserSheet = buildIAMUserSheet(application.Roles)
   const sheets = [IAMUserSheet].concat(application.Sheets)
@@ -56,6 +57,7 @@ export const createApp = (
     .filter((Route): Route is RouterBuilder => Boolean(Route))
     .map((Route) =>
       Route({
+        appTitle,
         sheets,
         groups,
         config,

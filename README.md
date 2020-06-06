@@ -368,6 +368,7 @@ import { BookSheet } from './sheets/book/book.sheet'
 
 export const app = createApp(
   {
+    AppTitle: 'Book Management App',
     Sheets: [BookSheet],
     Roles: RoleLabels,
     DatabaseDriver: MongoDriver,

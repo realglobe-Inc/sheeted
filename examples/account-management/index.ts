@@ -21,6 +21,7 @@ async function main() {
 
   const app = createApp(
     {
+      AppTitle: 'Account Management App',
       Sheets: [AccountSheet, AccountPlanSheet, PlanSheet],
       Roles: RoleLabels,
       DatabaseDriver: MongoDriver,
