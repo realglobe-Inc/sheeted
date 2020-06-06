@@ -30,6 +30,9 @@ export const locale = {
   placeholders: {
     pleaseSelect: '[未選択]',
   },
+  prompts: {
+    beforeLeaveOnEdit: 'ページを移動しますか？行った変更が保存されません。',
+  },
   table: {
     permissionDenied: 'アクセス権限がありません',
     emptyList: 'データがありません',
