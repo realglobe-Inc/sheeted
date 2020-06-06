@@ -92,7 +92,8 @@ export class EntityController {
     const columns: SheetInfo['columns'] = Object.keys(Schema).map(
       (field, index) => {
         const schemaField = Schema[field]
-        const { title, enumLabels, textOptions } = View.columns[field] || {}
+        const { title, enumLabels, textOptions, numericOptions } =
+          View.columns[field] || {}
         const column: Column = dropUndef({
           field,
           title: title || field,
@@ -122,6 +123,7 @@ export class EntityController {
             text: textOptions
               ? { isLink: Boolean(textOptions.isLink) }
               : undefined,
+            numeric: numericOptions,
           },
         })
         return column

@@ -29,6 +29,12 @@ export type Column = {
     text?: {
       isLink?: boolean
     }
+    numeric?: {
+      formatWithIntl?: {
+        locales: string
+        options: Intl.NumberFormatOptions
+      }
+    }
   }
 }
 

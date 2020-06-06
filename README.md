@@ -4,11 +4,11 @@
 
 Table UI web application development framework.
 
-Sheeted aims to make it extremely easy to develop Sheet-based web applications for organizations internal use. You have only to write data models, bissiness rules, validations, and access policies, then REST API and UI will be generated automatically. You can develop practical Table UI web applications 10x faster with Sheeted.
+Sheeted aims to make it extremely easy to develop sheet-based web applications which are often used for organizations internal use and for some management use. With Sheeted, you will be released from boring coding not concerned with business rules. You can develop practical Table UI web applications 10x faster with Sheeted.
 
 ## Features
 
-* REST API and UI is auto generated
+* REST API and UI are auto generated
 * Support SAML Authentication
 * Easy to deploy
 * and more
@@ -63,6 +63,7 @@ export interface BookEntity extends EntityBase {
   url?: string
   buyer: IAMUserEntity
   buyDate: number
+  readMinutes: number
   publicationYear: number
   comment?: string
 }
@@ -116,6 +117,9 @@ export const BookSchema: Schema<BookEntity> = {
   buyDate: {
     type: Types.CalendarDate,
   },
+  readMinutes: {
+    type: Types.Time,
+  },
   publicationYear: {
     type: Types.CalendarYear,
   },
@@ -129,7 +133,7 @@ export const BookSchema: Schema<BookEntity> = {
 AccessPolicies:
 
 ```ts
-import { AccessPolicy } from '@sheeted/core'
+import { AccessPolicy, Context } from '@sheeted/core'
 
 import { Roles, Role, ActionIds } from '../../constants'
 
@@ -149,12 +153,14 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
     action: 'update',
     role: Roles.EDITOR_ROLE,
     uneditableColumns: [],
-    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'delete',
     role: Roles.EDITOR_ROLE,
-    condition: (book, ctx) => ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'custom',
@@ -179,7 +185,7 @@ export const BookActions: Action<BookEntity>[] = [
     id: ActionIds.LIKE,
     title: 'Increment like count',
     icon: 'exposure_plus_1',
-    perform: async (entities) => {
+    perform: async (entities: BookEntity[]): Promise<void> => {
       await BookModel.updateMany(
         {
           id: {
@@ -228,9 +234,9 @@ import { Validator, ValidationResult } from '@sheeted/core'
 import { BookEntity } from './book.entity'
 
 export const BookValidator: Validator<BookEntity> = (_ctx) => (
-  input,
-  _current,
-) => {
+  input: Partial<BookEntity>,
+  _current: BookEntity | null,
+): ValidationResult<BookEntity> => {
   const result = new ValidationResult<BookEntity>()
   if (input.price) {
     if (!Number.isInteger(input.price)) {
@@ -270,6 +276,15 @@ export const BookView: View<BookEntity> = {
     },
     price: {
       title: 'PRICE',
+      numericOptions: {
+        formatWithIntl: {
+          locales: 'ja-JP',
+          options: {
+            style: 'currency',
+            currency: 'JPY',
+          },
+        },
+      },
     },
     genre: {
       title: 'GENRE',
@@ -296,6 +311,9 @@ export const BookView: View<BookEntity> = {
     },
     buyDate: {
       title: 'BUY DATE',
+    },
+    readMinutes: {
+      title: 'READ TIME',
     },
     publicationYear: {
       title: 'YEAR OF PUBLICATION',

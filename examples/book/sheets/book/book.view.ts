@@ -15,6 +15,15 @@ export const BookView: View<BookEntity> = {
     },
     price: {
       title: 'PRICE',
+      numericOptions: {
+        formatWithIntl: {
+          locales: 'ja-JP',
+          options: {
+            style: 'currency',
+            currency: 'JPY',
+          },
+        },
+      },
     },
     genre: {
       title: 'GENRE',

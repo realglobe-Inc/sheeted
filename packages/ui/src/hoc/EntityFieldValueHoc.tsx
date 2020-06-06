@@ -51,6 +51,23 @@ const MultilineTextValueHoc = (column: Column): FC<FieldValueProps> => {
   }
 }
 
+const NumericValueHoc = (column: Column): FC<FieldValueProps> => {
+  return function NumericValue({ entity }: FieldValueProps) {
+    if (!entity) {
+      return null
+    }
+    const rawValue = (entity[column.field] || 0) as number
+    const formatWithIntl = column.custom.numeric?.formatWithIntl
+    const value = formatWithIntl
+      ? new Intl.NumberFormat(
+          formatWithIntl.locales,
+          formatWithIntl.options,
+        ).format(rawValue)
+      : rawValue
+    return <>{value}</>
+  }
+}
+
 const EnumValueHoc = (column: Column): FC<FieldValueProps> => {
   return function EnumValue({ entity }: FieldValueProps) {
     if (!entity) {
@@ -91,6 +108,7 @@ export const EntityFieldValueHoc = (column: Column): FC<FieldValueProps> => {
   const isEntity = Boolean(column.custom.entity)
   const isLink = Boolean(column.custom.text?.isLink)
   const isMultilineText = column.form === 'text-multiline'
+  const isNumeric = Boolean(column.custom.numeric)
   if (isEnum) {
     return EnumValueHoc(column)
   }
@@ -102,6 +120,9 @@ export const EntityFieldValueHoc = (column: Column): FC<FieldValueProps> => {
   }
   if (isMultilineText) {
     return MultilineTextValueHoc(column)
+  }
+  if (isNumeric) {
+    return NumericValueHoc(column)
   }
   return PlainValueHoc(column)
 }
