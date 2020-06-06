@@ -1,0 +1,31 @@
+{
+  "name": "@sheeted/cli",
+  "description": "CLI of Sheeted framework",
+  "version": "0.6.0",
+  "author": "Sheeted team <sheeted@realglobe.jp>",
+  "dependencies": {
+    "commander": "^5.1.0",
+    "lodash.template": "^4.5.0"
+  },
+  "files": [
+    "build"
+  ],
+  "license": "UNLICENSED",
+  "main": "build",
+  "bin": {
+    "sheeted": "./bin/sheeted.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf build",
+    "prepare": "yarn build",
+    "test": "jest"
+  },
+  "types": "build/index.d.ts",
+  "devDependencies": {
+    "@types/lodash.template": "^4.5.0"
+  }
+}
