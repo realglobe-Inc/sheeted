@@ -3,7 +3,8 @@ import fs from 'fs'
 
 import mkdirp from 'mkdirp'
 import template from 'lodash.template'
-import { pascalCase, paramCase } from 'change-case'
+import { pascalCase } from 'pascal-case'
+import { paramCase } from 'param-case'
 
 const Resources = [
   'access-policies',
