@@ -1,6 +1,6 @@
 import { Hook } from '@sheeted/core'
 
-import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
 
 export const <%= entityNamePascal %>Hook: Hook<<%= entityNamePascal %>Entity> = {
   async onCreate(entity, ctx) {

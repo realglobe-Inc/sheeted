@@ -1,6 +1,6 @@
 import { Validator, ValidationResult } from '@sheeted/core'
 
-import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
 
 export const <%= entityNamePascal %>Validator: Validator<<%= entityNamePascal %>Entity> = (_ctx) => (
   input: Partial<<%= entityNamePascal %>Entity>,

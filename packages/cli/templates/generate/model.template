@@ -1,7 +1,7 @@
 import { compileModel } from '@sheeted/mongoose'
 
-import { <%= entityNamePascal %>Schema } from './<%= entityNameKebab %>.schema'
-import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+import { <%= entityNamePascal %>Schema } from './<%= entityNameParam %>.schema'
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
 
 // TODO: Pass model name to the first argument. The model name must be the same as sheet name
 export const <%= entityNamePascal %>Model = compileModel<<%= entityNamePascal %>Entity>('<%= entityNamePascal %>', <%= entityNamePascal %>Schema)

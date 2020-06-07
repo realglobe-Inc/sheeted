@@ -3,9 +3,7 @@ import fs from 'fs'
 
 import mkdirp from 'mkdirp'
 import template from 'lodash.template'
-import { paramCase } from 'change-case'
-
-import { assertPascalCase } from './helpers'
+import { pascalCase, paramCase } from 'change-case'
 
 const Resources = [
   'access-policies',
@@ -19,30 +17,23 @@ const Resources = [
   'view',
 ]
 
-export type GenerateSheetOptions = {
-  entityName: string
-}
+const TEMPLATE_DIR = path.resolve(__dirname, '../templates/generate')
 
-export const generateSheet = async (
-  distDir: string,
-  { entityName }: GenerateSheetOptions,
-): Promise<void> => {
-  assertPascalCase(entityName)
+export const generateSheet = async (distDir: string): Promise<void> => {
+  const entityName = path.basename(distDir)
+  const entityNameParam = paramCase(entityName)
+  const entityNamePascal = pascalCase(entityNameParam)
+
   await Promise.all(
     Resources.map(async (resource) => {
-      const templatePath = path.resolve(
-        __dirname,
-        '../templates/generate',
-        resource + '.template',
-      )
+      const templatePath = path.resolve(TEMPLATE_DIR, resource + '.template')
       const source = await fs.promises.readFile(templatePath, 'utf-8')
       const compiled = template(source)
-      const kebab = paramCase(entityName)
       const content = compiled({
-        entityNamePascal: entityName,
-        entityNameKebab: kebab,
+        entityNamePascal,
+        entityNameParam,
       })
-      const destPath = path.join(distDir, `${kebab}.${resource}.ts`)
+      const destPath = path.join(distDir, `${entityNameParam}.${resource}.ts`)
       await mkdirp(distDir)
       await fs.promises.writeFile(destPath, content)
       console.log(`File generated: ${destPath}`)
