@@ -379,7 +379,13 @@ export const app = createApp(
 )
 ```
 
-For more information, please visit:
+You can create sheet source files via CLI.
+
+```console
+$ npx @sheeted/cli generate dir/to/sheet-name
+```
+
+For more information about usage, please visit:
 
 * [examples/](./examples)
 * [API Documentation](https://realglobe-inc.github.io/sheeted/)
