@@ -12,10 +12,13 @@ export function CLI(argv: string[]): void {
   program
     .command('generate <path>')
     .description('Generate sheet files')
-    .action(function (distDir) {
-      void generateSheet(distDir).catch((e) => {
+    .action(async function (distDir) {
+      const destPaths = await generateSheet(distDir).catch((e) => {
         console.error(e)
         process.exit(1)
+      })
+      destPaths.forEach((dest) => {
+        console.log(`File generated: ${dest}`)
       })
     })
 

@@ -19,12 +19,12 @@ const Resources = [
 
 const TEMPLATE_DIR = path.resolve(__dirname, '../templates/generate')
 
-export const generateSheet = async (distDir: string): Promise<void> => {
+export const generateSheet = async (distDir: string): Promise<string[]> => {
   const entityName = path.basename(distDir)
   const entityNameParam = paramCase(entityName)
   const entityNamePascal = pascalCase(entityNameParam)
 
-  await Promise.all(
+  const destPaths = await Promise.all(
     Resources.map(async (resource) => {
       const templatePath = path.resolve(TEMPLATE_DIR, resource + '.template')
       const source = await fs.promises.readFile(templatePath, 'utf-8')
@@ -36,7 +36,8 @@ export const generateSheet = async (distDir: string): Promise<void> => {
       const destPath = path.join(distDir, `${entityNameParam}.${resource}.ts`)
       await mkdirp(distDir)
       await fs.promises.writeFile(destPath, content)
-      console.log(`File generated: ${destPath}`)
+      return destPath
     }),
   )
+  return destPaths
 }
