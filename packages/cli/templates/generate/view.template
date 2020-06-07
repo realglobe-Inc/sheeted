@@ -1,0 +1,13 @@
+import { View } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+
+export const <%= entityNamePascal %>View: View<<%= entityNamePascal %>Entity> = {
+  title: 'Sheet Title',
+  display: (entity) => entity.name,
+  columns: {
+    name: {
+      title: 'NAME',
+    },
+  },
+}

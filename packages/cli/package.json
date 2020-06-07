@@ -4,8 +4,10 @@
   "version": "0.6.0",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
+    "change-case": "^4.1.1",
     "commander": "^5.1.0",
-    "lodash.template": "^4.5.0"
+    "lodash.template": "^4.5.0",
+    "mkdirp": "^1.0.4"
   },
   "files": [
     "build"

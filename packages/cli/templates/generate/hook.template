@@ -1,0 +1,15 @@
+import { Hook } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+
+export const <%= entityNamePascal %>Hook: Hook<<%= entityNamePascal %>Entity> = {
+  async onCreate(entity, ctx) {
+    // TODO
+  },
+  async onUpdate(entity, ctx) {
+    // TODO
+  },
+  async onDestroy(entity, ctx) {
+    // TODO
+  },
+}

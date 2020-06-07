@@ -1,0 +1,19 @@
+import { Validator, ValidationResult } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameKebab %>.entity'
+
+export const <%= entityNamePascal %>Validator: Validator<<%= entityNamePascal %>Entity> = (_ctx) => (
+  input: Partial<<%= entityNamePascal %>Entity>,
+  _current: <%= entityNamePascal %>Entity | null,
+): ValidationResult<<%= entityNamePascal %>Entity> => {
+  const result = new ValidationResult<<%= entityNamePascal %>Entity>()
+  if (input.name) {
+    if (input.name.length < 2) {
+      result.appendError({
+        field: 'name',
+        message: 'Must have length more than 1',
+      })
+    }
+  }
+  return result
+}

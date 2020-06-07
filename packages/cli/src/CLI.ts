@@ -1,5 +1,7 @@
 import { program } from 'commander'
 
+import { generateSheet } from './GenerateSheet'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version: VERSION } = require('../package.json') as { version: string }
 const COMMAND_NAME = 'sheeted'
@@ -13,7 +15,10 @@ export function CLI(argv: string[]): void {
     .requiredOption('-n, --entity-name <EntityName>', 'entity name (CamelCase)')
     .action(function (dirPath, { entityName }) {
       // TODO
-      console.log(dirPath, entityName)
+      void generateSheet(dirPath, { entityName }).catch((e) => {
+        console.error(e)
+        process.exit(1)
+      })
     })
 
   program.parse(argv)
