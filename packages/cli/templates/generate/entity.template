@@ -1,0 +1,5 @@
+import { EntityBase } from '@sheeted/core'
+
+export interface <%= entityNamePascal %>Entity extends EntityBase {
+  name: string
+}

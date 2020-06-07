@@ -1,0 +1,7 @@
+import { Action } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
+
+export const <%= entityNamePascal %>Actions: Action<<%= entityNamePascal %>Entity>[] = [
+  // TODO
+]

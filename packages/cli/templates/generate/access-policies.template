@@ -1,0 +1,23 @@
+import { AccessPolicy, DefaultIAMRoles } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
+
+// TODO: Pass Role to the second type argument of AccessPolicy
+export const <%= entityNamePascal %>AccessPolicies: AccessPolicy<<%= entityNamePascal %>Entity, string>[] = [
+  {
+    action: 'read',
+    role: DefaultIAMRoles.DEFAULT_ROLE,
+  },
+  {
+    action: 'create',
+    role: DefaultIAMRoles.DEFAULT_ROLE,
+  },
+  {
+    action: 'update',
+    role: DefaultIAMRoles.DEFAULT_ROLE,
+  },
+  {
+    action: 'delete',
+    role: DefaultIAMRoles.DEFAULT_ROLE,
+  },
+]

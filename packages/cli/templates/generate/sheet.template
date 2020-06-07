@@ -1,0 +1,19 @@
+import { Sheet } from '@sheeted/core'
+
+import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
+import { <%= entityNamePascal %>Schema } from './<%= entityNameParam %>.schema'
+import { <%= entityNamePascal %>Validator } from './<%= entityNameParam %>.validator'
+import { <%= entityNamePascal %>View } from './<%= entityNameParam %>.view'
+import { <%= entityNamePascal %>AccessPolicies } from './<%= entityNameParam %>.access-policies'
+import { <%= entityNamePascal %>Actions } from './<%= entityNameParam %>.actions'
+import { <%= entityNamePascal %>Hook } from './<%= entityNameParam %>.hook'
+
+export const <%= entityNamePascal %>Sheet: Sheet<<%= entityNamePascal %>Entity, string> = {
+  name: '<%= entityNamePascal %>',
+  Schema: <%= entityNamePascal %>Schema,
+  Validator: <%= entityNamePascal %>Validator,
+  View: <%= entityNamePascal %>View,
+  AccessPolicies: <%= entityNamePascal %>AccessPolicies,
+  Actions: <%= entityNamePascal %>Actions,
+  Hook: <%= entityNamePascal %>Hook,
+}

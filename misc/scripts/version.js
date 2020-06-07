@@ -29,6 +29,7 @@ const updatePackageVersions = async (version = updatePatchVersion(currentVersion
     return pkg
   }
   await editJson('package.json', updateVersion)
+  await editJson('packages/cli/package.json', updateVersion)
   await editJson('packages/core/package.json', updateVersion)
   await editJson('packages/mongoose/package.json', (pkg) => {
     pkg = updateVersion(pkg)
