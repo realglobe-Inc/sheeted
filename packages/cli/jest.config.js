@@ -2,6 +2,7 @@ const { join } = require('path')
 
 module.exports = {
   preset: "ts-jest",
+  testTimeout: 10000,
   clearMocks: true,
   collectCoverageFrom: [
     "src/**/*.ts"
