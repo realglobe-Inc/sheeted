@@ -18,7 +18,8 @@
   },
   "files": [
     "bin",
-    "build"
+    "build",
+    "templates"
   ],
   "license": "UNLICENSED",
   "main": "build",
