@@ -4,14 +4,15 @@ import { Request, Response, Router as IRouter } from 'express'
 import { IAM_USER_SHEET, IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
+import { GuardMiddleware } from '../middlewares/GuardMiddleware'
 
 export const CurrentUserRoute = ({
-  jwt,
+  guards,
   repositories,
 }: RouterParams): IRouter =>
   Router().get(
     ApiPaths.CURRENT_USER,
-    jwt.guard,
+    GuardMiddleware(guards),
     async (req: Request, res: Response) => {
       const userId = req.context!.user.id
       const IAMUserSheet = repositories.get<IAMUserEntity>(IAM_USER_SHEET)

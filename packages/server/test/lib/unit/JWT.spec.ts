@@ -9,7 +9,5 @@ test('JWT', async () => {
   const payload = await jwt.verify(token)
   expect(payload).toMatchObject(user)
   await new Promise((resolve) => setTimeout(resolve, 1001))
-  await expect(jwt.verify(token)).rejects.toMatchObject({
-    message: 'jwt expired',
-  })
+  expect(await jwt.verify(token)).toBeNull()
 })

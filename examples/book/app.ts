@@ -12,6 +12,12 @@ export const app = createApp(
     Sheets: [BookSheet],
     Roles: RoleLabels,
     DatabaseDriver: MongoDriver,
+    ApiUsers: [
+      {
+        userId: 'admin',
+        accessToken: 'f572d396fae9206628714fb2ce00f72e94f2258f',
+      },
+    ],
   },
   {
     ...config,

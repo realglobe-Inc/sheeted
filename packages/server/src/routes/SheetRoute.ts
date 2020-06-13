@@ -6,11 +6,12 @@ import { Sheets } from '@sheeted/core/build/web/Shared.type'
 import { EntityController } from '../controllers/EntityController'
 import { RouterParams } from '../types/Router.type'
 import { assertContext } from '../utils/assertionUtil'
+import { GuardMiddleware } from '../middlewares/GuardMiddleware'
 
 export const SheetRoute = ({
   sheets,
   groups,
-  jwt,
+  guards,
   repositories,
 }: RouterParams): IRouter => {
   return (
@@ -18,7 +19,7 @@ export const SheetRoute = ({
       // one
       .get<SheetPathParams>(
         ApiPaths.SHEET_ONE,
-        jwt.guard,
+        GuardMiddleware(guards),
         (req: Request<SheetPathParams>, res: Response) => {
           const {
             context,
@@ -36,7 +37,7 @@ export const SheetRoute = ({
         },
       )
       // list
-      .get(ApiPaths.SHEETS, jwt.guard, (req, res) => {
+      .get(ApiPaths.SHEETS, GuardMiddleware(guards), (req, res) => {
         const resp: Sheets = {
           groups,
           sheets: sheets.map(({ name, group, View }) => ({

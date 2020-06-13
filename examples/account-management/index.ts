@@ -25,6 +25,12 @@ async function main() {
       Sheets: [AccountSheet, AccountPlanSheet, PlanSheet],
       Roles: RoleLabels,
       DatabaseDriver: MongoDriver,
+      ApiUsers: [
+        {
+          userId: 'admin',
+          accessToken: 'xxxxxxxxxxxxxxxxxxxxx',
+        },
+      ],
     },
     config,
   )

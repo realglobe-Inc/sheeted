@@ -18,6 +18,8 @@ import { JWT } from './JWT'
 import { validateSheets } from './server/SheetValidator'
 import { RouterBuilder } from './types/Router.type'
 import { createRepositories } from './server/Repositories'
+import { JWTGuard } from './guards/JWTGuard'
+import { ApiTokenGuard } from './guards/ApiTokenGuard'
 
 export type { ApplicationConfig }
 
@@ -42,10 +44,17 @@ export const createApp = (
   app.use(cors())
   app.use(Logger(config.logger?.format || 'dev', config.logger?.options))
 
-  const jwt = new JWT(config.jwt.secret, config.jwt.expiresIn)
   const passport = SamlPassport(config.saml, repositories.get(IAM_USER_SHEET))
   app.use(passport.initialize())
 
+  const jwt = new JWT(config.jwt.secret, config.jwt.expiresIn)
+  const guards = [
+    new JWTGuard(jwt),
+    new ApiTokenGuard(
+      application.ApiUsers || [],
+      repositories.get(IAM_USER_SHEET),
+    ),
+  ]
   const routes = [
     SignRoute,
     SheetRoute,
@@ -63,6 +72,7 @@ export const createApp = (
         config,
         passport,
         jwt,
+        guards,
         repositories,
       }),
     )

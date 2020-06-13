@@ -6,15 +6,16 @@ import bodyParser from 'body-parser'
 import { RouterParams } from '../types/Router.type'
 import { assertContext } from '../utils/assertionUtil'
 import { EntityController } from '../controllers/EntityController'
+import { GuardMiddleware } from '../middlewares/GuardMiddleware'
 
 export const ActionRoute = ({
-  jwt,
+  guards,
   sheets,
   repositories,
 }: RouterParams): IRouter =>
   Router().post<ActionPathParams>(
     ApiPaths.ACTION_ONE,
-    jwt.guard,
+    GuardMiddleware(guards),
     bodyParser.json(),
     async (req: Request<ActionPathParams>, res: Response) => {
       const { body = {} } = req

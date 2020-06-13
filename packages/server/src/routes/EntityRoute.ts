@@ -11,10 +11,11 @@ import { EntityController } from '../controllers/EntityController'
 import { parseListQuery } from '../middlewares/QueryMiddleware'
 import { RouterParams } from '../types/Router.type'
 import { assertContext } from '../utils/assertionUtil'
+import { GuardMiddleware } from '../middlewares/GuardMiddleware'
 
 export const EntityRoute = ({
   sheets,
-  jwt,
+  guards,
   repositories,
 }: RouterParams): IRouter => {
   return (
@@ -22,7 +23,7 @@ export const EntityRoute = ({
       // list
       .get<SheetPathParams>(
         ApiPaths.ENTITIES,
-        jwt.guard,
+        GuardMiddleware(guards),
         parseListQuery,
         async (req: Request<SheetPathParams>, res: Response) => {
           const {
@@ -45,7 +46,7 @@ export const EntityRoute = ({
       // one
       .get<EntityPathParams>(
         ApiPaths.ENTITY_ONE,
-        jwt.guard,
+        GuardMiddleware(guards),
         async (req: Request<EntityPathParams>, res: Response) => {
           const { entityId } = req.params
           const {
@@ -66,7 +67,7 @@ export const EntityRoute = ({
       // create
       .post<SheetPathParams>(
         ApiPaths.ENTITIES,
-        jwt.guard,
+        GuardMiddleware(guards),
         bodyParser.json(),
         async (req: Request<SheetPathParams>, res: Response) => {
           const {
@@ -87,7 +88,7 @@ export const EntityRoute = ({
       // delete
       .post<SheetPathParams>(
         ApiPaths.ENTITIES_DELETE,
-        jwt.guard,
+        GuardMiddleware(guards),
         bodyParser.json(),
         async (req: Request<SheetPathParams>, res: Response) => {
           const { body = {} } = req
@@ -110,7 +111,7 @@ export const EntityRoute = ({
       // update
       .post<EntityPathParams>(
         ApiPaths.ENTITY_ONE,
-        jwt.guard,
+        GuardMiddleware(guards),
         bodyParser.json(),
         async (req: Request<EntityPathParams>, res: Response) => {
           const {

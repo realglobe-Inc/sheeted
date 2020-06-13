@@ -1,6 +1,8 @@
 import { Types } from 'mongoose'
+import { IAMUserModel } from '@sheeted/mongoose'
+import { IAMUserEntity } from '@sheeted/core'
 
-import { Seeder, reduce } from '../util/seeder.util'
+import { Seeder, reduce, defaultUsers } from '../util/seeder.util'
 
 import { AccountModel } from './sheets/account/account.model'
 import { AccountPlanModel } from './sheets/account-plan/account-plan.model'
@@ -10,6 +12,7 @@ import { AccountPlanEntity } from './sheets/account-plan/account-plan.entity'
 import { PlanEntity } from './sheets/plan/plan.entity'
 
 export const seeders = reduce([
+  new Seeder<IAMUserEntity>(IAMUserModel, defaultUsers),
   new Seeder<AccountEntity>(AccountModel, [
     {
       _id: Types.ObjectId.createFromTime(0),

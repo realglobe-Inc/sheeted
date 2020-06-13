@@ -3,6 +3,7 @@ import { DefaultIAMRoles, Application, DefaultIAMRole } from '@sheeted/core'
 import { MongoDriver } from '@sheeted/mongoose'
 
 import { createApp, ApplicationConfig } from '../../../../src'
+import { adminUser } from '../../db/users'
 
 export const config: ApplicationConfig = {
   jwt: {
@@ -11,6 +12,8 @@ export const config: ApplicationConfig = {
   },
   saml: {},
 }
+
+export const ADMIN_ACCESS_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxx'
 
 export function App(config: ApplicationConfig): Express {
   const application: Application<DefaultIAMRole> = {
@@ -24,6 +27,12 @@ export function App(config: ApplicationConfig): Express {
       },
     ],
     DatabaseDriver: MongoDriver,
+    ApiUsers: [
+      {
+        userId: adminUser.id,
+        accessToken: ADMIN_ACCESS_TOKEN,
+      },
+    ],
   }
   const app = createApp(application, config)
   return app
