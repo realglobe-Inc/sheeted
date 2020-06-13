@@ -396,6 +396,81 @@ For more information about usage, please visit:
 * [examples/](./examples)
 * [API Documentation](https://realglobe-inc.github.io/sheeted/)
 
+## Generated REST API
+
+You can use the generated REST API. The format of a response is JSON.
+
+### Common request headers
+
+You need authorization header in every request which is defined in `Application.ApiUsers`.
+
+```
+Authorization: token <access token>
+```
+
+### List all sheets
+
+```
+GET /api/sheets
+```
+
+### Get a sheet
+
+```
+GET /api/sheets/:sheetName
+```
+
+### List entities
+
+```
+GET /api/sheets/:sheetName/entities
+```
+
+Parameters
+
+| Name | Type | Description |
+|:-----|:-----|:------------|
+| `page` | number | a page number of list |
+| `limit` | number | limit count of entities |
+| `search` | string | search string |
+| `sort` | array of object | sort objects |
+
+### Get an entity
+
+```
+GET /api/sheets/:sheetName/entities/:entityId
+```
+
+### Create an entity
+
+```
+POST /api/sheets/:sheetName/entities
+```
+
+Set JSON of an entity in the request body.
+
+### Update an entity
+
+```
+POST /api/sheets/:sheetName/entities/:entityId
+```
+
+Set JSON of changes in the request body.
+
+### Delete entities
+
+```
+POST /api/sheets/:sheetName/entities/delete
+```
+
+Set JSON of entity ids to be deleted as below.
+
+```json
+{
+  "ids": ["entityId1", "entityId2"]
+}
+```
+
 ## Development
 
 Install. This project uses [yarn workspaces](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/).
