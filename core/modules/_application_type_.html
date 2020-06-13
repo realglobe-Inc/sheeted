@@ -69,6 +69,7 @@
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_application_type_.html#apiuser" class="tsd-kind-icon">Api<wbr>User</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_application_type_.html#application" class="tsd-kind-icon">Application</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_application_type_.html#roleobject" class="tsd-kind-icon">Role<wbr>Object</a></li>
 							</ul>
@@ -78,15 +79,46 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="apiuser" class="tsd-anchor"></a>
+					<h3>Api<wbr>User</h3>
+					<div class="tsd-signature tsd-kind-icon">Api<wbr>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>accessToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/ee94958/packages/core/src/Application.type.ts#L16">Application.type.ts:16</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Server-defined API access token bound to a user</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>access<wbr>Token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>user<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="application" class="tsd-anchor"></a>
 					<h3>Application</h3>
-					<div class="tsd-signature tsd-kind-icon">Application&lt;Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>AppTitle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>DatabaseDriver<span class="tsd-signature-symbol">: </span><a href="_repository_type_.html#repositorydriver" class="tsd-signature-type">RepositoryDriver</a><span class="tsd-signature-symbol">; </span>Groups<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">keyof </span><a href="_sheetgroup_type_.html#sheetgroup" class="tsd-signature-type">SheetGroup</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Roles<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="_application_type_.html#roleobject" class="tsd-signature-type">RoleObject</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Sheets<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="_sheet_type_.html#sheet" class="tsd-signature-type">Sheet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Application&lt;Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>ApiUsers<span class="tsd-signature-symbol">?: </span><a href="_application_type_.html#apiuser" class="tsd-signature-type">ApiUser</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>AppTitle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>DatabaseDriver<span class="tsd-signature-symbol">: </span><a href="_repository_type_.html#repositorydriver" class="tsd-signature-type">RepositoryDriver</a><span class="tsd-signature-symbol">; </span>Groups<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">keyof </span><a href="_sheetgroup_type_.html#sheetgroup" class="tsd-signature-type">SheetGroup</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Roles<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="_application_type_.html#roleobject" class="tsd-signature-type">RoleObject</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>Sheets<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="_sheet_type_.html#sheet" class="tsd-signature-type">Sheet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/b09c05b/packages/core/src/Application.type.ts#L10">Application.type.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/ee94958/packages/core/src/Application.type.ts#L24">Application.type.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Application object, which passes to server</p>
+						</div>
+					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
@@ -96,6 +128,9 @@
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> Api<wbr>Users<span class="tsd-signature-symbol">?: </span><a href="_application_type_.html#apiuser" class="tsd-signature-type">ApiUser</a><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
 							<li class="tsd-parameter">
 								<h5>App<wbr>Title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
 							</li>
@@ -120,9 +155,14 @@
 					<div class="tsd-signature tsd-kind-icon">Role<wbr>Object&lt;Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/b09c05b/packages/core/src/Application.type.ts#L5">Application.type.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/ee94958/packages/core/src/Application.type.ts#L8">Application.type.ts:8</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Role label and value</p>
+						</div>
+					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
@@ -156,6 +196,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="_application_type_.html#apiuser" class="tsd-kind-icon">Api<wbr>User</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_application_type_.html#application" class="tsd-kind-icon">Application</a>
 					</li>
