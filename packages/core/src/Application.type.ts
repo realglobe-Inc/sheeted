@@ -7,10 +7,16 @@ export type RoleObject<Role extends string = string> = {
   value: Role
 }
 
+export type ApiUser = {
+  userId: string
+  accessToken: string
+}
+
 export type Application<Role extends string> = {
   AppTitle: string
   Sheets: readonly Sheet<any, Role>[]
   Roles: readonly RoleObject[]
-  Groups?: readonly SheetGroup[]
   DatabaseDriver: RepositoryDriver
+  Groups?: readonly SheetGroup[]
+  ApiUsers?: ApiUser[]
 }

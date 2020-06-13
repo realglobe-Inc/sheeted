@@ -30,16 +30,18 @@ const roles = [
   { label: 'USER', value: DefaultIAMRoles.DEFAULT_ROLE },
 ]
 
-beforeEach(async () => {
+beforeAll(async () => {
   await connectMongo()
+})
 
+afterAll(async () => {
+  await mongoose.disconnect()
+})
+
+beforeEach(async () => {
   await app1Model.deleteMany({})
   await userModel.deleteMany({})
   await userModel.create(adminUser)
-})
-
-afterEach(async () => {
-  await mongoose.disconnect()
 })
 
 test('EntityController with IAMUser with admin', async () => {

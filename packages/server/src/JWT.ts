@@ -1,27 +1,13 @@
 import jwt from 'jsonwebtoken'
 import { IAMUserEntity } from '@sheeted/core'
-import { Request, Response, NextFunction } from 'express'
-
-const getToken = (req: Request): string | null => {
-  const { authorization } = req.headers
-  const [bearer, token] = authorization?.split(' ') ?? []
-  if (bearer === 'Bearer') {
-    return token
-  } else {
-    return null
-  }
-}
 
 export class JWT {
   #secret: string
   #expiresIn: string | number
 
-  guard: (req: Request, res: Response, next: NextFunction) => void
-
   constructor(secret: string, expiresIn: string | number) {
     this.#secret = secret
     this.#expiresIn = expiresIn
-    this.guard = this._guard.bind(this)
   }
 
   async sign(payload: IAMUserEntity): Promise<string> {
@@ -41,8 +27,8 @@ export class JWT {
     })
   }
 
-  async verify(token: string): Promise<IAMUserEntity> {
-    return new Promise((resolve, reject) => {
+  async verify(token: string): Promise<IAMUserEntity | null> {
+    return new Promise((resolve) => {
       jwt.verify(
         token,
         this.#secret,
@@ -51,33 +37,12 @@ export class JWT {
         },
         (err, payload) => {
           if (err) {
-            reject(err)
+            resolve(null)
           } else {
             resolve(payload as IAMUserEntity)
           }
         },
       )
     })
-  }
-
-  private async _guard(req: Request, res: Response, next: NextFunction) {
-    const token = getToken(req)
-    if (!token) {
-      res.status(401)
-      res.json({
-        error: 'Unauthorized',
-      })
-      return
-    }
-    try {
-      const user = await this.verify(token)
-      req.context = { user }
-      next()
-    } catch (e) {
-      res.status(401)
-      res.json({
-        error: 'Unauthorized',
-      })
-    }
   }
 }

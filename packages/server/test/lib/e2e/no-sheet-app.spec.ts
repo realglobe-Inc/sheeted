@@ -9,14 +9,25 @@ import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 
 import { connectMongo } from '../../tools/mongoose'
 import { seedUsers, adminUser, userModel } from '../../fixtures/db/users'
-import { App, config } from '../../fixtures/apps/no-sheet-app/Application'
+import {
+  App,
+  config,
+  ADMIN_ACCESS_TOKEN,
+} from '../../fixtures/apps/no-sheet-app/Application'
 import { JWT } from '../../../src/JWT'
 
 let app: express.Application
 let authHeader: [string, string]
 
-beforeEach(async () => {
+beforeAll(async () => {
   await connectMongo()
+})
+
+afterAll(async () => {
+  await mongoose.disconnect()
+})
+
+beforeEach(async () => {
   await userModel.deleteMany({})
   await seedUsers()
   app = App(config)
@@ -24,10 +35,6 @@ beforeEach(async () => {
     adminUser,
   )
   authHeader = ['authorization', `Bearer ${token}`]
-})
-
-afterEach(async () => {
-  await mongoose.disconnect()
 })
 
 it('should succeed to get sheets info', async () => {
@@ -281,4 +288,19 @@ it('should be able to delete IAMUser', async () => {
     )
     .set(...authHeader)
     .expect(404)
+})
+
+it('should be able to request using access token', async () => {
+  await request(app)
+    .get(ApiPathBuilder().sheetsPath())
+    .set('authorization', `token ${ADMIN_ACCESS_TOKEN}`)
+    .expect(200, {
+      groups: [],
+      sheets: [
+        {
+          sheetName: IAM_USER_SHEET,
+          title: 'IAM User',
+        },
+      ],
+    })
 })

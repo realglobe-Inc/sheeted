@@ -3,6 +3,7 @@ import { PassportStatic } from 'passport'
 import { Router } from 'express'
 
 import { JWT } from '../JWT'
+import { Guard } from '../guards/Guard.type'
 
 import { ApplicationConfig } from './ApplicationConfig.type'
 
@@ -13,6 +14,7 @@ export type RouterParams = {
   config: ApplicationConfig
   passport: PassportStatic
   jwt: JWT
+  guards: Guard[]
   repositories: Repositories
 }
 
