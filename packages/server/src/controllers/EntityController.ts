@@ -152,7 +152,13 @@ export class EntityController {
     }
   }
 
-  async list({ page, limit, search, sort }: ListQuery): Promise<ListResult> {
+  async list({
+    page,
+    limit,
+    search,
+    sort,
+    filter,
+  }: ListQuery): Promise<ListResult> {
     const readPolicy = this.userAccessPolicy.ofRead
     if (!readPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
@@ -170,7 +176,10 @@ export class EntityController {
       limit,
       search: searchQuery,
       sort: sort as SortQuery<any>[],
-      filter: queryFilter,
+      filter: {
+        ...filter,
+        ...queryFilter,
+      },
     })
     const entities = result.entities.map((entity) =>
       this.converter.beforeSend(entity),
