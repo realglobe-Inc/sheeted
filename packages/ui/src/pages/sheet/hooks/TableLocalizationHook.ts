@@ -22,7 +22,6 @@ export const useTableLocalization = ({
           : l.table.emptyList,
       },
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forbidden])
+  }, [forbidden, l])
   return localization
 }
