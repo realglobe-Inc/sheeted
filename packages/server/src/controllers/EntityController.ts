@@ -171,13 +171,14 @@ export class EntityController {
     const words = search.split(/\s/).filter(Boolean)
     const searchQuery: SearchQuery<any> | undefined =
       searchFields.length > 0 ? { fields: searchFields, words } : undefined
+    const userFilter = this.converter.beforeSave(filter)
     const result = await this.repository.find({
       page,
       limit,
       search: searchQuery,
       sort: sort as SortQuery<any>[],
       filter: {
-        ...filter,
+        ...userFilter,
         ...queryFilter,
       },
     })

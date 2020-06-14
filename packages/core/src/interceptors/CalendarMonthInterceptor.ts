@@ -1,4 +1,4 @@
-import { Interceptor } from '../Interceptor.type'
+import { Interceptor, ParseFailedError } from '../Interceptor.type'
 
 export type CalendarMonthRaw = number
 
@@ -15,6 +15,9 @@ export const CalendarMonthInterceptor: Interceptor<CalendarMonthRaw> & {
 } = {
   parse(text: string) {
     const [year, month] = text.split(DELIMITER).map(Number)
+    if (!Number.isFinite(year) || !Number.isFinite(month)) {
+      throw new ParseFailedError(`Failed to parse ${JSON.stringify(text)}`)
+    }
     return month + 100 * year
   },
   stringify(value: number) {
