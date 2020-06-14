@@ -1,4 +1,4 @@
-import { Interceptor } from '../Interceptor.type'
+import { Interceptor, ParseFailedError } from '../Interceptor.type'
 
 export type TimeRaw = number
 
@@ -9,6 +9,9 @@ const DELIMITER = ':'
 export const TimeInterceptor: Interceptor<TimeRaw> = {
   parse(text: string) {
     const [hours, minutes] = text.split(DELIMITER).map(Number)
+    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
+      throw new ParseFailedError(`Failed to parse ${JSON.stringify(text)}`)
+    }
     return 60 * hours + minutes
   },
   stringify(time: TimeRaw) {

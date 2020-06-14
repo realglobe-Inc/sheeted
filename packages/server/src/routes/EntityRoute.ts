@@ -37,9 +37,15 @@ export const EntityRoute = ({
             sheets,
             repositories,
           )
-          const { page = 1, limit = 20, search = '', sort = [] } =
+          const { page = 1, limit = 20, search = '', sort = [], filter = {} } =
             req.listQuery || {} // parseListQuery により作られた値
-          const list = await controller.list({ page, limit, search, sort })
+          const list = await controller.list({
+            page,
+            limit,
+            search,
+            sort,
+            filter,
+          })
           res.json(list)
         },
       )

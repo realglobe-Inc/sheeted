@@ -16,6 +16,7 @@ export const parseListQuery = (
   const limit = Number(query.limit ?? 20)
   const search = (query.search || '') as string
   const sort = query.sort || []
+  const filter = query.filter || {}
 
   const errors: string[] = []
   if (!Number.isInteger(page)) {
@@ -38,6 +39,13 @@ export const parseListQuery = (
       `"sort" must be array of string, but given ${JSON.stringify(sort)}.`,
     )
   }
+  if (typeof filter !== 'object' || Array.isArray(filter)) {
+    errors.push(
+      `"filter" must be partial object of an entity, but given ${JSON.stringify(
+        filter,
+      )}`,
+    )
+  }
   if (errors.length > 0) {
     throw new HttpError(
       'Query string error: ' + errors.join(' '),
@@ -49,6 +57,7 @@ export const parseListQuery = (
     limit,
     search,
     sort,
+    filter,
   } as ListQuery
   Object.assign(req, {
     listQuery,

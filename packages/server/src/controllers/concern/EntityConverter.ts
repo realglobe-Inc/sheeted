@@ -1,4 +1,5 @@
 import { Schema, Context } from '@sheeted/core'
+import { ParseFailedError } from '@sheeted/core/build/Interceptor.type'
 import { WithEntityMetaField } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 
@@ -40,7 +41,16 @@ export class EntityConverter {
     for (const field of Object.keys(entity)) {
       const interceptor = schema[field]?.type.interceptor
       if (interceptor) {
-        copy[field] = interceptor.parse(entity[field])
+        try {
+          copy[field] = interceptor.parse(entity[field])
+        } catch (err) {
+          if (err instanceof ParseFailedError) {
+            console.log(`Failed to parse field "${field}": ${err.message}`)
+            delete copy[field]
+          } else {
+            throw err
+          }
+        }
       }
     }
     return copy

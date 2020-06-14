@@ -1,4 +1,4 @@
-import { Interceptor } from '../Interceptor.type'
+import { Interceptor, ParseFailedError } from '../Interceptor.type'
 
 export type CalendarYearRaw = number
 
@@ -9,7 +9,10 @@ export const CALENDAR_YEAR_FORMAT = 'YYYY'
  */
 export const CalendarYearInterceptor: Interceptor<CalendarYearRaw> = {
   parse(text: string) {
-    // これならただの数値型で良いのでは？
+    const year = Number(text)
+    if (!Number.isFinite(year)) {
+      throw new ParseFailedError(`Failed to parse ${JSON.stringify(text)}`)
+    }
     return Number(text)
   },
   stringify(year: number) {

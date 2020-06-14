@@ -132,7 +132,13 @@ test('EntityController with IAMUser with admin', async () => {
 
   expect(await controller.one(user.id)).toBeTruthy()
   expect(
-    await controller.list({ page: 1, limit: 10, search: '', sort: [] }),
+    await controller.list({
+      page: 1,
+      limit: 10,
+      search: '',
+      sort: [],
+      filter: {},
+    }),
   ).toMatchObject({
     total: 2,
     pages: 1,
@@ -197,11 +203,11 @@ test('EntityController with a sheet', async () => {
     n: 10,
   })
   expect(entity).toMatchObject({
-    n: 10,
-  } as App1Entity)
+    n: '10',
+  })
   await controller.update(entity.id, { n: 20 })
   await expect(controller.update(entity.id, { n: 20 })).resolves.toMatchObject({
-    n: 20,
+    n: '20',
   })
 })
 

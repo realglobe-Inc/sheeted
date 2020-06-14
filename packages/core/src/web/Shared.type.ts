@@ -79,6 +79,7 @@ export type ListQuery = {
     field: string
     order: 'asc' | 'desc'
   }[]
+  filter: Record<string, any>
 }
 
 export type ListResult = {

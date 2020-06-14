@@ -13,6 +13,7 @@ import { useActionContext } from './ActionContextHook'
 export const useTableActions = (
   sheet: SheetInfo | null,
   refreshTable: (page?: number) => void,
+  toggleFiltering: () => void,
 ): {
   actions: TableAction<Entity>[]
   onSelectionChange: (entities: Entity[]) => void
@@ -22,6 +23,16 @@ export const useTableActions = (
   const { startAction } = useActionContext()
   const [entities, setEntities] = useState<Entity[]>([])
   const { enqueueSnackbar } = useSnackbar()
+  const toggleFilterAction: TableAction<Entity> = useMemo(() => {
+    return {
+      tooltip: l.actions.filter,
+      icon: 'filter_list',
+      isFreeAction: true,
+      onClick: () => {
+        toggleFiltering()
+      },
+    }
+  }, [l, toggleFiltering])
   const deletionAction: TableAction<Entity> = useMemo(() => {
     const ids = entities.map(({ id }) => id)
     const deletable =
@@ -111,7 +122,7 @@ export const useTableActions = (
     refreshTable,
   ])
   return {
-    actions: [...customActions, deletionAction],
+    actions: [...customActions, toggleFilterAction, deletionAction],
     onSelectionChange: setEntities,
   }
 }

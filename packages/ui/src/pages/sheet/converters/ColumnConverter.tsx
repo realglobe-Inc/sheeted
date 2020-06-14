@@ -5,6 +5,13 @@ import { EditCellFor } from '../components/EditCell'
 import { Entity } from '../../../types/Entity.type'
 import { EntityFieldValueHoc } from '../../../hoc/EntityFieldValueHoc'
 
+const lookupLabel = (column: SColumn) =>
+  column.custom.enum?.labels
+    ? Object.fromEntries(
+        column.custom.enum.labels.map(({ label, value }) => [value, label]),
+      )
+    : undefined
+
 export const convertColumn = (column: SColumn): MColumn<Entity> => {
   const editComponent = EditCellFor(column)
   const { readonly, readonlyOnCreate, readonlyOnUpdate } = column
@@ -18,11 +25,15 @@ export const convertColumn = (column: SColumn): MColumn<Entity> => {
     ? 'onAdd'
     : 'always'
   const render = (entity: any) => EntityFieldValueHoc(column)({ entity })
+  const lookup = lookupLabel(column)
+  const filtering = column.form === 'entity' ? false : true // entity は filter が難しいのでとりあえず除外
   return {
     field: column.field,
     title: column.title,
     editable,
     editComponent,
     render,
+    lookup,
+    filtering,
   }
 }

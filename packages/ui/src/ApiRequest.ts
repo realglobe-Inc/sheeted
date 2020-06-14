@@ -32,10 +32,10 @@ export class ApiRequest {
     bind(this)
   }
 
-  async fetchCurrentUser(): Promise<IAMUserEntity> {
+  async fetchCurrentUser(): Promise<IAMUserEntity | null> {
     const resp = await this.fetch(this.apiPaths.currentUserPath())
     const { user } = await resp.json()
-    return user as IAMUserEntity
+    return user ? (user as IAMUserEntity) : null
   }
 
   async fetchSheets(): Promise<Sheets> {
