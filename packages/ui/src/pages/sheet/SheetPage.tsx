@@ -11,6 +11,7 @@ import {
   useSheetInfoContext,
   SheetInfoContextProvider,
 } from '../../hooks/SheetInfoContextHook'
+import { useToggle } from '../../hooks/utils/ToggleHook'
 
 import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
@@ -37,6 +38,7 @@ const tableOptions: TableOptions = {
   padding: 'dense',
   debounceInterval: 500,
   selection: true,
+  hideFilterIcons: true,
 }
 
 export const SheetPage: FC = () => {
@@ -76,7 +78,12 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   const queryEntities = useQueryEntities(sheetName)
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
   const refreshTable = useRefreshTable(tableRef.current)
-  const { actions, onSelectionChange } = useTableActions(info, refreshTable)
+  const [filtering, toggleFiltering] = useToggle()
+  const { actions, onSelectionChange } = useTableActions(
+    info,
+    refreshTable,
+    toggleFiltering,
+  )
   useEffect(() => {
     trigger(sheetName)
   }, [sheetName, trigger])
@@ -107,7 +114,10 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         Header: TableHeader,
       }}
       icons={tableIcons}
-      options={tableOptions}
+      options={{
+        ...tableOptions,
+        filtering,
+      }}
     />
   )
 }
