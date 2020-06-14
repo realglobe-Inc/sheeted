@@ -7,7 +7,7 @@
     "url": "https://github.com/realglobe-Inc/sheeted/issues"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^26.0.0",
     "@types/mongoose": "^5.7.3",
     "@types/node": "^14.0.6",
     "@typescript-eslint/eslint-plugin": "^3.0.2",

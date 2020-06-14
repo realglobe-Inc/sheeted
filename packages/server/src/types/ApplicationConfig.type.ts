@@ -1,5 +1,4 @@
 import { SamlConfig } from 'passport-saml'
-import morgan from 'morgan'
 
 /**
  * Sheeted application server config.
@@ -16,14 +15,6 @@ export type ApplicationConfig = {
   jwt: {
     secret: string
     expiresIn: string | number
-  }
-
-  /**
-   * Logger config
-   */
-  logger?: {
-    format: string
-    options?: morgan.Options
   }
 
   /**
