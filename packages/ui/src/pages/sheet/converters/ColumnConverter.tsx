@@ -26,6 +26,7 @@ export const convertColumn = (column: SColumn): MColumn<Entity> => {
     : 'always'
   const render = (entity: any) => EntityFieldValueHoc(column)({ entity })
   const lookup = lookupLabel(column)
+  const filtering = column.form === 'entity' ? false : true // entity は filter が難しいのでとりあえず除外
   return {
     field: column.field,
     title: column.title,
@@ -33,5 +34,6 @@ export const convertColumn = (column: SColumn): MColumn<Entity> => {
     editComponent,
     render,
     lookup,
+    filtering,
   }
 }
