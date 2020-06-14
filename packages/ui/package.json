@@ -70,6 +70,10 @@
     "clean": "rimraf build",
     "deploy": "yarn build && ./deploy/upload.js",
     "start": "node scripts/start.js",
-    "test": "node scripts/test.js"
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@testing-library/react-hooks": "^3.3.0",
+    "react-test-renderer": "^16.13.1"
   }
 }
