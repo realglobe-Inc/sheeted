@@ -42,7 +42,10 @@ export const createApp = (
   const app = Express()
   app.set('trust proxy', true)
   app.use(cors())
-  app.use(Logger(config.logger?.format || 'dev', config.logger?.options))
+  const loggerFormat =
+    config.logger?.format ||
+    (process.env.NODE_ENV === 'production' ? 'common' : 'dev')
+  app.use(Logger(loggerFormat, config.logger?.options))
 
   const passport = SamlPassport(config.saml, repositories.get(IAM_USER_SHEET))
   app.use(passport.initialize())
