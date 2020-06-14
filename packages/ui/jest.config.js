@@ -18,15 +18,17 @@ module.exports = {
   ],
   moduleFileExtensions: [
     "js",
+    "jsx",
     "json",
     "ts",
+    "tsx"
   ],
   roots: [
     "test",
   ],
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   testMatch: [
-    "**/*.spec.[jt]s",
+    "**/*.spec.[jt]s?(x)",
   ],
   testPathIgnorePatterns: [
     "/node_modules/",

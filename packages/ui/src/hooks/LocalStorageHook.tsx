@@ -3,14 +3,14 @@ export const LocalStorageKeys = {
 }
 
 class Storage {
-  getToken() {
-    return localStorage.getItem(LocalStorageKeys.TOKEN)
+  getToken(): string | null {
+    return window.localStorage.getItem(LocalStorageKeys.TOKEN)
   }
-  setToken(token: string) {
-    return localStorage.setItem(LocalStorageKeys.TOKEN, token)
+  setToken(token: string): void {
+    return window.localStorage.setItem(LocalStorageKeys.TOKEN, token)
   }
-  removeToken() {
-    return localStorage.removeItem(LocalStorageKeys.TOKEN)
+  removeToken(): void {
+    return window.localStorage.removeItem(LocalStorageKeys.TOKEN)
   }
 }
 

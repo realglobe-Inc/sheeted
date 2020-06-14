@@ -2,8 +2,8 @@ import { renderHook, act } from '@testing-library/react-hooks'
 
 import { useToggle } from '../../src/hooks/utils/ToggleHook'
 
-test('should increment counter', () => {
-  const { result } = renderHook(() => useToggle())
+test('useToggle()', () => {
+  const { result } = renderHook(() => useToggle(false))
 
   void act(() => {
     const [, toggle] = result.current
