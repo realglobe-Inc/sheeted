@@ -8,6 +8,7 @@ import {
   TIME_FORMAT,
   CalendarYearInterceptor,
   CalendarMonthInterceptor,
+  NumericInterceptor,
 } from './interceptors'
 
 const Text: Type<string> = {
@@ -23,6 +24,7 @@ const LongText: Type<string> = {
 const Numeric: Type<number> = {
   rawType: 'number',
   form: 'number',
+  interceptor: NumericInterceptor,
 }
 
 const CalendarDate: Type<number> = {
