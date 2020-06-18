@@ -2,10 +2,10 @@ import React, { FC } from 'react'
 import { MTableHeader } from 'material-table'
 import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   header: {
     wordBreak: 'keep-all',
-    background: 'rgb(238, 245, 250)',
+    background: theme.palette.primary.light,
     fontWeight: 600,
   },
 }))

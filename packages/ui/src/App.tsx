@@ -1,7 +1,14 @@
 import React, { FC } from 'react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import {
+  makeStyles,
+  createStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from '@material-ui/core/styles'
+import teal from '@material-ui/core/colors/teal'
+import amber from '@material-ui/core/colors/amber'
 
 import { Routes } from './Routes'
 import { useMountEffect } from './hooks/utils/MountEffectHook'
@@ -13,6 +20,19 @@ import { SheetContextProvider } from './hooks/SheetContextHook'
 import { MenuContextProvider } from './hooks/MenuContextHook'
 import { TopErrorBoundary } from './components/TopErrorBoundary'
 import { handleGlobalError } from './utils/ErrorUtil'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: teal[600],
+      light: teal[50],
+    },
+    secondary: {
+      main: amber[800],
+      light: amber[100],
+    },
+  },
+})
 
 const useGlobalStyles = makeStyles(() =>
   createStyles({
@@ -95,7 +115,9 @@ export const App = withSnackbarProvider(() => {
     <>
       <CssBaseline />
       <TopErrorBoundary>
-        <AppMain />
+        <ThemeProvider theme={theme}>
+          <AppMain />
+        </ThemeProvider>
       </TopErrorBoundary>
     </>
   )
