@@ -1,3 +1,5 @@
+import * as CSS from 'csstype'
+
 /**
  * Column view
  */
@@ -6,6 +8,11 @@ export type ColumnView = {
    * Field title
    */
   title: string
+
+  /**
+   * Custom CSS style of the column
+   */
+  style?: CSS.Properties
 
   /**
    * Enum label (only required for enum type)

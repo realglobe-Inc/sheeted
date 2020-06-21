@@ -6,6 +6,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
+    "csstype": "^2.6.10",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
     "jsonwebtoken": "^8.5.1",

@@ -20,6 +20,8 @@ export type Column = {
   readonlyOnCreate?: boolean
   readonlyOnUpdate?: boolean
 
+  style: { [property: string]: any }
+
   custom: {
     entity?: {
       sheetName: string

@@ -17,7 +17,7 @@ const PlainValueHoc = (column: Column): FC<FieldValueProps> => {
       return null
     }
     const rawValue = (entity[column.field] || '') as string
-    return <>{rawValue}</>
+    return <div style={column.style}>{rawValue}</div>
   }
 }
 
@@ -28,7 +28,12 @@ const LinkTextValueHoc = (column: Column): FC<FieldValueProps> => {
     }
     const rawValue = (entity[column.field] || '') as string
     return (
-      <ExternalLink href={rawValue} target="_blank" rel="noopener noreferrer">
+      <ExternalLink
+        href={rawValue}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={column.style}
+      >
         {rawValue}
       </ExternalLink>
     )
@@ -42,7 +47,7 @@ const MultilineTextValueHoc = (column: Column): FC<FieldValueProps> => {
     }
     const rawValue = (entity[column.field] || '') as string
     return (
-      <div>
+      <div style={column.style}>
         {rawValue.split('\n').map((line, i) => (
           <div key={i}>{line}</div>
         ))}
@@ -64,7 +69,7 @@ const NumericValueHoc = (column: Column): FC<FieldValueProps> => {
           formatWithIntl.options,
         ).format(rawValue)
       : rawValue
-    return <>{value}</>
+    return <div style={column.style}>{value}</div>
   }
 }
 
@@ -78,7 +83,7 @@ const EnumValueHoc = (column: Column): FC<FieldValueProps> => {
       ? rawValue
       : [rawValue].filter(Boolean)
     return (
-      <>
+      <div style={column.style}>
         {values
           .map((value) => {
             const label = column.custom.enum?.labels.find(
@@ -88,7 +93,7 @@ const EnumValueHoc = (column: Column): FC<FieldValueProps> => {
           })
           .sort()
           .join(', ')}
-      </>
+      </div>
     )
   }
 }
@@ -99,7 +104,11 @@ const EntityValueHoc = (column: Column): FC<FieldValueProps> => {
       return null
     }
     const rawValue = entity[column.field] as WithEntityMetaField
-    return <>{rawValue ? rawValue[ENTITY_META_FIELD].displayText : ''}</>
+    return (
+      <div style={column.style}>
+        {rawValue ? rawValue[ENTITY_META_FIELD].displayText : ''}
+      </div>
+    )
   }
 }
 

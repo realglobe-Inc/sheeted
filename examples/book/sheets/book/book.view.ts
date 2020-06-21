@@ -9,6 +9,9 @@ export const BookView: View<BookEntity> = {
   columns: {
     title: {
       title: 'TITLE',
+      style: {
+        minWidth: '10em',
+      },
     },
     like: {
       title: 'LIKE',
@@ -59,6 +62,9 @@ export const BookView: View<BookEntity> = {
     },
     comment: {
       title: 'COMMENT',
+      style: {
+        minWidth: '15em',
+      },
     },
   },
 }
