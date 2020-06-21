@@ -64,6 +64,7 @@ it('should succeed to get IAMUser sheet info', async () => {
         form: 'text',
         index: 0,
         searchable: true,
+        style: {},
         custom: {},
       },
       {
@@ -72,6 +73,7 @@ it('should succeed to get IAMUser sheet info', async () => {
         form: 'text',
         index: 1,
         searchable: true,
+        style: {},
         custom: {},
       },
       {
@@ -79,6 +81,7 @@ it('should succeed to get IAMUser sheet info', async () => {
         title: 'Roles',
         form: 'select-multiple',
         index: 2,
+        style: {},
         custom: {
           enum: {
             multiple: true,

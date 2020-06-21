@@ -69,6 +69,7 @@ test('EntityController with IAMUser with admin', async () => {
         index: 0,
         searchable: true,
         form: 'text',
+        style: {},
         custom: {},
       },
       {
@@ -77,6 +78,7 @@ test('EntityController with IAMUser with admin', async () => {
         index: 1,
         searchable: true,
         form: 'text',
+        style: {},
         custom: {},
       },
       {
@@ -84,6 +86,7 @@ test('EntityController with IAMUser with admin', async () => {
         title: 'Roles',
         form: 'select-multiple',
         index: 2,
+        style: {},
         custom: {
           enum: {
             multiple: true,
