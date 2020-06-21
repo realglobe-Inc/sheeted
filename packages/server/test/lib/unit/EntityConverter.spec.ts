@@ -17,7 +17,10 @@ test('EntityConverter.spec.ts', () => {
     {
       action: 'read',
       role: 'default',
-      excludeColumns: ['excluded'],
+      column: {
+        effect: 'deny',
+        columns: ['excluded'],
+      },
     },
     {
       action: 'update',
@@ -35,7 +38,10 @@ test('EntityConverter.spec.ts', () => {
       condition: () => false,
     },
   ]
-  const userAccessPolicy = new UserAccessPolicy(['default'], accessPolicies)
+  const userAccessPolicy = new UserAccessPolicy(['default'], accessPolicies, [
+    'time',
+    'excluded',
+  ])
   const converter = new EntityConverter(
     'sheet',
     schema,

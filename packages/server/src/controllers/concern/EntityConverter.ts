@@ -134,10 +134,9 @@ export class EntityConverter {
       // Must be blocked before
       throw new Error('Has no permission to read')
     }
-    const excludeColumns = readPolicy.excludeColumns ?? []
     const copy = { ...entity }
     for (const field of Object.keys(entity)) {
-      if (excludeColumns.includes(field)) {
+      if (readPolicy.deniedColumns.includes(field)) {
         delete copy[field]
       }
     }

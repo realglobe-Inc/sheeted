@@ -64,9 +64,11 @@ export class EntityController {
   ) {
     const { Schema } = sheet
     this.userRoles = ctx.user.roles
+    const columns = Object.keys(sheet.Schema)
     this.userAccessPolicy = new UserAccessPolicy(
       this.userRoles,
       sheet.AccessPolicies,
+      columns,
     )
     this.converter = new EntityConverter(
       sheet.name,
@@ -103,12 +105,12 @@ export class EntityController {
           searchable: schemaField.searchable || undefined,
           // access policy で readonly になることがある
           readonly: schemaField.readonly || undefined,
-          readonlyOnCreate: userAccessPolicy.ofCreate?.uneditableColumns?.includes(
-            field,
-          ),
-          readonlyOnUpdate: userAccessPolicy.ofUpdate?.uneditableColumns?.includes(
-            field,
-          ),
+          readonlyOnCreate:
+            userAccessPolicy.ofCreate?.deniedColumns.includes(field) ||
+            undefined,
+          readonlyOnUpdate:
+            userAccessPolicy.ofUpdate?.deniedColumns.includes(field) ||
+            undefined,
           custom: {
             entity: schemaField.entityProperties,
             enum: enumLabels
