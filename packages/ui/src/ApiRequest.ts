@@ -24,10 +24,9 @@ type ErrorResponse = {
 }
 
 export class ApiRequest {
-  token = ''
   apiPaths: ApiPathFuncs
 
-  constructor(readonly apiUrl: string) {
+  constructor() {
     this.apiPaths = ApiPathBuilder()
     bind(this)
   }
@@ -164,13 +163,18 @@ export class ApiRequest {
     }
   }
 
-  getSignInUrl(): string {
-    return new URL(this.apiPaths.signInPath(), this.apiUrl).toString()
+  async signOut(): Promise<void> {
+    const resp = await this.fetch(this.apiPaths.signOutPath(), {
+      method: 'POST',
+    })
+    if (!resp.ok) {
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
+    }
   }
 
   private async fetch(path: string, init: RequestInit = {}) {
-    const url = new URL(path, this.apiUrl).href
-    return window.fetch(url, {
+    return window.fetch(path, {
       headers: {
         ...this.headers,
         ...(init.headers || {}),
@@ -183,7 +187,6 @@ export class ApiRequest {
     return {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.token}`,
     }
   }
 }

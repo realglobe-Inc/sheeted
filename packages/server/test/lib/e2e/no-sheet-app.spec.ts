@@ -17,7 +17,7 @@ import {
 import { JWT } from '../../../src/JWT'
 
 let app: express.Application
-let authHeader: [string, string]
+let authCookie: ['Cookie', string[]]
 
 beforeAll(async () => {
   await connectMongo()
@@ -34,13 +34,13 @@ beforeEach(async () => {
   const token = await new JWT(config.jwt.secret, config.jwt.expiresIn).sign(
     adminUser,
   )
-  authHeader = ['authorization', `Bearer ${token}`]
+  authCookie = ['Cookie', [`${JWT.COOKIE_KEY}=${token}`]]
 })
 
 it('should succeed to get sheets info', async () => {
   await request(app)
     .get(ApiPathBuilder().sheetsPath())
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200, {
       groups: [],
       sheets: [
@@ -101,14 +101,14 @@ it('should succeed to get IAMUser sheet info', async () => {
   }
   await request(app)
     .get(ApiPathBuilder().sheetOnePath({ sheetName: IAM_USER_SHEET }))
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200, expected)
 })
 
 it('should succeed to get IAMUser entities', async () => {
   await request(app)
     .get(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => {
       expect(resp.body).toMatchObject({
@@ -127,7 +127,7 @@ it('should fail to get IAMUser entities with invalid queries', async () => {
           page: -1,
         }),
     )
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(400)
     .then((resp) => {
       expect(resp.body).toHaveProperty(['error', 'message'])
@@ -143,7 +143,7 @@ it('should be able to create IAMUser', async () => {
   const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => resp.body as EntityBase)
   expect(created).toMatchObject(user)
@@ -155,7 +155,7 @@ it('should be able to create IAMUser', async () => {
         entityId: created.id,
       }),
     )
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => {
       expect(resp.body).toEqual(created)
@@ -172,7 +172,7 @@ it('should drop unnecessary field on creating IAMUser', async () => {
   const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => resp.body as EntityBase)
   expect(created).not.toHaveProperty('expectToBeDropped')
@@ -187,7 +187,7 @@ it('should fail to create IAMUser with invalid input', async () => {
   await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(422)
     .then((resp) => {
       expect(resp.body).toHaveProperty(['errors', '0', 'message'])
@@ -206,7 +206,7 @@ it('should succeed to update IAMUser', async () => {
   const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => resp.body as EntityBase)
 
@@ -221,7 +221,7 @@ it('should succeed to update IAMUser', async () => {
       email: 'updated@example.com',
       roles: [DefaultIAMRoles.ADMIN_ROLE],
     })
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
 
   await request(app)
@@ -231,7 +231,7 @@ it('should succeed to update IAMUser', async () => {
         entityId: created.id,
       }),
     )
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => {
       expect(resp.body).toMatchObject({
@@ -251,7 +251,7 @@ it('should be able to delete IAMUser', async () => {
   const created = await request(app)
     .post(ApiPathBuilder().entitiesPath({ sheetName: IAM_USER_SHEET }))
     .send(user)
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
     .then((resp) => resp.body as EntityBase)
 
@@ -263,7 +263,7 @@ it('should be able to delete IAMUser', async () => {
         entityId: created.id,
       }),
     )
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
 
   await request(app)
@@ -275,7 +275,7 @@ it('should be able to delete IAMUser', async () => {
     .send({
       ids: [created.id],
     })
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(200)
 
   // check to be deleted
@@ -286,7 +286,7 @@ it('should be able to delete IAMUser', async () => {
         entityId: created.id,
       }),
     )
-    .set(...authHeader)
+    .set(...authCookie)
     .expect(404)
 })
 

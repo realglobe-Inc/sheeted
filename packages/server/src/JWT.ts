@@ -5,6 +5,8 @@ export class JWT {
   #secret: string
   #expiresIn: string | number
 
+  static COOKIE_KEY = 'jwt'
+
   constructor(secret: string, expiresIn: string | number) {
     this.#secret = secret
     this.#expiresIn = expiresIn
