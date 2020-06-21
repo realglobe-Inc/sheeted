@@ -1,17 +1,5 @@
-export const LocalStorageKeys = {
-  TOKEN: 'sheeted:token',
-}
-
 class Storage {
-  getToken(): string | null {
-    return window.localStorage.getItem(LocalStorageKeys.TOKEN)
-  }
-  setToken(token: string): void {
-    return window.localStorage.setItem(LocalStorageKeys.TOKEN, token)
-  }
-  removeToken(): void {
-    return window.localStorage.removeItem(LocalStorageKeys.TOKEN)
-  }
+  // Add methods getXXX(), setXXX(), and removeXXX()
 }
 
 const storage = new Storage()

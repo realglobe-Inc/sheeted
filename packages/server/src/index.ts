@@ -1,6 +1,6 @@
 import { Application, IAM_USER_SHEET } from '@sheeted/core'
 import Express from 'express'
-import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import Logger from 'morgan'
 import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
 
@@ -41,7 +41,7 @@ export const createApp = (
 
   const app = Express()
   app.set('trust proxy', true)
-  app.use(cors())
+  app.use(cookieParser())
   app.use(Logger(process.env.NODE_ENV === 'production' ? 'common' : 'dev'))
 
   const passport = SamlPassport(config.saml, repositories.get(IAM_USER_SHEET))

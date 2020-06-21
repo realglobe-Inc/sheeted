@@ -12,8 +12,6 @@ import amber from '@material-ui/core/colors/amber'
 
 import { Routes } from './Routes'
 import { useMountEffect } from './hooks/utils/MountEffectHook'
-import { LocalStorageKeys, useLocalStorage } from './hooks/LocalStorageHook'
-import { useApi } from './hooks/ApiHook'
 import { useUserContext, UserContextProvider } from './hooks/UserContextHook'
 import { LocaleContextProvider, useLocale } from './hooks/LocaleContextHook'
 import { SheetContextProvider } from './hooks/SheetContextHook'
@@ -81,24 +79,11 @@ const withContextProviders = (Component: FC) => () => {
 }
 
 export const AppMain = withContextProviders(() => {
-  const api = useApi()
-  const storage = useLocalStorage()
   const { trigger: triggerUserSync } = useUserContext()
   const l = useLocale()
   const { enqueueSnackbar } = useSnackbar()
   useMountEffect(() => {
-    const token = storage.getToken()
-    if (token) {
-      api.token = token
-    }
     triggerUserSync()
-    window.addEventListener('storage', (event) => {
-      if (event.key === LocalStorageKeys.TOKEN) {
-        const token = event.newValue ?? ''
-        api.token = token
-        triggerUserSync()
-      }
-    })
     handleGlobalError((err) => {
       console.error(err)
       enqueueSnackbar(l.errors.unexpectedError, {

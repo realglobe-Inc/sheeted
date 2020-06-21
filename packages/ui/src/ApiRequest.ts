@@ -24,7 +24,6 @@ type ErrorResponse = {
 }
 
 export class ApiRequest {
-  token = ''
   apiPaths: ApiPathFuncs
 
   constructor() {
@@ -178,7 +177,6 @@ export class ApiRequest {
     return {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.token}`,
     }
   }
 }

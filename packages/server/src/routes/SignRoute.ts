@@ -1,7 +1,6 @@
 import Router from 'express-promise-router'
 import bodyParser from 'body-parser'
 import { Router as IRouter } from 'express'
-import qs from 'qs'
 import {
   ApiPaths,
   UIPathBuilder,
@@ -10,6 +9,7 @@ import {
 import { IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
+import { JWT } from '../JWT'
 
 export const SignRoute = ({ passport, jwt }: RouterParams): IRouter => {
   const apiPaths = ApiPathBuilder()
@@ -37,7 +37,13 @@ export const SignRoute = ({ passport, jwt }: RouterParams): IRouter => {
         const user = req.user as IAMUserEntity
         const token = await jwt.sign(user)
         const callbackPath = uiPaths.signInCallbackPath()
-        res.redirect(callbackPath + '?' + qs.stringify({ token }))
+        res.cookie(JWT.COOKIE_KEY, token, {
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+          httpOnly: true,
+          sameSite: true,
+          secure: process.env.NODE_ENV === 'production',
+        })
+        res.redirect(callbackPath)
       },
     )
     .post(ApiPaths.SIGN_OUT, () => {
