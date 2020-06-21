@@ -18,7 +18,6 @@ import { Toolbar } from './components/Toolbar'
 import { TableHeader } from './components/TableHeader'
 import { EditRow } from './components/EditRow'
 import { tableIcons } from './assets/icons'
-import { convertColumn } from './converters/ColumnConverter'
 import { useQueryEntities } from './hooks/QueryEntitiesHook'
 import { useSheetReady } from './hooks/SheetReadyHook'
 import { useEditEntity } from './hooks/EditEntityHook'
@@ -31,6 +30,7 @@ import { ActionDialog } from './components/ActionDialog'
 import { useTableActions } from './hooks/TableActionsHook'
 import { useRefreshTable } from './hooks/RefreshTableHook'
 import { useDetailCallback } from './hooks/DetailCallbackHook'
+import { useMColumns } from './hooks/MColumnsHook'
 
 const tableOptions: TableOptions = {
   pageSize: 10,
@@ -84,10 +84,10 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
     refreshTable,
     toggleFiltering,
   )
+  const columns = useMColumns(info)
   useEffect(() => {
     trigger(sheetName)
   }, [sheetName, trigger])
-  const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
   const localization = useTableLocalization({ forbidden })
   const goToDetail = useDetailCallback(sheetName)
