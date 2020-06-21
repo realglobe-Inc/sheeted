@@ -71,6 +71,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#accesspolicy" class="tsd-kind-icon">Access<wbr>Policy</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#actionaccesspolicy" class="tsd-kind-icon">Action<wbr>Access<wbr>Policy</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-kind-icon">Column<wbr>Policy<wbr>Option</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#createaccesspolicy" class="tsd-kind-icon">Create<wbr>Access<wbr>Policy</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#deleteaccesspolicy" class="tsd-kind-icon">Delete<wbr>Access<wbr>Policy</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_accesspolicy_type_.html#readaccesspolicy" class="tsd-kind-icon">Read<wbr>Access<wbr>Policy</a></li>
@@ -88,7 +89,7 @@
 					<div class="tsd-signature tsd-kind-icon">Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <a href="_accesspolicy_type_.html#readaccesspolicy" class="tsd-signature-type">ReadAccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_accesspolicy_type_.html#createaccesspolicy" class="tsd-signature-type">CreateAccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_accesspolicy_type_.html#updateaccesspolicy" class="tsd-signature-type">UpdateAccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_accesspolicy_type_.html#deleteaccesspolicy" class="tsd-signature-type">DeleteAccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_accesspolicy_type_.html#actionaccesspolicy" class="tsd-signature-type">ActionAccessPolicy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L36">packages/core/src/AccessPolicy.type.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L52">packages/core/src/AccessPolicy.type.ts:52</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -107,7 +108,7 @@
 					<div class="tsd-signature tsd-kind-icon">Action<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"custom"</span><span class="tsd-signature-symbol">; </span>condition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span>, context<span class="tsd-signature-symbol">?: </span><a href="_context_type_.html#context" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">; </span>customActionId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L29">packages/core/src/AccessPolicy.type.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L45">packages/core/src/AccessPolicy.type.ts:45</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -138,12 +139,55 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-					<a name="createaccesspolicy" class="tsd-anchor"></a>
-					<h3>Create<wbr>Access<wbr>Policy</h3>
-					<div class="tsd-signature tsd-kind-icon">Create<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"create"</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">; </span>uneditableColumns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></div>
+					<a name="columnpolicyoption" class="tsd-anchor"></a>
+					<h3>Column<wbr>Policy<wbr>Option</h3>
+					<div class="tsd-signature tsd-kind-icon">Column<wbr>Policy<wbr>Option&lt;Key&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>columns<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>effect<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"allow"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"deny"</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L10">packages/core/src/AccessPolicy.type.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L6">packages/core/src/AccessPolicy.type.ts:6</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Policy about columns for reading, creating, and updating</p>
+						</div>
+					</div>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>Key</h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>columns<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Column names</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5>effect<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"allow"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"deny"</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>If &#39;allow&#39; is set, the operation will be allowed for columns specified in <code>columns</code>.
+										If &#39;deny&#39; is set, the operation will be allowed for columns <em>not</em> specified in <code>columns</code>.</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="createaccesspolicy" class="tsd-anchor"></a>
+					<h3>Create<wbr>Access<wbr>Policy</h3>
+					<div class="tsd-signature tsd-kind-icon">Create<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"create"</span><span class="tsd-signature-symbol">; </span>column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L26">packages/core/src/AccessPolicy.type.ts:26</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -162,10 +206,10 @@
 								<h5>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"create"</span></h5>
 							</li>
 							<li class="tsd-parameter">
-								<h5>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> uneditable<wbr>Columns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span></h5>
+								<h5>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span></h5>
 							</li>
 						</ul>
 					</div>
@@ -176,7 +220,7 @@
 					<div class="tsd-signature tsd-kind-icon">Delete<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"delete"</span><span class="tsd-signature-symbol">; </span>condition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span>, context<span class="tsd-signature-symbol">?: </span><a href="_context_type_.html#context" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L23">packages/core/src/AccessPolicy.type.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L39">packages/core/src/AccessPolicy.type.ts:39</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -206,10 +250,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="readaccesspolicy" class="tsd-anchor"></a>
 					<h3>Read<wbr>Access<wbr>Policy</h3>
-					<div class="tsd-signature tsd-kind-icon">Read<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"read"</span><span class="tsd-signature-symbol">; </span>excludeColumns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>queryFilter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Read<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"read"</span><span class="tsd-signature-symbol">; </span>column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>queryFilter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L3">packages/core/src/AccessPolicy.type.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L19">packages/core/src/AccessPolicy.type.ts:19</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -228,7 +272,7 @@
 								<h5>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"read"</span></h5>
 							</li>
 							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> exclude<wbr>Columns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li class="tsd-parameter">
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> query<wbr>Filter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -242,10 +286,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="updateaccesspolicy" class="tsd-anchor"></a>
 					<h3>Update<wbr>Access<wbr>Policy</h3>
-					<div class="tsd-signature tsd-kind-icon">Update<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"update"</span><span class="tsd-signature-symbol">; </span>condition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span>, context<span class="tsd-signature-symbol">?: </span><a href="_context_type_.html#context" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">; </span>uneditableColumns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Update<wbr>Access<wbr>Policy&lt;Entity, Role&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"update"</span><span class="tsd-signature-symbol">; </span>column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>condition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span>, context<span class="tsd-signature-symbol">?: </span><a href="_context_type_.html#context" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/26196a6/packages/core/src/AccessPolicy.type.ts#L16">packages/core/src/AccessPolicy.type.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/698e7f6/packages/core/src/AccessPolicy.type.ts#L32">packages/core/src/AccessPolicy.type.ts:32</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -264,13 +308,13 @@
 								<h5>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"update"</span></h5>
 							</li>
 							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> column<span class="tsd-signature-symbol">?: </span><a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-signature-type">ColumnPolicyOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Entity</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li class="tsd-parameter">
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> condition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Entity</span>, context<span class="tsd-signature-symbol">?: </span><a href="_context_type_.html#context" class="tsd-signature-type">Context</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Role</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></h5>
 							</li>
 							<li class="tsd-parameter">
 								<h5>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Role</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> uneditable<wbr>Columns<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">keyof Entity</span><span class="tsd-signature-symbol">[]</span></h5>
 							</li>
 						</ul>
 					</div>
@@ -295,6 +339,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_accesspolicy_type_.html#actionaccesspolicy" class="tsd-kind-icon">Action<wbr>Access<wbr>Policy</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_accesspolicy_type_.html#columnpolicyoption" class="tsd-kind-icon">Column<wbr>Policy<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_accesspolicy_type_.html#createaccesspolicy" class="tsd-kind-icon">Create<wbr>Access<wbr>Policy</a>
