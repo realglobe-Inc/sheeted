@@ -61,7 +61,7 @@ export const createApp = (
     EntityRoute,
     CurrentUserRoute,
     ActionRoute,
-    !process.env.USE_LOCAL_CONTENT_SERVER && ContentRoute,
+    !process.env.DISABLE_CONTENT_ROUTE && ContentRoute,
   ]
     .filter((Route): Route is RouterBuilder => Boolean(Route))
     .map((Route) =>

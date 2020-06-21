@@ -27,7 +27,7 @@ export class ApiRequest {
   token = ''
   apiPaths: ApiPathFuncs
 
-  constructor(readonly apiUrl: string) {
+  constructor() {
     this.apiPaths = ApiPathBuilder()
     bind(this)
   }
@@ -164,13 +164,8 @@ export class ApiRequest {
     }
   }
 
-  getSignInUrl(): string {
-    return new URL(this.apiPaths.signInPath(), this.apiUrl).toString()
-  }
-
   private async fetch(path: string, init: RequestInit = {}) {
-    const url = new URL(path, this.apiUrl).href
-    return window.fetch(url, {
+    return window.fetch(path, {
       headers: {
         ...this.headers,
         ...(init.headers || {}),

@@ -25,7 +25,7 @@ export const SignInPage: FC = () => {
   const l = useLocale()
   const classes = useStyles()
   const api = useApi()
-  const signInUrl = api.getSignInUrl()
+  const signInUrl = api.apiPaths.signInPath()
   return (
     <div className={classes.root}>
       <div>
