@@ -3,6 +3,7 @@ name: feature
 on:
   push:
     branches:
+      - '*'
       - '!master'
   pull_request:
 

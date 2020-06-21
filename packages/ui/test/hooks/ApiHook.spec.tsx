@@ -5,7 +5,6 @@ import { Sheeted } from '../../src/Sheeted'
 
 test('useApi()', () => {
   Sheeted.config({
-    apiUrl: 'http://localhost',
     appTitle: 'app',
   })
 

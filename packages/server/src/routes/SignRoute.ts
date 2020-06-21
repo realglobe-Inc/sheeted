@@ -1,7 +1,6 @@
 import Router from 'express-promise-router'
 import bodyParser from 'body-parser'
 import { Router as IRouter } from 'express'
-import qs from 'qs'
 import {
   ApiPaths,
   UIPathBuilder,
@@ -10,11 +9,11 @@ import {
 import { IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
+import { JWT } from '../JWT'
 
-export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
+export const SignRoute = ({ passport, jwt }: RouterParams): IRouter => {
   const apiPaths = ApiPathBuilder()
   const uiPaths = UIPathBuilder()
-  const { externalUrl } = config.contentServer || {}
   return Router()
     .get(
       ApiPaths.SIGN_IN,
@@ -24,10 +23,7 @@ export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
       }),
       (req, res) => {
         const signInPath = uiPaths.signInPath()
-        const signInUrl = externalUrl
-          ? new URL(signInPath, externalUrl).toString()
-          : signInPath
-        res.redirect(signInUrl)
+        res.redirect(signInPath)
       },
     )
     .post(
@@ -41,14 +37,17 @@ export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
         const user = req.user as IAMUserEntity
         const token = await jwt.sign(user)
         const callbackPath = uiPaths.signInCallbackPath()
-        const callbackUrl = externalUrl
-          ? new URL(callbackPath, externalUrl).toString()
-          : callbackPath
-        res.redirect(callbackUrl + '?' + qs.stringify({ token }))
+        res.cookie(JWT.COOKIE_KEY, token, {
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+          httpOnly: true,
+          sameSite: true,
+          secure: process.env.NODE_ENV === 'production',
+        })
+        res.redirect(callbackPath)
       },
     )
-    .post(ApiPaths.SIGN_OUT, () => {
-      // JWT has no sign out on server sice
-      // Just delete token on front side
+    .post(ApiPaths.SIGN_OUT, (req, res) => {
+      res.clearCookie(JWT.COOKIE_KEY)
+      res.json({ ok: true })
     })
 }

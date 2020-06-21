@@ -1,4 +1,3 @@
-import { Sheeted } from '../Sheeted'
 import { ApiRequest } from '../ApiRequest'
 
 class ApiContainer {
@@ -8,7 +7,7 @@ class ApiContainer {
     if (this.api) {
       return this.api
     } else {
-      const api = new ApiRequest(Sheeted.apiUrl)
+      const api = new ApiRequest()
       this.api = api
       return api
     }

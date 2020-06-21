@@ -21,14 +21,8 @@ export const ContentRoute = ({ appTitle }: RouterParams): IRouter => {
   const htmlTemplate = fs.readFileSync(htmlPath, 'utf-8')
   const compiled = template(htmlTemplate)
   return Router().get(CONTENT_PATH, (req: Request, res: Response) => {
-    const { protocol } = req
-    const host = req.get('host')
-    if (!host) {
-      throw new Error(`Empty host`)
-    }
-    const apiUrl = `${protocol}://${host}`
     // TODO: consider to escape appTitle
-    const html = compiled({ appTitle, apiUrl, jsUrl })
+    const html = compiled({ appTitle, jsUrl })
     res.send(html)
   })
 }

@@ -16,11 +16,4 @@ export type ApplicationConfig = {
     secret: string
     expiresIn: string | number
   }
-
-  /**
-   * Content server config
-   */
-  contentServer?: {
-    externalUrl?: string
-  }
 }
