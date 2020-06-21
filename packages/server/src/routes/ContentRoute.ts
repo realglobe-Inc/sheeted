@@ -11,6 +11,8 @@ import { RouterParams } from '../types/Router.type'
 const { version } = require('../../package.json') as { version: string } // import にすると build/ に package.json が含まれてしまう
 
 const JS_CDN_URL = 'https://d2nu34hyw3op89.cloudfront.net'
+// /api/* 以外にマッチ
+const CONTENT_PATH = '(?!/api/)*'
 
 export const ContentRoute = ({ appTitle }: RouterParams): IRouter => {
   // TODO: UI と共通化
@@ -18,7 +20,7 @@ export const ContentRoute = ({ appTitle }: RouterParams): IRouter => {
   const htmlPath = join(__dirname, '../../assets/index.html.template')
   const htmlTemplate = fs.readFileSync(htmlPath, 'utf-8')
   const compiled = template(htmlTemplate)
-  return Router().get('*', (req: Request, res: Response) => {
+  return Router().get(CONTENT_PATH, (req: Request, res: Response) => {
     // TODO: consider to escape appTitle
     const html = compiled({ appTitle, jsUrl })
     res.send(html)
