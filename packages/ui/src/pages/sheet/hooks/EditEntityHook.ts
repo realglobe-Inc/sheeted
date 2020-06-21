@@ -50,7 +50,7 @@ export const useEditEntity = (
         resetErrors()
       } catch (e) {
         enqueueSnackbar(l.snackbars.editFaield, {
-          variant: 'warning',
+          variant: 'error',
         })
         if (Object.getOwnPropertyDescriptor(e, 'errors')) {
           setErrors(e as InputValidationErrors)

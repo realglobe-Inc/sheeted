@@ -16,7 +16,6 @@ const alertBeforeUnload = (e: BeforeUnloadEvent) => {
 
 export const EditRow: FC<any> = (props) => {
   const l = useLocale()
-  // I'm waiting for being implemented onRowAddCancelled / onRowUpdateCancelled in material-table
   const { reset } = useInputErrorContext()
   useUnmountEffect(() => {
     reset()
