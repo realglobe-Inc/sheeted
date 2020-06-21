@@ -94,7 +94,7 @@ export class EntityController {
     const columns: SheetInfo['columns'] = Object.keys(Schema).map(
       (field, index) => {
         const schemaField = Schema[field]
-        const { title, enumLabels, textOptions, numericOptions } =
+        const { title, style = {}, enumLabels, textOptions, numericOptions } =
           View.columns[field] || {}
         const column: Column = dropUndef({
           field,
@@ -111,6 +111,7 @@ export class EntityController {
           readonlyOnUpdate:
             userAccessPolicy.ofUpdate?.deniedColumns.includes(field) ||
             undefined,
+          style,
           custom: {
             entity: schemaField.entityProperties,
             enum: enumLabels
