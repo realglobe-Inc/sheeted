@@ -6,18 +6,25 @@ import { useMountEffect } from '../../hooks/utils/MountEffectHook'
 import { useLocale } from '../../hooks/LocaleContextHook'
 import { useUserContext } from '../../hooks/UserContextHook'
 import { useUIPaths } from '../../hooks/UIPathHook'
+import { useApi } from '../../hooks/ApiHook'
 
 export const SignOutPage: FC = () => {
-  // TODO: sign out logic
   const l = useLocale()
+  const api = useApi()
   const uiPaths = useUIPaths()
   const { enqueueSnackbar } = useSnackbar()
   const { reset: resetUser } = useUserContext()
   const history = useHistory()
   useMountEffect(() => {
     resetUser()
-    enqueueSnackbar(l.snackbars.signOutComplete)
-    history.push(uiPaths.signInPath())
+    void api
+      .signOut()
+      .then(() => {
+        enqueueSnackbar(l.snackbars.signOutComplete)
+      })
+      .finally(() => {
+        history.push(uiPaths.signInPath())
+      })
   })
   return <div></div>
 }

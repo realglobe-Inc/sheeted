@@ -46,8 +46,8 @@ export const SignRoute = ({ passport, jwt }: RouterParams): IRouter => {
         res.redirect(callbackPath)
       },
     )
-    .post(ApiPaths.SIGN_OUT, () => {
-      // JWT has no sign out on server sice
-      // Just delete token on front side
+    .post(ApiPaths.SIGN_OUT, (req, res) => {
+      res.clearCookie(JWT.COOKIE_KEY)
+      res.json({ ok: true })
     })
 }

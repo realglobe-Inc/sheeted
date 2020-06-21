@@ -163,6 +163,16 @@ export class ApiRequest {
     }
   }
 
+  async signOut(): Promise<void> {
+    const resp = await this.fetch(this.apiPaths.signOutPath(), {
+      method: 'POST',
+    })
+    if (!resp.ok) {
+      const { error }: ErrorResponse = await resp.json()
+      throw new HttpError(error.message, resp.status)
+    }
+  }
+
   private async fetch(path: string, init: RequestInit = {}) {
     return window.fetch(path, {
       headers: {
