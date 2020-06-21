@@ -147,12 +147,14 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
   {
     action: 'create',
     role: Roles.EDITOR_ROLE,
-    uneditableColumns: [],
   },
   {
     action: 'update',
     role: Roles.EDITOR_ROLE,
-    uneditableColumns: [],
+    column: {
+      effect: 'deny',
+      columns: ['genre'],
+    },
     condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
       ctx?.user.id === book.buyer.id,
   },
@@ -270,6 +272,9 @@ export const BookView: View<BookEntity> = {
   columns: {
     title: {
       title: 'TITLE',
+      style: {
+        minWidth: '10em',
+      },
     },
     like: {
       title: 'LIKE',
@@ -320,6 +325,9 @@ export const BookView: View<BookEntity> = {
     },
     comment: {
       title: 'COMMENT',
+      style: {
+        minWidth: '15em',
+      },
     },
   },
 }
