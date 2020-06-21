@@ -12,12 +12,14 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
   {
     action: 'create',
     role: Roles.EDITOR_ROLE,
-    uneditableColumns: [],
   },
   {
     action: 'update',
     role: Roles.EDITOR_ROLE,
-    uneditableColumns: [],
+    column: {
+      effect: 'deny',
+      columns: ['genre'],
+    },
     condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
       ctx?.user.id === book.buyer.id,
   },
