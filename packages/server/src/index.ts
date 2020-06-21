@@ -61,7 +61,7 @@ export const createApp = (
     EntityRoute,
     CurrentUserRoute,
     ActionRoute,
-    !config.contentServer?.externalUrl && ContentRoute,
+    !process.env.USE_LOCAL_CONTENT_SERVER && ContentRoute,
   ]
     .filter((Route): Route is RouterBuilder => Boolean(Route))
     .map((Route) =>
@@ -69,7 +69,6 @@ export const createApp = (
         appTitle,
         sheets,
         groups,
-        config,
         passport,
         jwt,
         guards,

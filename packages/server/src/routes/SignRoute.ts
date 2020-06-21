@@ -11,10 +11,9 @@ import { IAMUserEntity } from '@sheeted/core'
 
 import { RouterParams } from '../types/Router.type'
 
-export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
+export const SignRoute = ({ passport, jwt }: RouterParams): IRouter => {
   const apiPaths = ApiPathBuilder()
   const uiPaths = UIPathBuilder()
-  const { externalUrl } = config.contentServer || {}
   return Router()
     .get(
       ApiPaths.SIGN_IN,
@@ -24,10 +23,7 @@ export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
       }),
       (req, res) => {
         const signInPath = uiPaths.signInPath()
-        const signInUrl = externalUrl
-          ? new URL(signInPath, externalUrl).toString()
-          : signInPath
-        res.redirect(signInUrl)
+        res.redirect(signInPath)
       },
     )
     .post(
@@ -41,10 +37,7 @@ export const SignRoute = ({ passport, jwt, config }: RouterParams): IRouter => {
         const user = req.user as IAMUserEntity
         const token = await jwt.sign(user)
         const callbackPath = uiPaths.signInCallbackPath()
-        const callbackUrl = externalUrl
-          ? new URL(callbackPath, externalUrl).toString()
-          : callbackPath
-        res.redirect(callbackUrl + '?' + qs.stringify({ token }))
+        res.redirect(callbackPath + '?' + qs.stringify({ token }))
       },
     )
     .post(ApiPaths.SIGN_OUT, () => {
