@@ -65,6 +65,11 @@ const Time: Type<number> = {
   interceptor: TimeInterceptor,
 }
 
+const ISODate: Type<number> = {
+  rawType: 'number', // Milliseconds since Unix Epoch Time
+  form: 'text',
+}
+
 const Enum: Type<any> = {
   rawType: 'text',
   form: 'select',
@@ -88,6 +93,7 @@ export const Types = {
   CalendarMonth,
   CalendarYear,
   Time,
+  ISODate,
   Enum,
   EnumList,
   Entity,

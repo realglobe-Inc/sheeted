@@ -7,7 +7,7 @@ import {
   modelNames,
 } from 'mongoose'
 import { v4 as uuid } from 'uuid'
-import { Schema, SchemaField } from '@sheeted/core'
+import { Schema, SchemaField, EntityBase } from '@sheeted/core'
 
 /**
  * A helper function to compile a [Mongoose Model](https://mongoosejs.com/docs/api/model.html) from a Sheeted schema object.
@@ -36,8 +36,8 @@ export const compileModel = <Entity>(
             return {
               type: MongoTypes.ObjectId,
               ref:
-                schema[field as Exclude<keyof Entity, 'id'>].entityProperties
-                  ?.sheetName,
+                schema[field as Exclude<keyof Entity, keyof EntityBase>]
+                  .entityProperties?.sheetName,
               autopopulate: true,
             }
         }
@@ -45,16 +45,25 @@ export const compileModel = <Entity>(
       return [field, definitionValue]
     }),
   )
-  const mongoSchema = new MongoSchema({
-    ...definition,
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true,
-      default: () => uuid(),
+  const mongoSchema = new MongoSchema(
+    {
+      ...definition,
+      id: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        default: () => uuid(),
+      },
+      createdAt: Number,
+      updatedAt: Number,
     },
-  })
+    {
+      timestamps: {
+        currentTime: () => Date.now(),
+      },
+    },
+  )
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   mongoSchema.plugin(require('mongoose-autopopulate'))
   return model<Document & Entity>(name, mongoSchema)

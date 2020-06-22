@@ -6,6 +6,7 @@ import {
   SearchQuery,
   SortQuery,
   EntityBase,
+  SchemaField,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -27,6 +28,7 @@ import { EntityConverter } from './concern/EntityConverter'
 import { EntityValidator } from './concern/EntityValidator'
 import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
+import { EntityBaseSchema } from './concern/EntityBase'
 
 export class EntityController {
   /**
@@ -91,9 +93,13 @@ export class EntityController {
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const columns: SheetInfo['columns'] = Object.keys(Schema).map(
+    const schema: { [field: string]: SchemaField<any> } = {
+      ...Schema,
+      ...EntityBaseSchema,
+    }
+    const columns: SheetInfo['columns'] = Object.keys(schema).map(
       (field, index) => {
-        const schemaField = Schema[field]
+        const schemaField = schema[field]
         const {
           title,
           style = {},

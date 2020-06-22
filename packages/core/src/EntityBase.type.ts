@@ -6,6 +6,16 @@ export interface EntityBase {
    * Unique identifer.
    */
   id: string
+
+  /**
+   * Timestamp to be created.
+   */
+  createdAt: number
+
+  /**
+   * Timestamp to be last updated.
+   */
+  updatedAt: number
 }
 
 /**

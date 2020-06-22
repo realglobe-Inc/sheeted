@@ -31,6 +31,8 @@ test('MongoDriver/01 simple schame', async () => {
   expect(created).toMatchObject({
     name: 'foo',
   })
+  expect(typeof created.createdAt).toBe('number')
+  expect(typeof created.updatedAt).toBe('number')
   const updated = await repository.update(created.id, {
     name: 'foo1',
   })
