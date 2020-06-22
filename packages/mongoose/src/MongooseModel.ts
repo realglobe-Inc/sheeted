@@ -17,7 +17,7 @@ import { Schema, SchemaField, EntityBase } from '@sheeted/core'
 export const compileModel = <Entity>(
   name: string,
   schema: Schema<Entity>,
-): MongoModel<Document & Entity> => {
+): MongoModel<Document & Partial<Entity>> => {
   const exists = modelNames().includes(name)
   if (exists) {
     return model<Document & Entity>(name)
@@ -66,5 +66,5 @@ export const compileModel = <Entity>(
   )
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   mongoSchema.plugin(require('mongoose-autopopulate'))
-  return model<Document & Entity>(name, mongoSchema)
+  return model<Document & Partial<Entity>>(name, mongoSchema)
 }

@@ -24,7 +24,10 @@ const updateAggregation = async (report: ReportEntity) => {
       $lt: (month + 1) * 100,
     },
   }).lean()
-  const hours = reports.reduce((sum, report) => sum + report.time / 60, 0)
+  const hours = reports.reduce(
+    (sum, report) => sum + (report.time || 0) / 60,
+    0,
+  )
   const aggregation = await AggregationModel.findOne({
     project,
     month,
@@ -37,7 +40,7 @@ const updateAggregation = async (report: ReportEntity) => {
       project,
       month,
       hours,
-    } as CreateQuery<AggregationEntity>)
+    } as CreateQuery<Partial<AggregationEntity>>)
   }
 }
 

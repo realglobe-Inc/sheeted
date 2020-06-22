@@ -13,7 +13,7 @@ import { compileModel } from './MongooseModel'
 
 /** @internal */
 class MongoRepositoryImpl<Entity> implements Repository<Entity> {
-  private readonly model: MongoModel<EntityBase & Document>
+  private readonly model: MongoModel<Partial<EntityBase> & Document>
 
   constructor(name: string, schema: Schema<Entity>) {
     this.model = compileModel<EntityBase>(name, schema)
