@@ -7,7 +7,13 @@ import { Entity } from '../../../types/Entity.type'
 
 export const useMColumns = (info: SheetInfo | null): Column<Entity>[] => {
   const columns = useMemo(
-    () => (info ? info.columns.map(convertColumn).filter(Boolean) : []),
+    () =>
+      info
+        ? info.columns
+            .filter((column) => !column.detailPageOnly)
+            .map(convertColumn)
+            .filter(Boolean)
+        : [],
     [info],
   )
   return columns
