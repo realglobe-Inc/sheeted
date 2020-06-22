@@ -15,6 +15,12 @@ export type ColumnView = {
   style?: CSS.Properties
 
   /**
+   * Show field only on the detail page.
+   * This option is valid only when the field is readonly.
+   */
+  detailPageOnly?: boolean
+
+  /**
    * Enum label (only required for enum type)
    */
   enumLabels?: {

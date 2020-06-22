@@ -36,6 +36,10 @@ test('SheetValidator.validateSheet()', () => {
           type: Types.Entity,
           // entityProperties is required
         },
+        detailPage: {
+          type: Types.Text,
+          // readonly is required
+        },
       },
       Validator: null as any,
       View: {
@@ -50,11 +54,15 @@ test('SheetValidator.validateSheet()', () => {
             title: 'enumList',
             // enumLabels is required.
           },
+          detailPage: {
+            title: 'detailPage',
+            detailPageOnly: true,
+          },
         },
       },
       AccessPolicies: [],
     }),
-  ).toHaveLength(5)
+  ).toHaveLength(6)
 })
 
 test('SheetValidator.validateSheets()', () => {

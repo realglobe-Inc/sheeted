@@ -52,6 +52,16 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
         message: `Property "enumLabels" is required when field type is Enum or EnumList`,
       })
     }
+    if (
+      sheet.View.columns[fieldName]?.detailPageOnly &&
+      !(sheet.View.enableDetail && field.readonly)
+    ) {
+      details.push({
+        sheetName,
+        path: `.View.columns.${fieldName}`,
+        message: `Property "detailPageOnly" is invalid when the field isn't readonly`,
+      })
+    }
   }
   return details
 }
