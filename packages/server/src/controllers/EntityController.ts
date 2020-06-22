@@ -28,7 +28,7 @@ import { EntityConverter } from './concern/EntityConverter'
 import { EntityValidator } from './concern/EntityValidator'
 import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
-import { EntityBaseSchema } from './concern/EntityBase'
+import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 
 export class EntityController {
   /**
@@ -95,7 +95,13 @@ export class EntityController {
     }
     const schema: { [field: string]: SchemaField<any> } = {
       ...Schema,
+      // EntityBaseSchema は上書きできない
       ...EntityBaseSchema,
+    }
+    const viewColumns = {
+      // EntityBaseColumns は上書きできる
+      ...EntityBaseColumns,
+      ...View.columns,
     }
     const columns: SheetInfo['columns'] = Object.keys(schema).map(
       (field, index) => {
@@ -107,7 +113,7 @@ export class EntityController {
           enumLabels,
           textOptions,
           numericOptions,
-        } = View.columns[field] || {}
+        } = viewColumns[field] || {}
         const column: Column = dropUndef({
           field,
           title: title || field,

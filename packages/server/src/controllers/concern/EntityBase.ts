@@ -18,8 +18,10 @@ export const EntityBaseSchema = {
 export const EntityBaseColumns: { [field: string]: ColumnView } = {
   createdAt: {
     title: '作成日時',
+    detailPageOnly: true,
   },
   updatedAt: {
     title: '更新日時',
+    detailPageOnly: true,
   },
 }

@@ -14,7 +14,7 @@ afterAll(async () => {
   await mongoose.disconnect()
 })
 
-test('MongoDriver/01 simple schame', async () => {
+test('MongoDriver/01 simple schema', async () => {
   interface Entity extends EntityBase {
     name: string
   }
