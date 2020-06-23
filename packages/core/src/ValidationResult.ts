@@ -1,3 +1,5 @@
+import { EntityBase } from './EntityBase.type'
+
 type ValidationError = {
   field: string
   message: string
@@ -18,7 +20,7 @@ export class ValidationResult<Entity = any> {
   }
 
   appendError(error: {
-    field: Exclude<keyof Entity, 'id' | number | symbol>
+    field: Exclude<keyof Entity, keyof EntityBase | number | symbol>
     message: string
   }): void {
     this._errors.push(error)

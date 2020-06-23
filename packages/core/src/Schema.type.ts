@@ -1,3 +1,4 @@
+import { EntityBase } from './EntityBase.type'
 import { Type } from './Type.type'
 
 export type SchemaField<E> = {
@@ -18,5 +19,5 @@ export type SchemaField<E> = {
  * Properties of each field in Entity.
  */
 export type Schema<Entity = any> = {
-  [P in Exclude<keyof Entity, 'id'>]: SchemaField<Entity>
+  [P in Exclude<keyof Entity, keyof EntityBase>]: SchemaField<Entity>
 }

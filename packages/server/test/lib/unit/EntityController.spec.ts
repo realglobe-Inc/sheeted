@@ -1,5 +1,5 @@
 import '../../tools/typings'
-import mongoose, { CreateQuery } from 'mongoose'
+import mongoose from 'mongoose'
 import {
   DefaultIAMRoles,
   IAM_USER_SHEET,
@@ -20,7 +20,6 @@ import {
 } from '../../fixtures/db/users'
 import {
   App1Sheet,
-  App1Entity,
   app1Repository,
   app1Model,
 } from '../../fixtures/apps/app1/Application'
@@ -100,6 +99,34 @@ test('EntityController with IAMUser with admin', async () => {
                 value: DefaultIAMRoles.DEFAULT_ROLE,
               },
             ],
+          },
+        },
+      },
+      {
+        field: 'createdAt',
+        title: '作成日時',
+        form: 'number',
+        detailPageOnly: true,
+        index: 3,
+        readonly: true,
+        style: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
+          },
+        },
+      },
+      {
+        field: 'updatedAt',
+        title: '更新日時',
+        form: 'number',
+        detailPageOnly: true,
+        index: 4,
+        readonly: true,
+        style: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
           },
         },
       },
@@ -223,10 +250,10 @@ test('EntityController.performAction()', async () => {
     {},
     app1Repository,
   )
-  const entity: EntityBase = await app1Model.create({
+  const entity = await app1Model.create({
     id: 'entity',
     n: 10,
-  } as CreateQuery<App1Entity>)
+  } as any)
   // n が10以下なら100にするアクション
   await controller.performAction('set100', [entity.id])
   expect(await app1Model.findOne({ id: entity.id })).toMatchObject({

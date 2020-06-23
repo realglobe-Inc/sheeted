@@ -42,6 +42,7 @@ export type Column = {
         locales: string
         options: Intl.NumberFormatOptions
       }
+      formatAsDate?: string
     }
   }
 }

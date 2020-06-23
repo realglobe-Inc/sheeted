@@ -7,8 +7,8 @@ export interface ISeeder {
 
 export class Seeder<E extends EntityBase> implements ISeeder {
   constructor(
-    private model: Model<EntityBase & Document>,
-    private data: (E & { _id?: Types.ObjectId })[],
+    private model: Model<Partial<EntityBase> & Document>,
+    private data: (Partial<E> & { _id?: Types.ObjectId })[],
   ) {}
 
   async seed(): Promise<void> {

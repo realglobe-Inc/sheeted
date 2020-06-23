@@ -6,6 +6,7 @@ import {
   SearchQuery,
   SortQuery,
   EntityBase,
+  SchemaField,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -27,6 +28,7 @@ import { EntityConverter } from './concern/EntityConverter'
 import { EntityValidator } from './concern/EntityValidator'
 import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
+import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 
 export class EntityController {
   /**
@@ -50,6 +52,7 @@ export class EntityController {
     return new EntityController(sheet, ctx, displays, repository)
   }
 
+  private readonly schema: { [field: string]: SchemaField<any> }
   private readonly userRoles: string[]
   private readonly userAccessPolicy: UserAccessPolicy
   private readonly converter: EntityConverter
@@ -62,38 +65,48 @@ export class EntityController {
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
   ) {
-    const { Schema } = sheet
+    this.schema = {
+      ...sheet.Schema,
+      // EntityBaseSchema は上書きできない
+      ...EntityBaseSchema,
+    }
     this.userRoles = ctx.user.roles
-    const columns = Object.keys(sheet.Schema)
+    const columnNames = Object.keys(sheet.Schema)
     this.userAccessPolicy = new UserAccessPolicy(
       this.userRoles,
       sheet.AccessPolicies,
-      columns,
+      columnNames,
     )
     this.converter = new EntityConverter(
       sheet.name,
-      Schema,
+      this.schema,
       this.userAccessPolicy,
       displays,
       ctx,
     )
     this.hook = new HookTrigger(ctx, sheet.Hook)
     this.validator = new EntityValidator(
-      Schema,
+      this.schema,
       sheet.Validator(ctx),
       repository,
     )
   }
 
   info(): SheetInfo {
-    const { name: sheetName, View, Schema, Actions = [] } = this.sheet
+    const { name: sheetName, View, Actions = [] } = this.sheet
     const { userAccessPolicy } = this
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const columns: SheetInfo['columns'] = Object.keys(Schema).map(
+    const { schema } = this
+    const viewColumns = {
+      // EntityBaseColumns は上書きできる
+      ...EntityBaseColumns,
+      ...View.columns,
+    }
+    const columns: SheetInfo['columns'] = Object.keys(schema).map(
       (field, index) => {
-        const schemaField = Schema[field]
+        const schemaField = schema[field]
         const {
           title,
           style = {},
@@ -101,7 +114,7 @@ export class EntityController {
           enumLabels,
           textOptions,
           numericOptions,
-        } = View.columns[field] || {}
+        } = viewColumns[field] || {}
         const column: Column = dropUndef({
           field,
           title: title || field,
@@ -186,7 +199,9 @@ export class EntityController {
       page,
       limit,
       search: searchQuery,
-      sort: sort as SortQuery<any>[],
+      sort: sort.concat({ field: 'updatedAt', order: 'desc' }) as SortQuery<
+        any
+      >[],
       filter: {
         ...userFilter,
         ...queryFilter,

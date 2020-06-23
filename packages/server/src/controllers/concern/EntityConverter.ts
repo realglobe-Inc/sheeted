@@ -22,6 +22,7 @@ export class EntityConverter {
     return [changes]
       .map((changes) => this.parseFieldsByInterceptors(changes))
       .map((changes) => this.dropMetaFields(changes))
+      .map((changes) => this.dropTimestamps(changes))
       .pop()!
   }
 
@@ -110,6 +111,16 @@ export class EntityConverter {
     const copy = { ...entity }
     for (const field of Object.keys(copy)) {
       if (field === ENTITY_META_FIELD) {
+        delete copy[field]
+      }
+    }
+    return copy
+  }
+
+  private dropTimestamps(entity: Record<string, any>) {
+    const copy = { ...entity }
+    for (const field of Object.keys(copy)) {
+      if (field === 'createdAt' || field === 'updatedAt') {
         delete copy[field]
       }
     }
