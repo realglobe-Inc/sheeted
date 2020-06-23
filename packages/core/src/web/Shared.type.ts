@@ -21,6 +21,7 @@ export type Column = {
   readonlyOnUpdate?: boolean
 
   style: { [property: string]: any }
+  detailPageOnly?: boolean
 
   custom: {
     entity?: {
