@@ -101,22 +101,30 @@ it('should succeed to get IAMUser sheet info', async () => {
       {
         field: 'createdAt',
         title: '作成日時',
-        form: 'text',
+        form: 'number',
         detailPageOnly: true,
         index: 3,
         readonly: true,
         style: {},
-        custom: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
+          },
+        },
       },
       {
         field: 'updatedAt',
         title: '更新日時',
-        form: 'text',
+        form: 'number',
         detailPageOnly: true,
         index: 4,
         readonly: true,
         style: {},
-        custom: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
+          },
+        },
       },
     ],
     permissions: { creates: true, updates: true, deletes: true },

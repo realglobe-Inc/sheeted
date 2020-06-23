@@ -105,22 +105,30 @@ test('EntityController with IAMUser with admin', async () => {
       {
         field: 'createdAt',
         title: '作成日時',
-        form: 'text',
+        form: 'number',
         detailPageOnly: true,
         index: 3,
         readonly: true,
         style: {},
-        custom: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
+          },
+        },
       },
       {
         field: 'updatedAt',
         title: '更新日時',
-        form: 'text',
+        form: 'number',
         detailPageOnly: true,
         index: 4,
         readonly: true,
         style: {},
-        custom: {},
+        custom: {
+          numeric: {
+            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
+          },
+        },
       },
     ],
     permissions: { creates: true, updates: true, deletes: true },
@@ -242,7 +250,7 @@ test('EntityController.performAction()', async () => {
     {},
     app1Repository,
   )
-  const entity: EntityBase = await app1Model.create({
+  const entity = await app1Model.create({
     id: 'entity',
     n: 10,
   } as any)
