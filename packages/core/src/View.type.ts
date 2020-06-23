@@ -45,6 +45,11 @@ export type ColumnView = {
       locales: string
       options: Intl.NumberFormatOptions
     }
+
+    /**
+     * See number as Date and format with such as "YYYY-MM-DD HH:mm:ss" string.
+     */
+    formatAsDate?: string
   }
 }
 

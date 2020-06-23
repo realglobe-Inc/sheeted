@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import dayjs from 'dayjs'
 import {
   Column,
   WithEntityMetaField,
@@ -58,16 +59,19 @@ const MultilineTextValueHoc = (column: Column): FC<FieldValueProps> => {
 
 const NumericValueHoc = (column: Column): FC<FieldValueProps> => {
   return function NumericValue({ entity }: FieldValueProps) {
-    if (!entity) {
+    if (!entity || !entity[column.field]) {
       return null
     }
-    const rawValue = (entity[column.field] || 0) as number
+    const rawValue = Number(entity[column.field])
     const formatWithIntl = column.custom.numeric?.formatWithIntl
+    const formatAsDate = column.custom.numeric?.formatAsDate
     const value = formatWithIntl
       ? new Intl.NumberFormat(
           formatWithIntl.locales,
           formatWithIntl.options,
         ).format(rawValue)
+      : formatAsDate
+      ? dayjs(rawValue).format(formatAsDate)
       : rawValue
     return <div style={column.style}>{value}</div>
   }

@@ -52,6 +52,7 @@ export class EntityController {
     return new EntityController(sheet, ctx, displays, repository)
   }
 
+  private readonly schema: { [field: string]: SchemaField<any> }
   private readonly userRoles: string[]
   private readonly userAccessPolicy: UserAccessPolicy
   private readonly converter: EntityConverter
@@ -64,40 +65,40 @@ export class EntityController {
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
   ) {
-    const { Schema } = sheet
+    this.schema = {
+      ...sheet.Schema,
+      // EntityBaseSchema は上書きできない
+      ...EntityBaseSchema,
+    }
     this.userRoles = ctx.user.roles
-    const columns = Object.keys(sheet.Schema)
+    const columnNames = Object.keys(sheet.Schema)
     this.userAccessPolicy = new UserAccessPolicy(
       this.userRoles,
       sheet.AccessPolicies,
-      columns,
+      columnNames,
     )
     this.converter = new EntityConverter(
       sheet.name,
-      Schema,
+      this.schema,
       this.userAccessPolicy,
       displays,
       ctx,
     )
     this.hook = new HookTrigger(ctx, sheet.Hook)
     this.validator = new EntityValidator(
-      Schema,
+      this.schema,
       sheet.Validator(ctx),
       repository,
     )
   }
 
   info(): SheetInfo {
-    const { name: sheetName, View, Schema, Actions = [] } = this.sheet
+    const { name: sheetName, View, Actions = [] } = this.sheet
     const { userAccessPolicy } = this
     if (!userAccessPolicy.ofRead) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const schema: { [field: string]: SchemaField<any> } = {
-      ...Schema,
-      // EntityBaseSchema は上書きできない
-      ...EntityBaseSchema,
-    }
+    const { schema } = this
     const viewColumns = {
       // EntityBaseColumns は上書きできる
       ...EntityBaseColumns,
@@ -198,7 +199,9 @@ export class EntityController {
       page,
       limit,
       search: searchQuery,
-      sort: sort as SortQuery<any>[],
+      sort: sort.concat({ field: 'updatedAt', order: 'desc' }) as SortQuery<
+        any
+      >[],
       filter: {
         ...userFilter,
         ...queryFilter,
