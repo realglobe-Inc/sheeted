@@ -17,6 +17,7 @@ import { InputErrorContextProvider } from './hooks/InputErrorContextHook'
 import { Toolbar } from './components/Toolbar'
 import { TableHeader } from './components/TableHeader'
 import { EditRow } from './components/EditRow'
+import { SheetNotFound } from './components/SheetNotFound'
 import { tableIcons } from './assets/icons'
 import { useQueryEntities } from './hooks/QueryEntitiesHook'
 import { useSheetReady } from './hooks/SheetReadyHook'
@@ -51,9 +52,10 @@ export const SheetPage: FC = () => {
         <InputErrorContextProvider>
           <EntityDialogContextProvider>
             <PageLayout>
-              {sheet && user && ready ? (
+              {ready && sheet && user ? (
                 <SheetPageTable user={user} sheet={sheet} />
               ) : null}
+              {!ready && <SheetNotFound />}
               <EntitySelectDialog />
               <ActionDialog />
             </PageLayout>

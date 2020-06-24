@@ -34,7 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-export const Toolbar: FC<any> = (props) => {
+export const Toolbar: FC<{ disabled?: boolean } & Record<string, any>> = (
+  props,
+) => {
   const classes = useStyles()
   const { isOpen, openMenu } = useMenuContext()
   const { result: info } = useSheetInfoContext()
@@ -52,7 +54,7 @@ export const Toolbar: FC<any> = (props) => {
         </IconButton>
       </div>
       <div className={classes.toolbar}>
-        <MTableToolbar {...props} search={search} />
+        {!props.disabled && <MTableToolbar {...props} search={search} />}
       </div>
     </div>
   )
