@@ -74,7 +74,7 @@ export const DrawerMenu: FC = () => {
     sheets: { sheets, groups },
   } = useSheetContext()
   const sheetGroups = useSheetGroups({ sheets, groups })
-  const currentSheet = useCurrentSheet()
+  const { sheet: currentSheet } = useCurrentSheet()
   const iamSheet = sheets.find(({ sheetName }) => sheetName === IAM_USER_SHEET)
   return (
     <Drawer

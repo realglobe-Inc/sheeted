@@ -20,7 +20,6 @@ import { EditRow } from './components/EditRow'
 import { SheetNotFound } from './components/SheetNotFound'
 import { tableIcons } from './assets/icons'
 import { useQueryEntities } from './hooks/QueryEntitiesHook'
-import { useSheetReady } from './hooks/SheetReadyHook'
 import { useEditEntity } from './hooks/EditEntityHook'
 import { EntityDialogContextProvider } from './hooks/EntityDialogContextHook'
 import { EntitySelectDialog } from './components/EntitySelectDialog'
@@ -44,18 +43,17 @@ const tableOptions: TableOptions = {
 
 export const SheetPage: FC = () => {
   const { user } = useUserContext()
-  const sheet = useCurrentSheet()
-  const ready = useSheetReady(sheet)
+  const { ready, sheet } = useCurrentSheet()
   return (
     <SheetInfoContextProvider>
       <ActionContextProvider>
         <InputErrorContextProvider>
           <EntityDialogContextProvider>
             <PageLayout>
-              {ready && sheet && user ? (
+              {ready && sheet && user && (
                 <SheetPageTable user={user} sheet={sheet} />
-              ) : null}
-              {!ready && <SheetNotFound />}
+              )}
+              {ready && !sheet && <SheetNotFound />}
               <EntitySelectDialog />
               <ActionDialog />
             </PageLayout>
