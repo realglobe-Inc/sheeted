@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
       ...theme.mixins.toolbar,
       justifyContent: 'flex-end',
     },
+    listItem: {
+      fontWeight: 600,
+    },
     user: {
       padding: theme.spacing(0, 2),
       color: '#888',
@@ -71,7 +74,7 @@ export const DrawerMenu: FC = () => {
     sheets: { sheets, groups },
   } = useSheetContext()
   const sheetGroups = useSheetGroups({ sheets, groups })
-  const currentSheet = useCurrentSheet()
+  const { sheet: currentSheet } = useCurrentSheet()
   const iamSheet = sheets.find(({ sheetName }) => sheetName === IAM_USER_SHEET)
   return (
     <Drawer
@@ -119,7 +122,14 @@ export const DrawerMenu: FC = () => {
                     <Icon color="primary">{icon}</Icon>
                   </ListItemIcon>
                 )}
-                <ListItemText primary={title} />
+                <ListItemText
+                  primary={title}
+                  primaryTypographyProps={{
+                    classes: {
+                      root: classes.listItem,
+                    },
+                  }}
+                />
               </ListItem>
             )),
         ])}
@@ -138,7 +148,14 @@ export const DrawerMenu: FC = () => {
             <ListItemIcon>
               <Icon color="primary">people</Icon>
             </ListItemIcon>
-            <ListItemText primary={iamSheet.title} />
+            <ListItemText
+              primary={iamSheet.title}
+              primaryTypographyProps={{
+                classes: {
+                  root: classes.listItem,
+                },
+              }}
+            />
           </ListItem>
         )}
       </List>

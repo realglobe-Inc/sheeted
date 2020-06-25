@@ -40,6 +40,7 @@ export const locale = {
   },
   titles: {
     error: 'エラー',
+    sheetNotFound: 'シートが見つかりません',
   },
   snackbars: {
     actionComplete: '操作が完了しました',

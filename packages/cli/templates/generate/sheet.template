@@ -8,7 +8,9 @@ import { <%= entityNamePascal %>AccessPolicies } from './<%= entityNameParam %>.
 import { <%= entityNamePascal %>Actions } from './<%= entityNameParam %>.actions'
 import { <%= entityNamePascal %>Hook } from './<%= entityNameParam %>.hook'
 
+// TODO: Pass Role type as the second type argument of AccessPolicy
 export const <%= entityNamePascal %>Sheet: Sheet<<%= entityNamePascal %>Entity, string> = {
+  // TODO: Sheet names are recommended to be managed in one constants file
   name: '<%= entityNamePascal %>',
   Schema: <%= entityNamePascal %>Schema,
   Validator: <%= entityNamePascal %>Validator,
