@@ -4,6 +4,7 @@ import { BookEntity } from './book.entity'
 
 export const BookView: View<BookEntity> = {
   title: 'Books',
+  icon: 'menu_book',
   display: (entity) => entity.title,
   enableDetail: true,
   columns: {
