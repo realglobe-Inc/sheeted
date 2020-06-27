@@ -121,7 +121,7 @@ test('MongoDriver/02 complex queries', async () => {
       },
     },
   }
-  const repository = new MongoDriver<Entity>('Entity', schema)
+  const repository = new MongoDriver<Entity>('model2', schema)
   const inputs = [
     {
       name: 'aaa bbb',
@@ -241,4 +241,26 @@ test('MongoDriver/02 complex queries', async () => {
     })
     expect(total).toBe(2)
   }
+})
+
+test('Should be able to set default fields', async () => {
+  interface Entity extends EntityBase {
+    name: string
+  }
+  const schema: Schema<Entity> = {
+    name: {
+      type: Types.Text,
+    },
+  }
+  const repository = new MongoDriver<Entity>('model3', schema)
+
+  const entity = {
+    _id: mongoose.Types.ObjectId.createFromTime(10),
+    id: 'id',
+    name: 'name',
+    createdAt: 10000,
+    updatedAt: 10000,
+  } as Entity
+  const created = await repository.create(entity)
+  expect(created).toMatchObject(entity)
 })
