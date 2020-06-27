@@ -243,7 +243,7 @@ test('MongoDriver/02 complex queries', async () => {
   }
 })
 
-test('Should be able to set default fields', async () => {
+test('Should be able to set createdAt / updatedAt', async () => {
   interface Entity extends EntityBase {
     name: string
   }
@@ -263,4 +263,12 @@ test('Should be able to set default fields', async () => {
   } as Entity
   const created = await repository.create(entity)
   expect(created).toMatchObject(entity)
+
+  const changes = {
+    name: 'name2',
+    createdAt: 20000,
+    updatedAt: 20000,
+  }
+  const updated = await repository.update(entity.id, changes)
+  expect(updated).toMatchObject(changes)
 })

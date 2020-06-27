@@ -45,25 +45,24 @@ export const compileModel = <Entity>(
       return [field, definitionValue]
     }),
   )
-  const mongoSchema = new MongoSchema(
-    {
-      ...definition,
-      id: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true,
-        default: () => uuid(),
-      },
-      createdAt: Number,
-      updatedAt: Number,
+  const mongoSchema = new MongoSchema({
+    ...definition,
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+      default: () => uuid(),
     },
-    {
-      timestamps: {
-        currentTime: () => Date.now(),
-      },
+    createdAt: {
+      type: Number,
+      default: () => Date.now(),
     },
-  )
+    updatedAt: {
+      type: Number,
+      default: () => Date.now(),
+    },
+  })
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   mongoSchema.plugin(require('mongoose-autopopulate'))
   return model<Document & Partial<Entity>>(name, mongoSchema)
