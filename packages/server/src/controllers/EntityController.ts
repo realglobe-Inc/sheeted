@@ -320,7 +320,9 @@ export class EntityController {
             await this.hook.triggerDestroy(entity)
             return null
           } catch (e) {
-            console.error(e)
+            if (process.env.NODE_ENV !== 'test') {
+              console.error(e)
+            }
             return id
           }
         }),
