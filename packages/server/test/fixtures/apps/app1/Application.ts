@@ -7,6 +7,7 @@ import {
   Application,
   DefaultIAMRole,
   Schema,
+  Context,
 } from '@sheeted/core'
 import { Express } from 'express'
 import { MongoDriver, compileModel } from '@sheeted/mongoose'
@@ -29,8 +30,16 @@ export const app1Repository = new MongoDriver('App1', App1Schema)
 export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
   name: 'App1',
   Schema: App1Schema,
-  Validator: (_ctx) => (_input: Partial<App1Entity>): ValidationResult => {
+  Validator: (_ctx) => (input: Partial<App1Entity>): ValidationResult => {
     const result = new ValidationResult()
+    if (typeof input.n === 'number') {
+      if (input.n <= 0) {
+        result.appendError({
+          field: 'n',
+          message: 'Must be more than 0',
+        })
+      }
+    }
     return result
   },
   View: {
@@ -57,6 +66,23 @@ export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
       },
     },
   ],
+  Hook: {
+    onCreate(entity: App1Entity, _ctx: Context<DefaultIAMRole>): void {
+      if (entity.n === 100) {
+        throw new Error('failed')
+      }
+    },
+    onUpdate(entity: App1Entity, _ctx: Context<DefaultIAMRole>): void {
+      if (entity.n === 100) {
+        throw new Error('failed')
+      }
+    },
+    onDestroy(entity: App1Entity, _ctx: Context<DefaultIAMRole>): void {
+      if (entity.n === 99) {
+        throw new Error('failed')
+      }
+    },
+  },
 }
 
 const config: ApplicationConfig = {

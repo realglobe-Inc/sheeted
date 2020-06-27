@@ -12,6 +12,7 @@ import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUs
 
 import { connectMongo } from '../../tools/mongoose'
 import { EntityController } from '../../../src/controllers/EntityController'
+import { HttpValidationError } from '../../../src/middlewares/ErrorMiddleware'
 import {
   adminUser,
   defaultUser,
@@ -263,4 +264,52 @@ test('EntityController.performAction()', async () => {
   await expect(() =>
     controller.performAction('set100', [entity.id]),
   ).rejects.toBeTruthy()
+})
+
+test('EntityController rollback with hook', async () => {
+  const controller = new EntityController(
+    App1Sheet,
+    {
+      user: adminUser,
+    },
+    {},
+    app1Repository,
+  )
+
+  // n = 100 にすると Hook でエラーになる
+  await expect(
+    controller.create({
+      n: 100,
+    }),
+  ).rejects.toMatchObject(new Error('failed'))
+  // rollbacked
+  await expect(
+    controller.list({
+      page: 1,
+      limit: 10,
+      search: '',
+      sort: [],
+      filter: {},
+    }),
+  ).resolves.toMatchObject({
+    total: 0,
+  })
+
+  const entity: EntityBase = await controller.create({ n: 99 })
+
+  // n = 100 にすると Hook でエラーになる
+  await expect(
+    controller.update(entity.id, {
+      n: 100,
+    }),
+  ).rejects.toMatchObject(new Error('failed'))
+  // rollbacked
+  await expect(controller.one(entity.id)).resolves.toEqual(entity)
+
+  // n = 99 にすると Hook でエラーになる
+  await expect(controller.delete([entity.id])).rejects.toMatchObject({
+    destroyedIds: [],
+    failedIds: [entity.id],
+  })
+  await expect(controller.one(entity.id)).resolves.toEqual(entity)
 })
