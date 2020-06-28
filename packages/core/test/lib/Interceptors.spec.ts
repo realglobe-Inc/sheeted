@@ -1,5 +1,6 @@
 import {
   CalendarDateInterceptor,
+  CalendarDatetimeInterceptor,
   CalendarMonthInterceptor,
   CalendarYearInterceptor,
   TimeInterceptor,
@@ -9,6 +10,14 @@ test('CalendarDateInterceptor', () => {
   const { parse, stringify, toDate } = CalendarDateInterceptor
   expect(stringify(parse('2020/01/02'))).toBe('2020/01/02')
   expect(toDate(parse('2020/01/02'))).toEqual(new Date(2020, 0, 2))
+})
+
+test('CalendarDatetimeInterceptor', () => {
+  const { parse, stringify, toDate } = CalendarDatetimeInterceptor
+  expect(stringify(parse('2020/01/02 13:45'))).toBe('2020/01/02 13:45')
+  expect(toDate(parse('2020/01/02 13:45'))).toEqual(
+    new Date(2020, 0, 2, 13, 45),
+  )
 })
 
 test('CalendarMonthInterceptor', () => {

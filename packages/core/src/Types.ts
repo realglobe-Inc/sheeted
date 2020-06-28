@@ -3,9 +3,11 @@ import {
   CalendarDateInterceptor,
   TimeInterceptor,
   CALENDAR_DATE_FORMAT,
+  CALENDAR_DATETIME_FORMAT,
   CALENDAR_YEAR_FORMAT,
   CALENDAR_MONTH_FORMAT,
   TIME_FORMAT,
+  CalendarDatetimeInterceptor,
   CalendarYearInterceptor,
   CalendarMonthInterceptor,
   NumericInterceptor,
@@ -34,6 +36,15 @@ const CalendarDate: Type<number> = {
     format: CALENDAR_DATE_FORMAT,
   },
   interceptor: CalendarDateInterceptor,
+}
+
+const CalendarDatetime: Type<number> = {
+  rawType: 'number',
+  form: 'calendar_datetime',
+  formOptions: {
+    format: CALENDAR_DATETIME_FORMAT,
+  },
+  interceptor: CalendarDatetimeInterceptor,
 }
 
 const CalendarMonth: Type<number> = {
@@ -85,6 +96,7 @@ export const Types = {
   LongText,
   Numeric,
   CalendarDate,
+  CalendarDatetime,
   CalendarMonth,
   CalendarYear,
   Time,

@@ -13,6 +13,5 @@ export const BookHook: Hook<BookEntity> = {
         buyer: user,
       },
     )
-    console.log('success')
   },
 }

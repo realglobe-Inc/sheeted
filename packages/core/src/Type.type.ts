@@ -5,6 +5,7 @@ export type InputForm =
   | 'text-multiline'
   | 'number'
   | 'calendar'
+  | 'calendar_datetime'
   | 'time'
   | 'select'
   | 'select-multiple'

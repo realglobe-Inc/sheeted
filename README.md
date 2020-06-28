@@ -63,6 +63,7 @@ export interface BookEntity extends EntityBase {
   url?: string
   buyer: IAMUserEntity
   buyDate: number
+  readFinishedAt: number
   readMinutes: number
   publicationYear: number
   comment?: string
@@ -116,6 +117,10 @@ export const BookSchema: Schema<BookEntity> = {
   },
   buyDate: {
     type: Types.CalendarDate,
+  },
+  readFinishedAt: {
+    type: Types.CalendarDatetime,
+    optional: true,
   },
   readMinutes: {
     type: Types.Time,
@@ -223,7 +228,6 @@ export const BookHook: Hook<BookEntity> = {
         buyer: user,
       },
     )
-    console.log('success')
   },
 }
 ```
@@ -267,6 +271,7 @@ import { BookEntity } from './book.entity'
 
 export const BookView: View<BookEntity> = {
   title: 'Books',
+  icon: 'menu_book',
   display: (entity) => entity.title,
   enableDetail: true,
   defaultSort: {
@@ -320,6 +325,9 @@ export const BookView: View<BookEntity> = {
     },
     buyDate: {
       title: 'BUY DATE',
+    },
+    readFinishedAt: {
+      title: 'FINISHED READING',
     },
     readMinutes: {
       title: 'READ TIME',
