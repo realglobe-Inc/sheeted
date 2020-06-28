@@ -243,7 +243,13 @@ export class EntityController {
     await this.validator.validate(input, null)
     const creating = this.converter.beforeSave(input)
     const entity = await this.repository.create(creating)
-    await this.hook.triggerCreate(entity)
+    try {
+      await this.hook.triggerCreate(entity)
+    } catch (e) {
+      // roleback
+      await this.repository.destroy(entity.id)
+      throw e
+    }
     // hook により entity が変化したかもしれない
     const final = (await this.repository.findById(entity.id))!
     return this.converter.beforeSend(final)
@@ -264,7 +270,13 @@ export class EntityController {
     await this.validator.validate(changes, current)
     const updating = this.converter.beforeSave(changes)
     const entity = await this.repository.update(id, updating)
-    await this.hook.triggerUpdate(entity)
+    try {
+      await this.hook.triggerUpdate(entity)
+    } catch (e) {
+      // rollback
+      await this.repository.update(id, current)
+      throw e
+    }
     // hook により entity が変化したかもしれない
     const final = (await this.repository.findById(entity.id))!
     return this.converter.beforeSend(final)
@@ -297,15 +309,36 @@ export class EntityController {
       )
     }
     await this.repository.destroyBulk(ids)
-    await Promise.all(
-      ids.map((id) => {
-        const entity = entities[id]
-        if (!entity) {
-          return Promise.resolve()
-        }
-        return this.hook.triggerDestroy(entity)
-      }),
-    )
+    const failedIds = (
+      await Promise.all(
+        ids.map(async (id) => {
+          const entity = entities[id]
+          if (!entity) {
+            return Promise.resolve(null)
+          }
+          try {
+            await this.hook.triggerDestroy(entity)
+            return null
+          } catch (e) {
+            if (process.env.NODE_ENV !== 'test') {
+              console.error(e)
+            }
+            return id
+          }
+        }),
+      )
+    ).filter((id): id is string => Boolean(id))
+    if (failedIds.length > 0) {
+      // mongoose _id を含めて復元できるか？
+      const rollbacking = failedIds
+        .map((id) => entities[id])
+        .filter((id): id is EntityBase => Boolean(id))
+      await this.repository.createBulk(rollbacking)
+    }
+    return {
+      destroyedIds: ids.filter((id) => !failedIds.includes(id)),
+      failedIds,
+    }
   }
 
   async performAction(actionId: string, ids: string[]): Promise<any> {
