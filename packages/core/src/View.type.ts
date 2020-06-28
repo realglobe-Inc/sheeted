@@ -1,5 +1,7 @@
 import * as CSS from 'csstype'
 
+import { SortQuery } from './Repository.type'
+
 /**
  * Column view
  */
@@ -67,6 +69,11 @@ export type View<Entity = any> = {
    * See https://material.io/resources/icons/
    */
   icon?: string
+
+  /**
+   * Default sort
+   */
+  defaultSort?: SortQuery<Entity>
 
   /**
    * Text to display entity

@@ -4,7 +4,6 @@ import {
   Repositories,
   Repository,
   SearchQuery,
-  SortQuery,
   EntityBase,
   SchemaField,
 } from '@sheeted/core'
@@ -29,6 +28,7 @@ import { EntityValidator } from './concern/EntityValidator'
 import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
 import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
+import { SortBuilder } from './concern/SortBuilder'
 
 export class EntityController {
   /**
@@ -58,6 +58,7 @@ export class EntityController {
   private readonly converter: EntityConverter
   private readonly validator: EntityValidator
   private readonly hook: HookTrigger
+  private readonly sortBuilder: SortBuilder
 
   constructor(
     private readonly sheet: Sheet<any, any>,
@@ -90,6 +91,7 @@ export class EntityController {
       sheet.Validator(ctx),
       repository,
     )
+    this.sortBuilder = new SortBuilder(sheet)
   }
 
   info(): SheetInfo {
@@ -199,9 +201,7 @@ export class EntityController {
       page,
       limit,
       search: searchQuery,
-      sort: sort.concat({ field: 'updatedAt', order: 'desc' }) as SortQuery<
-        any
-      >[],
+      sort: this.sortBuilder.build(sort),
       filter: {
         ...userFilter,
         ...queryFilter,

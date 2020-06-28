@@ -7,6 +7,10 @@ export const BookView: View<BookEntity> = {
   icon: 'menu_book',
   display: (entity) => entity.title,
   enableDetail: true,
+  defaultSort: {
+    field: 'title',
+    order: 'asc',
+  },
   columns: {
     title: {
       title: 'TITLE',
