@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 import {
   KeyboardTimePicker,
   KeyboardDatePicker,
+  KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
   DatePickerView,
 } from '@material-ui/pickers'
@@ -39,6 +40,11 @@ const useStyles = makeStyles(() => ({
     display: 'inline-block',
     fontSize: 13,
     minWidth: '11em',
+  },
+  datetimePicker: {
+    display: 'inline-block',
+    fontSize: 13,
+    minWidth: '14em',
   },
   timePicker: {
     display: 'inline-block',
@@ -200,6 +206,44 @@ const DatePickerCell = (
   )
 }
 
+const DatetimePickerCell = (
+  props: EditComponentProps<Entity> & CommonOptions & DatePickerOptions,
+) => {
+  const { field } = props.columnDef
+  const error = useInputErrorFromContext(field)
+  const value = props.value || null
+  const l = useLocale()
+  const classes = useStyles()
+  const onChange = useCallback(
+    (date: MaterialUiPickersDate) => {
+      props.onChange(date?.format(props.format))
+    },
+    [props],
+  )
+  return (
+    <span className={classes.datetimePicker}>
+      <MuiPickersUtilsProvider utils={DayjsUtils}>
+        <KeyboardDateTimePicker
+          autoFocus={props.autoFocus}
+          format={props.format}
+          value={value}
+          views={props.views}
+          onChange={onChange}
+          error={Boolean(error)}
+          helperText={error}
+          ampm={false}
+          // Modal props
+          autoOk
+          clearable
+          okLabel={l.buttons.ok}
+          cancelLabel={l.buttons.cancel}
+          clearLabel={l.buttons.clear}
+        />
+      </MuiPickersUtilsProvider>
+    </span>
+  )
+}
+
 const TimePickerCell = (
   props: EditComponentProps<Entity> & CommonOptions & DatePickerOptions,
 ) => {
@@ -314,6 +358,12 @@ export const EditCellFor = (column: SColumn) =>
       case 'calendar': {
         const options: DatePickerOptions = column.formOptions
         return <DatePickerCell autoFocus={autoFocus} {...props} {...options} />
+      }
+      case 'calendar_datetime': {
+        const options: DatePickerOptions = column.formOptions
+        return (
+          <DatetimePickerCell autoFocus={autoFocus} {...props} {...options} />
+        )
       }
       case 'time': {
         const options: DatePickerOptions = column.formOptions
