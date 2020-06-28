@@ -268,7 +268,11 @@ import { BookEntity } from './book.entity'
 export const BookView: View<BookEntity> = {
   title: 'Books',
   display: (entity) => entity.title,
-  // enableDetail: true,
+  enableDetail: true,
+  defaultSort: {
+    field: 'title',
+    order: 'asc',
+  },
   columns: {
     title: {
       title: 'TITLE',
