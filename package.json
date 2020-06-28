@@ -1,7 +1,7 @@
 {
   "name": "sheeted",
   "description": "Table UI web application development framework",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bugs": {
     "url": "https://github.com/realglobe-Inc/sheeted/issues"
