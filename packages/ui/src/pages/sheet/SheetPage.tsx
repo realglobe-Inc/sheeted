@@ -31,8 +31,10 @@ import { useTableActions } from './hooks/TableActionsHook'
 import { useRefreshTable } from './hooks/RefreshTableHook'
 import { useDetailCallback } from './hooks/DetailCallbackHook'
 import { useMColumns } from './hooks/MColumnsHook'
+import { EditingContextProvider } from './hooks/EditingContextHook'
 
 const tableOptions: TableOptions = {
+  addRowPosition: 'first',
   pageSize: 10,
   pageSizeOptions: [10, 20, 30],
   padding: 'dense',
@@ -49,14 +51,16 @@ export const SheetPage: FC = () => {
       <ActionContextProvider>
         <InputErrorContextProvider>
           <EntityDialogContextProvider>
-            <PageLayout>
-              {ready && sheet && user && (
-                <SheetPageTable user={user} sheet={sheet} />
-              )}
-              {ready && !sheet && <SheetNotFound />}
-              <EntitySelectDialog />
-              <ActionDialog />
-            </PageLayout>
+            <EditingContextProvider>
+              <PageLayout>
+                {ready && sheet && user && (
+                  <SheetPageTable user={user} sheet={sheet} />
+                )}
+                {ready && !sheet && <SheetNotFound />}
+                <EntitySelectDialog />
+                <ActionDialog />
+              </PageLayout>
+            </EditingContextProvider>
           </EntityDialogContextProvider>
         </InputErrorContextProvider>
       </ActionContextProvider>
