@@ -97,9 +97,11 @@ $include ../examples/book/sheets/book/book.sheet.ts
 
 Function `createApp()` needs arguments as below.
 
+* AppTitle: title of application.
 * Sheets: sheets array.
 * Roles: role objects array.
 * DatabaseDriver: database driver. Currently only supported driver is mongo driver.
+* ApiUsers: array of an api user which has userId and accessToken. This is used for API access.
 
 ```ts
 $include ../examples/book/app.ts

@@ -373,9 +373,11 @@ export const BookSheet: Sheet<BookEntity, Role> = {
 
 Function `createApp()` needs arguments as below.
 
+* AppTitle: title of application.
 * Sheets: sheets array.
 * Roles: role objects array.
 * DatabaseDriver: database driver. Currently only supported driver is mongo driver.
+* ApiUsers: array of an api user which has userId and accessToken. This is used for API access.
 
 ```ts
 import { createApp } from '@sheeted/server'
