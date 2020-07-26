@@ -93,7 +93,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
   }
 
   async update(id: EntityId, input: Partial<Entity>): Promise<Entity> {
-    await this.model.updateOne({ id }, input)
+    await this.model.updateOne({ id }, { updatedAt: Date.now(), ...input })
     const updated = await this.findById(id)
     return updated!
   }
@@ -106,7 +106,10 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       {
         id: { $in: ids },
       },
-      changes,
+      {
+        updatedAt: Date.now(),
+        ...changes,
+      },
     )
     const docs = await this.model.find({ id: { $in: ids } })
     const entities = docs.map((doc) => doc.toJSON() as Entity)
