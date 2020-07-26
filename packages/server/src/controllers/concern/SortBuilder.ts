@@ -1,30 +1,61 @@
-import { SortQuery, Sheet } from '@sheeted/core'
+import { SortQuery, Sheet, SortOrder } from '@sheeted/core'
 import { ListQuery } from '@sheeted/core/build/web/Shared.type'
 
-export class SortBuilder {
-  constructor(private sheet: Sheet) {}
+export const SortOrders = {
+  DESC: 'desc',
+  ASC: 'asc',
+} as const
 
-  build(sort: ListQuery['sort']): SortQuery<any>[] {
-    const { View } = this.sheet
-    if (sort.length === 0 && View.defaultSort) {
-      return [View.defaultSort]
-    } else {
-      return this.filterValidSort(sort).concat({
-        field: 'updatedAt',
-        order: 'desc',
-      })
-    }
+const SortFields = {
+  UPDATED_AT: 'updatedAt',
+  CREATED_AT: 'createdAt',
+} as const
+
+const SortByUpdatedAt = {
+  field: SortFields.UPDATED_AT,
+  order: SortOrders.DESC,
+}
+
+export class SortBuilder {
+  defaultSort?: SortQuery<any>
+  fields: string[]
+
+  constructor(sheet: Sheet) {
+    const { Schema, View } = sheet
+    this.defaultSort = View.defaultSort
+    this.fields = Object.keys(Schema).concat([
+      SortFields.CREATED_AT,
+      SortFields.UPDATED_AT,
+    ])
   }
 
-  private filterValidSort(sort: ListQuery['sort']) {
-    const fields = Object.keys(this.sheet.Schema).concat([
-      'createdAt',
-      'updatedAt',
-    ])
-    const validSort = sort.filter(
-      ({ field, order }) =>
-        fields.includes(field) && ['asc', 'desc'].includes(order),
+  /**
+   * Build sort query.
+   * Sort query will be sort + defaultSort + updatedAt(desc).
+   * When the query has duplicated fields, the sort argument overrides.
+   */
+  build(sort: ListQuery['sort']): SortQuery<any>[] {
+    const { defaultSort } = this
+    return sort
+      .concat([defaultSort!, SortByUpdatedAt])
+      .filter(Boolean)
+      .filter((query) => this.isValid(query))
+      .filter(
+        (query, index, arr) =>
+          arr.findIndex(({ field }) => field === query.field) === index,
+      )
+  }
+
+  private isValid({
+    field,
+    order,
+  }: {
+    field: string
+    order: SortOrder
+  }): boolean {
+    return (
+      this.fields.includes(field) &&
+      [SortOrders.ASC, SortOrders.DESC].includes(order)
     )
-    return validSort
   }
 }
