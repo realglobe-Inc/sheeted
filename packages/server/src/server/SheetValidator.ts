@@ -38,6 +38,17 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
         message: `Property "entityProperties" is required when field type is Entity`,
       })
     }
+    if (
+      isEntityType &&
+      field.entityProperties?.onDelete === 'SET_NULL' &&
+      !field.optional
+    ) {
+      details.push({
+        sheetName,
+        path: `.Schema.${fieldName}`,
+        message: `Property "optional" must be true when entityProperties.onDelete is "SET_NULL"`,
+      })
+    }
     if (isEnumType && !field.enumProperties) {
       details.push({
         sheetName,

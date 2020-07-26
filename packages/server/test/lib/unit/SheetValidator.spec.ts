@@ -36,6 +36,14 @@ test('SheetValidator.validateSheet()', () => {
           type: Types.Entity,
           // entityProperties is required
         },
+        entityOptional: {
+          type: Types.Entity,
+          // optional is required
+          entityProperties: {
+            sheetName: 'b',
+            onDelete: 'SET_NULL',
+          },
+        },
         detailPage: {
           type: Types.Text,
           // readonly is required
@@ -62,7 +70,7 @@ test('SheetValidator.validateSheet()', () => {
       },
       AccessPolicies: [],
     }),
-  ).toHaveLength(6)
+  ).toHaveLength(7)
 })
 
 test('SheetValidator.validateSheets()', () => {
