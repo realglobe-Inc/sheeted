@@ -49,7 +49,7 @@ export class EntityController {
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
     const repository = repositories.get<any>(sheetName)
-    return new EntityController(sheet, ctx, displays, repository)
+    return new EntityController(sheet, ctx, displays, repository, repositories)
   }
 
   private readonly schema: { [field: string]: SchemaField<any> }
@@ -65,6 +65,7 @@ export class EntityController {
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
+    private readonly repositories: Repositories,
   ) {
     this.schema = {
       ...sheet.Schema,
