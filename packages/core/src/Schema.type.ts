@@ -1,6 +1,8 @@
 import { EntityBase } from './EntityBase.type'
 import { Type } from './Type.type'
 
+export type EntityOnDeleteOption = 'RESRICT' | 'CASCADE' | 'SET_NULL'
+
 export type SchemaField<E> = {
   /**
    * Field type.
@@ -42,6 +44,12 @@ export type SchemaField<E> = {
      * Sheet name of the referenced entity.
      */
     sheetName: string
+
+    /**
+     * Behavior on deleting the referenced entity. Default is "RESRICT".
+     * In order to set "SET_NULL", `optional: true` is required.
+     */
+    onDelete?: EntityOnDeleteOption
   }
 }
 
