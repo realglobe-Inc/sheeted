@@ -1,67 +1,118 @@
-import { SortBuilder } from '../../../src/controllers/concern/SortBuilder'
+import { SortQuery } from '@sheeted/core'
+import { ListQuery } from '@sheeted/core/build/web/Shared.type'
+
+import {
+  SortBuilder,
+  SortOrders,
+} from '../../../src/controllers/concern/SortBuilder'
 
 test('SortBuilder', () => {
-  expect(
+  const build = (
+    defaultSort: SortQuery<any> | undefined,
+    sort: ListQuery['sort'],
+  ) =>
     new SortBuilder({
       Schema: {
-        // only key names are used
+        // Just use field names
         key1: null,
       },
       View: {
-        defaultSort: undefined,
+        defaultSort,
       },
-    } as any).build([]),
-  ).toEqual([
-    {
-      field: 'updatedAt',
-      order: 'desc',
-    },
-  ])
+    } as any).build(sort)
 
-  expect(
-    new SortBuilder({
-      Schema: {
-        key1: null,
+  {
+    const defaultSort = undefined
+    const sort: ListQuery['sort'] = []
+    expect(build(defaultSort, sort)).toEqual([
+      {
+        field: 'updatedAt',
+        order: 'desc',
       },
-      View: {
-        defaultSort: {
-          field: 'key1',
-          order: 'desc',
-        },
+    ])
+  }
+
+  {
+    const defaultSort = undefined
+    const sort = [
+      {
+        field: 'keyNotFound',
+        order: SortOrders.ASC,
       },
-    } as any).build([]),
-  ).toEqual([
-    {
+      {
+        field: 'keyNotFound2',
+        order: SortOrders.DESC,
+      },
+    ]
+    expect(build(defaultSort, sort)).toEqual([
+      {
+        field: 'updatedAt',
+        order: 'desc',
+      },
+    ])
+  }
+
+  {
+    const defaultSort = {
       field: 'key1',
-      order: 'desc',
-    },
-  ])
+      order: SortOrders.DESC,
+    }
+    const sort: ListQuery['sort'] = []
+    expect(build(defaultSort, sort)).toEqual([
+      {
+        field: 'key1',
+        order: 'desc',
+      },
+      {
+        field: 'updatedAt',
+        order: 'desc',
+      },
+    ])
+  }
 
-  expect(
-    new SortBuilder({
-      Schema: {
-        key1: null,
+  {
+    const defaultSort = {
+      field: 'key1',
+      order: SortOrders.DESC,
+    } as const
+    const sort = [
+      {
+        field: 'key1',
+        order: SortOrders.ASC,
       },
-      View: {
-        defaultSort: {
-          field: 'key1',
-          order: 'desc',
-        },
-      },
-    } as any).build([
+    ]
+    expect(build(defaultSort, sort)).toEqual([
       {
         field: 'key1',
         order: 'asc',
       },
-    ]),
-  ).toEqual([
-    {
+      {
+        field: 'updatedAt',
+        order: 'desc',
+      },
+    ])
+  }
+
+  {
+    const defaultSort = {
       field: 'key1',
-      order: 'asc',
-    },
-    {
-      field: 'updatedAt',
-      order: 'desc',
-    },
-  ])
+      order: SortOrders.DESC,
+    }
+    const sort = [
+      {
+        field: 'updatedAt',
+        order: SortOrders.ASC,
+      },
+    ]
+    expect(build(defaultSort, sort)).toEqual([
+      {
+        field: 'updatedAt',
+        order: 'asc',
+      },
+      {
+        field: 'key1',
+        order: 'desc',
+      },
+    ])
+  }
 })

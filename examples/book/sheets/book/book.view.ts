@@ -74,5 +74,11 @@ export const BookView: View<BookEntity> = {
         minWidth: '15em',
       },
     },
+    updatedAt: {
+      title: 'LAST UPDATED',
+      numericOptions: {
+        formatAsDate: 'YYYY/MM/DD HH:mm',
+      },
+    },
   },
 }
