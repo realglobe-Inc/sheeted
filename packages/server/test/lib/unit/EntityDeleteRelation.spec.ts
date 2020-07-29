@@ -149,7 +149,7 @@ test('EntityDeleteRelation / validate', () => {
         ['C', 'D'],
       ]),
     )
-    expect(validateEntityDeleteRelation(relation)).toHaveLength(0)
+    expect(validateEntityDeleteRelation(relation)).toBeFalsy()
   }
   {
     const relation = createEntityDeleteRelation(
@@ -161,7 +161,7 @@ test('EntityDeleteRelation / validate', () => {
         ['B', 'D'],
       ]),
     )
-    expect(validateEntityDeleteRelation(relation)).toHaveLength(0)
+    expect(validateEntityDeleteRelation(relation)).toBeFalsy()
   }
   {
     const relation = createEntityDeleteRelation(
@@ -172,7 +172,7 @@ test('EntityDeleteRelation / validate', () => {
         ['D', 'B'],
       ]),
     )
-    expect(validateEntityDeleteRelation(relation)).toHaveLength(1)
+    expect(validateEntityDeleteRelation(relation)).toBeTruthy()
   }
   {
     const relation = createEntityDeleteRelation(
@@ -184,6 +184,6 @@ test('EntityDeleteRelation / validate', () => {
         ['D', 'A'],
       ]),
     )
-    expect(validateEntityDeleteRelation(relation)).toHaveLength(1)
+    expect(validateEntityDeleteRelation(relation)).toBeTruthy()
   }
 })

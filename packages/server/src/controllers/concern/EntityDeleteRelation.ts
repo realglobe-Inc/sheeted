@@ -60,18 +60,13 @@ const findLoop = (relation: EntityDeleteRelation, start: string) => {
 
 export const validateEntityDeleteRelation = (
   relation: EntityDeleteRelation,
-): Error[] => {
-  const errors: Error[] = []
+): Error | null => {
   const hasLoop = Array.from(relation.keys())
     .map((sheetName) => findLoop(relation, sheetName))
     .includes(false)
-  if (hasLoop) {
-    errors.push(
-      new Error(
+  return hasLoop
+    ? new Error(
         'Detect loop in the relations of "entityProperties.onDelete" option',
-      ),
-    )
-  }
-  // TODO: check invalid edge pairs
-  return errors
+      )
+    : null
 }
