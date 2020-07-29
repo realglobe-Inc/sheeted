@@ -40,3 +40,38 @@ export const createEntityDeleteRelation = (
   }
   return map
 }
+
+const findLoop = (relation: EntityDeleteRelation, start: string) => {
+  const maxDepth = relation.size
+  const dfs = (current: string, depth: number) => {
+    if (depth > maxDepth) {
+      return false
+    }
+    for (const edge of relation.get(current) || []) {
+      const ok = dfs(edge.referrer.sheetName, depth + 1)
+      if (!ok) {
+        return false
+      }
+    }
+    return true
+  }
+  return dfs(start, 0)
+}
+
+export const validateEntityDeleteRelation = (
+  relation: EntityDeleteRelation,
+): Error[] => {
+  const errors: Error[] = []
+  const hasLoop = Array.from(relation.keys())
+    .map((sheetName) => findLoop(relation, sheetName))
+    .includes(false)
+  if (hasLoop) {
+    errors.push(
+      new Error(
+        'Detect loop in the relations of "entityProperties.onDelete" option',
+      ),
+    )
+  }
+  // TODO: check invalid edge pairs
+  return errors
+}

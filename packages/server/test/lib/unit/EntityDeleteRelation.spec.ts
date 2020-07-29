@@ -3,9 +3,10 @@ import { Types, Schema } from '@sheeted/core'
 import {
   createEntityDeleteRelation,
   EntityDeleteRelationEdge,
+  validateEntityDeleteRelation,
 } from '../../../src/controllers/concern/EntityDeleteRelation'
 
-test('EntityDeleteRelation.ts', () => {
+test('EntityDeleteRelation / create', () => {
   expect(createEntityDeleteRelation([])).toEqual(new Map())
 
   expect(
@@ -107,4 +108,82 @@ test('EntityDeleteRelation.ts', () => {
       ],
     ]),
   )
+})
+
+test('EntityDeleteRelation / validate', () => {
+  const sheetsFrom = (edges: string[][]): any[] => {
+    const flat = (arr: string[][]): string[] => ([] as string[]).concat(...arr)
+    const uniq = (arr: string[]) => Array.from(new Set(arr))
+    const sheetNames = uniq(flat(edges))
+    const sheets = sheetNames.map((sheetName) => ({
+      name: sheetName,
+      Schema: edges
+        .filter(([referrer]) => referrer === sheetName)
+        .map(
+          ([, sheetName]) =>
+            [
+              sheetName,
+              {
+                type: Types.Entity,
+                entityProperties: {
+                  sheetName,
+                },
+              },
+            ] as const,
+        )
+        .reduce(
+          (schema, [sheetName, field]) => ({
+            ...schema,
+            [sheetName]: field,
+          }),
+          {},
+        ),
+    }))
+    return sheets
+  }
+  {
+    const relation = createEntityDeleteRelation(
+      sheetsFrom([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'D'],
+      ]),
+    )
+    expect(validateEntityDeleteRelation(relation)).toHaveLength(0)
+  }
+  {
+    const relation = createEntityDeleteRelation(
+      sheetsFrom([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'D'],
+        ['A', 'C'],
+        ['B', 'D'],
+      ]),
+    )
+    expect(validateEntityDeleteRelation(relation)).toHaveLength(0)
+  }
+  {
+    const relation = createEntityDeleteRelation(
+      sheetsFrom([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'D'],
+        ['D', 'B'],
+      ]),
+    )
+    expect(validateEntityDeleteRelation(relation)).toHaveLength(1)
+  }
+  {
+    const relation = createEntityDeleteRelation(
+      sheetsFrom([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'D'],
+        ['A', 'C'],
+        ['D', 'A'],
+      ]),
+    )
+    expect(validateEntityDeleteRelation(relation)).toHaveLength(1)
+  }
 })
