@@ -6,63 +6,50 @@ import {
   validateEntityDeleteRelation,
 } from '../../../src/controllers/concern/EntityDeleteRelation'
 
+const sheetsFrom = (edges: string[][]): any[] => {
+  const flat = (arr: string[][]): string[] => ([] as string[]).concat(...arr)
+  const uniq = (arr: string[]) => Array.from(new Set(arr))
+  const sheetNames = uniq(flat(edges.map((edge) => edge.slice(0, 2))))
+  const sheets = sheetNames.map((sheetName) => ({
+    name: sheetName,
+    Schema: edges
+      .filter(([referrer]) => referrer === sheetName)
+      .map(
+        ([, sheetName, onDelete]) =>
+          [
+            sheetName.toLowerCase(),
+            {
+              type: Types.Entity,
+              entityProperties: {
+                sheetName,
+                onDelete,
+              },
+            },
+          ] as const,
+      )
+      .reduce(
+        (schema, [sheetName, field]) => ({
+          ...schema,
+          [sheetName]: field,
+        }),
+        {},
+      ),
+  }))
+  return sheets
+}
+
 test('EntityDeleteRelation / create', () => {
   expect(createEntityDeleteRelation([])).toEqual(new Map())
 
   expect(
-    createEntityDeleteRelation([
-      {
-        name: 'A',
-        Schema: {
-          b: {
-            type: Types.Entity,
-            entityProperties: {
-              sheetName: 'B',
-              onDelete: 'CASCADE',
-            },
-          },
-          c: {
-            type: Types.Entity,
-            entityProperties: {
-              sheetName: 'C',
-              onDelete: 'SET_NULL',
-            },
-          },
-        } as Schema,
-      } as any,
-      {
-        name: 'B',
-        Schema: {
-          c: {
-            type: Types.Entity,
-            entityProperties: {
-              sheetName: 'C',
-              onDelete: 'RESRICT',
-            },
-          },
-        } as Schema,
-      } as any,
-      {
-        name: 'C',
-        Schema: {
-          text: {
-            type: Types.Text,
-          },
-        },
-      },
-      {
-        name: 'D',
-        Schema: {
-          c: {
-            type: Types.Entity,
-            entityProperties: {
-              sheetName: 'C',
-              // default delete option
-            },
-          },
-        },
-      },
-    ]),
+    createEntityDeleteRelation(
+      sheetsFrom([
+        ['A', 'B', 'CASCADE'],
+        ['A', 'C', 'SET_NULL'],
+        ['B', 'C', 'RESTRICT'],
+        ['D', 'C'],
+      ]),
+    ),
   ).toEqual(
     new Map<string, EntityDeleteRelationEdge[]>([
       [
@@ -95,14 +82,14 @@ test('EntityDeleteRelation / create', () => {
             refered: {
               sheetName: 'C',
             },
-            onDelete: 'RESRICT',
+            onDelete: 'RESTRICT',
           },
           {
             referrer: { sheetName: 'D', field: 'c' },
             refered: {
               sheetName: 'C',
             },
-            onDelete: 'RESRICT',
+            onDelete: 'RESTRICT',
           },
         ],
       ],
@@ -111,36 +98,6 @@ test('EntityDeleteRelation / create', () => {
 })
 
 test('EntityDeleteRelation / validate', () => {
-  const sheetsFrom = (edges: string[][]): any[] => {
-    const flat = (arr: string[][]): string[] => ([] as string[]).concat(...arr)
-    const uniq = (arr: string[]) => Array.from(new Set(arr))
-    const sheetNames = uniq(flat(edges))
-    const sheets = sheetNames.map((sheetName) => ({
-      name: sheetName,
-      Schema: edges
-        .filter(([referrer]) => referrer === sheetName)
-        .map(
-          ([, sheetName]) =>
-            [
-              sheetName,
-              {
-                type: Types.Entity,
-                entityProperties: {
-                  sheetName,
-                },
-              },
-            ] as const,
-        )
-        .reduce(
-          (schema, [sheetName, field]) => ({
-            ...schema,
-            [sheetName]: field,
-          }),
-          {},
-        ),
-    }))
-    return sheets
-  }
   {
     const relation = createEntityDeleteRelation(
       sheetsFrom([

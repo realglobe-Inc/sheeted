@@ -13,7 +13,7 @@ export type EntityDeleteRelationEdge = {
 
 export type EntityDeleteRelation = Map<string, EntityDeleteRelationEdge[]>
 
-const DEFAULT_ON_DELETE = 'RESRICT' as const
+const DEFAULT_ON_DELETE = 'RESTRICT' as const
 
 export const createEntityDeleteRelation = (
   sheets: Sheet[],
