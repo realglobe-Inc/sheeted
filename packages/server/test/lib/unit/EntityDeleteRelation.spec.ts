@@ -1,4 +1,4 @@
-import { Types, Schema } from '@sheeted/core'
+import { Types } from '@sheeted/core'
 
 import {
   createEntityDeleteRelation,
