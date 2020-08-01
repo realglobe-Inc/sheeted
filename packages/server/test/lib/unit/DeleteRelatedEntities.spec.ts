@@ -4,9 +4,8 @@ import { EntityBase, Schema, Types, Sheet } from '@sheeted/core'
 import { MongoDriver, compileModel } from '@sheeted/mongoose'
 
 import {
-  RelatedEntityFinder,
+  RelatedEntityTransaction,
   RestrictViolationError,
-  transactRelatedEntities,
 } from '../../../src/controllers/concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from '../../../src/controllers/concern/EntityDeleteRelation'
 import { createRepositories } from '../../../src/server/Repositories'
@@ -188,10 +187,10 @@ test('RelatedEntityFinder', async () => {
   ])
 
   const relation = createEntityDeleteRelation(sheets)
-  const finder = new RelatedEntityFinder(relation, repositories)
+  const transaction = new RelatedEntityTransaction(relation, repositories)
 
-  const entities = await finder.find(SheetNames.A, a1)
-  await transactRelatedEntities(entities, repositories)
+  const entities = await transaction.find(SheetNames.A, a1)
+  await transaction.transact(entities)
 
   expect(await BModel.count({ a: a2 })).toBe(1)
   expect(await BModel.count({ a: undefined })).toBe(2) // Query does not distinguish between null and undefined
@@ -257,9 +256,9 @@ test('RelatedEntityFinder / RestrictViolationError', async () => {
   })
 
   const relation = createEntityDeleteRelation(sheets)
-  const finder = new RelatedEntityFinder(relation, repositories)
+  const transaction = new RelatedEntityTransaction(relation, repositories)
 
-  await expect(() => finder.find(SheetNames.A, a1)).rejects.toBeInstanceOf(
+  await expect(() => transaction.find(SheetNames.A, a1)).rejects.toBeInstanceOf(
     RestrictViolationError,
   )
 })

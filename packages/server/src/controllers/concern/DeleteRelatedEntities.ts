@@ -47,7 +47,7 @@ class Result {
   }
 }
 
-export class RelatedEntityFinder {
+export class RelatedEntityTransaction {
   constructor(
     private readonly relation: EntityDeleteRelation,
     private readonly repositories: Repositories,
@@ -57,6 +57,7 @@ export class RelatedEntityFinder {
     const { relation, repositories } = this
     const edges = relation.get(sheetName) || []
     const result = new Result()
+    result.pushDelete(sheetName, [entity.id]) // add self id
     for (const edge of edges) {
       const { referrer, onDelete } = edge
       const repository = repositories.get<EntityBase>(referrer.sheetName)
@@ -109,18 +110,16 @@ export class RelatedEntityFinder {
     }
     return result.value
   }
-}
 
-export const transactRelatedEntities = async (
-  entities: RelatedEntities,
-  repositories: Repositories,
-): Promise<void> => {
-  for (const { sheetName, ids, changes } of entities.update) {
-    const repository = repositories.get<EntityBase>(sheetName)
-    await repository.updateBulk(ids, changes)
-  }
-  for (const [sheetName, ids] of Object.entries(entities.delete)) {
-    const repository = repositories.get<EntityBase>(sheetName)
-    await repository.destroyBulk(ids)
+  async transact(entities: RelatedEntities): Promise<void> {
+    const { repositories } = this
+    for (const { sheetName, ids, changes } of entities.update) {
+      const repository = repositories.get<EntityBase>(sheetName)
+      await repository.updateBulk(ids, changes)
+    }
+    for (const [sheetName, ids] of Object.entries(entities.delete)) {
+      const repository = repositories.get<EntityBase>(sheetName)
+      await repository.destroyBulk(ids)
+    }
   }
 }

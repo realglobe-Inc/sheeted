@@ -29,6 +29,11 @@ import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
 import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 import { SortBuilder } from './concern/SortBuilder'
+import {
+  RelatedEntityTransaction,
+  RestrictViolationError,
+} from './concern/DeleteRelatedEntities'
+import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
 
 export class EntityController {
   /**
@@ -49,7 +54,18 @@ export class EntityController {
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
     const repository = repositories.get<any>(sheetName)
-    return new EntityController(sheet, ctx, displays, repository, repositories)
+    const relation = createEntityDeleteRelation(sheets)
+    const deleteTransaction = new RelatedEntityTransaction(
+      relation,
+      repositories,
+    )
+    return new EntityController(
+      sheet,
+      ctx,
+      displays,
+      repository,
+      deleteTransaction,
+    )
   }
 
   private readonly schema: { [field: string]: SchemaField<any> }
@@ -65,7 +81,7 @@ export class EntityController {
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
-    private readonly repositories: Repositories,
+    private readonly deleteTransaction: RelatedEntityTransaction,
   ) {
     this.schema = {
       ...sheet.Schema,
@@ -309,7 +325,23 @@ export class EntityController {
         HttpStatuses.FORBIDDEN,
       )
     }
-    await this.repository.destroyBulk(ids)
+    // FIXME: ちゃんと transaction を使わないと rollback できない
+    for (const entity of Object.values(entities)) {
+      if (!entity) {
+        continue
+      }
+      const related = await this.deleteTransaction.find(this.sheet.name, entity)
+      try {
+        await this.deleteTransaction.transact(related)
+      } catch (e) {
+        if (e instanceof RestrictViolationError) {
+          throw new HttpError('', 400)
+        } else {
+          throw e
+        }
+      }
+    }
+
     const failedIds = (
       await Promise.all(
         ids.map(async (id) => {
