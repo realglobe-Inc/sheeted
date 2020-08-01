@@ -6,7 +6,8 @@ import { MongoDriver, compileModel } from '@sheeted/mongoose'
 import {
   RelatedEntityFinder,
   RestrictViolationError,
-} from '../../../src/controllers/concern/DeleteRelatedEntitiyFinder'
+  transactRelatedEntities,
+} from '../../../src/controllers/concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from '../../../src/controllers/concern/EntityDeleteRelation'
 import { createRepositories } from '../../../src/server/Repositories'
 import { connectMongo } from '../../tools/mongoose'
@@ -21,11 +22,11 @@ afterAll(async () => {
 
 test('RelatedEntityFinder', async () => {
   const SheetNames = {
-    A: 'A',
-    B: 'B',
-    C: 'C',
-    D: 'D',
-    E: 'D',
+    A: 'RelatedEntityFinder_A',
+    B: 'RelatedEntityFinder_B',
+    C: 'RelatedEntityFinder_C',
+    D: 'RelatedEntityFinder_D',
+    E: 'RelatedEntityFinder_E',
   }
 
   interface AEntity extends EntityBase {
@@ -143,54 +144,122 @@ test('RelatedEntityFinder', async () => {
 
   await repositories.get<BEntity>(SheetNames.B).createBulk([
     {
-      a: a1,
+      a: a1, // deleted
     },
     {
-      a: a1,
+      a: a1, // deleted
     },
     {
-      a: a2,
+      a: a2, // not deleted
     },
   ])
   const [c1, c2] = await repositories.get<CEntity>(SheetNames.C).createBulk([
     {
-      a: a1,
+      a: a1, // deleted
     },
     {
-      a: a1,
+      a: a2, // not deleted
     },
     {
-      a: a2,
+      a: a1, // deleted
     },
   ])
-  const [d1, d2, d3] = await repositories
-    .get<DEntity>(SheetNames.D)
-    .createBulk([
-      {
-        c: c1,
-      },
-      {
-        c: c1,
-      },
-      {
-        c: c2,
-      },
-    ])
+  const [d1, d2] = await repositories.get<DEntity>(SheetNames.D).createBulk([
+    {
+      c: c1, // deleted
+    },
+    {
+      c: c1, // deleted
+    },
+    {
+      c: c2, // not deleted
+    },
+  ])
   await repositories.get<EEntity>(SheetNames.E).createBulk([
     {
       c: c1, // set null
     },
     {
-      d: d1, // cascade
+      d: d1, // deleted
     },
     {
-      d: d2,
+      d: d2, // deleted
     },
   ])
 
   const relation = createEntityDeleteRelation(sheets)
   const finder = new RelatedEntityFinder(relation, repositories)
 
-  const result = await finder.find(SheetNames.A, a1)
-  console.log(JSON.stringify(result, null, 2))
+  const entities = await finder.find(SheetNames.A, a1)
+  await transactRelatedEntities(entities, repositories)
+
+  expect(await BModel.count({ a: a2 })).toBe(1)
+  expect(await BModel.count({ a: undefined })).toBe(2) // Query does not distinguish between null and undefined
+  expect(await CModel.count({})).toBe(1)
+  expect(await DModel.count({})).toBe(1)
+  expect(await EModel.count({})).toBe(1)
+  expect(await EModel.count({ c: undefined })).toBe(1)
+})
+
+test('RelatedEntityFinder / RestrictViolationError', async () => {
+  const SheetNames = {
+    A: 'RelatedEntityFinder_restrict_A',
+    B: 'RelatedEntityFinder_restrict_B',
+  }
+
+  interface AEntity extends EntityBase {
+    name: string
+  }
+  interface BEntity extends EntityBase {
+    a: AEntity
+  }
+
+  const ASchema: Schema<AEntity> = {
+    name: {
+      type: Types.Text,
+    },
+  }
+  const BSchema: Schema<BEntity> = {
+    a: {
+      type: Types.Entity,
+      entityProperties: {
+        sheetName: SheetNames.A,
+        onDelete: 'RESTRICT',
+      },
+    },
+  }
+
+  const sheets = [
+    {
+      name: SheetNames.A,
+      Schema: ASchema,
+    },
+    {
+      name: SheetNames.B,
+      Schema: BSchema,
+    },
+  ] as Sheet[]
+
+  const AModel = compileModel(SheetNames.A, ASchema)
+  const BModel = compileModel(SheetNames.B, BSchema)
+
+  await AModel.deleteMany({})
+  await BModel.deleteMany({})
+
+  const repositories = createRepositories(sheets, MongoDriver)
+
+  const a1 = await repositories.get<AEntity>(SheetNames.A).create({
+    name: 'a1',
+  })
+
+  await repositories.get<BEntity>(SheetNames.B).create({
+    a: a1,
+  })
+
+  const relation = createEntityDeleteRelation(sheets)
+  const finder = new RelatedEntityFinder(relation, repositories)
+
+  await expect(() => finder.find(SheetNames.A, a1)).rejects.toBeInstanceOf(
+    RestrictViolationError,
+  )
 })

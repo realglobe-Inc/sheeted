@@ -5,7 +5,7 @@ import { EntityDeleteRelation } from './EntityDeleteRelation'
 
 export class RestrictViolationError extends Error {}
 
-export type RelatedEntitiesResult = {
+export type RelatedEntities = {
   delete: {
     [sheetName: string]: string[] // ids
   }
@@ -17,12 +17,12 @@ export type RelatedEntitiesResult = {
 }
 
 class Result {
-  value: RelatedEntitiesResult = {
+  value: RelatedEntities = {
     delete: {},
     update: [],
   }
 
-  merge(another: RelatedEntitiesResult): void {
+  merge(another: RelatedEntities): void {
     for (const [sheetName, ids] of Object.entries(another.delete)) {
       this.pushDelete(sheetName, ids)
     }
@@ -53,10 +53,7 @@ export class RelatedEntityFinder {
     private readonly repositories: Repositories,
   ) {}
 
-  async find(
-    sheetName: string,
-    entity: EntityBase,
-  ): Promise<RelatedEntitiesResult> {
+  async find(sheetName: string, entity: EntityBase): Promise<RelatedEntities> {
     const { relation, repositories } = this
     const edges = relation.get(sheetName) || []
     const result = new Result()
@@ -103,11 +100,27 @@ export class RelatedEntityFinder {
           })) {
             ids = ids.concat(entities.map((e) => e.id))
           }
-          result.pushUpdate(referrer.sheetName, ids, { [referrer.field]: null })
+          result.pushUpdate(referrer.sheetName, ids, {
+            [referrer.field]: null,
+          })
           break
         }
       }
     }
     return result.value
+  }
+}
+
+export const transactRelatedEntities = async (
+  entities: RelatedEntities,
+  repositories: Repositories,
+): Promise<void> => {
+  for (const { sheetName, ids, changes } of entities.update) {
+    const repository = repositories.get<EntityBase>(sheetName)
+    await repository.updateBulk(ids, changes)
+  }
+  for (const [sheetName, ids] of Object.entries(entities.delete)) {
+    const repository = repositories.get<EntityBase>(sheetName)
+    await repository.destroyBulk(ids)
   }
 }
