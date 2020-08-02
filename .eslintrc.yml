@@ -6,7 +6,6 @@ extends:
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:@typescript-eslint/recommended-requiring-type-checking
   - prettier
-  - plugin:prettier/recommended
   - prettier/@typescript-eslint
   - plugin:react-hooks/recommended
   # Extension for "import": https://github.com/benmosher/eslint-plugin-import
