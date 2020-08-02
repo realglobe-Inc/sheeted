@@ -294,6 +294,7 @@ test('MongoDriver/04 Transaction', async () => {
   const model = compileModel('model4', schema)
   await model.deleteMany({})
   const repository = new MongoDriver<Entity>('model4', schema)
+  await repository.initialize()
 
   const id = await repository.transaction(async (t) => {
     const created = await repository.create(
