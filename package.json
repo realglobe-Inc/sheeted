@@ -1,7 +1,7 @@
 {
   "name": "sheeted",
   "description": "Table UI web application development framework",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bugs": {
     "url": "https://github.com/realglobe-Inc/sheeted/issues"
@@ -15,12 +15,11 @@
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "husky": "^4.2.5",
     "include-file-cli": "^1.0.1",
     "jest": "^26.0.1",
-    "mongodb-memory-server": "^6.5.0",
     "mongoose": "^5.9.3",
     "prettier": "^2.0.2",
     "rimraf": "^3.0.2",
@@ -29,6 +28,11 @@
     "typescript": "^3.8.2"
   },
   "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "./misc/git-hooks/pre-commit.sh"
+    }
+  },
   "keywords": [
     "Low-Code",
     "Sheet"
@@ -42,6 +46,7 @@
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/cli build && yarn w/example build",
     "doc": "include-file doc/readme.md README.md",
+    "format": "prettier --write '(packages|examples)/**/*.ts?(x)' --ignore-path .eslintignore",
     "lint": "eslint --ext .ts,.tsx --cache --cache-location tmp/.eslintcache packages examples",
     "prepare": "yarn build",
     "test": "yarn w/core test && yarn w/server test && yarn w/cli test && yarn w/mongoose test && yarn w/ui test",

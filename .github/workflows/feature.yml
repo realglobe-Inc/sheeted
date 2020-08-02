@@ -16,7 +16,9 @@ jobs:
       with:
         node-version: 12.x
     - name: Install
-      run: yarn install
+      run: |
+        docker-compose up -d
+        yarn install
     - name: Test
       run: |
         yarn lint

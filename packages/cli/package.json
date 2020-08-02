@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/cli",
   "description": "CLI of Sheeted framework",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bin": {
     "sheeted": "./bin/sheeted.js"
@@ -14,7 +14,8 @@
     "pascal-case": "^3.1.1"
   },
   "devDependencies": {
-    "@types/lodash.template": "^4.5.0"
+    "@types/lodash.template": "^4.5.0",
+    "@types/mkdirp": "^1.0.1"
   },
   "files": [
     "bin",

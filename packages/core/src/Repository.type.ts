@@ -62,44 +62,72 @@ export type FindListQuery<Entity = any> = {
   filter?: Partial<Entity>
 }
 
+export type TransactionOption = { transaction: any }
+
 /**
  * Repository interface via which application access persistent data.
  */
 export type Repository<Entity> = {
   /**
+   * Initialize the repository
+   */
+  initialize(): Promise<void>
+
+  /**
+   * Create transaction block
+   */
+  transaction<R>(callback: (transaction: any) => Promise<R>): Promise<R>
+
+  /**
    * Find entities by condition
    */
-  find(condition: FindListQuery<Entity>): Promise<FindListResult<Entity>>
+  find(
+    condition: FindListQuery<Entity>,
+    options?: TransactionOption,
+  ): Promise<FindListResult<Entity>>
 
   /**
    * Find an entity by id
    */
-  findById(id: EntityId): Promise<Entity | null>
+  findById(id: EntityId, options?: TransactionOption): Promise<Entity | null>
 
   /**
    * Find entities by ids
    */
-  findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }>
+  findByIds(
+    ids: EntityId[],
+    options?: TransactionOption,
+  ): Promise<{ [id: string]: Entity | null }>
 
   /**
    * Find an entity
    */
-  findOne(filter: Partial<Entity>): Promise<Entity | null>
+  findOne(
+    filter: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity | null>
 
   /**
    * Create an entity
    */
-  create(input: Partial<Entity>): Promise<Entity>
+  create(input: Partial<Entity>, options?: TransactionOption): Promise<Entity>
 
   /**
    * Create entities
    */
-  createBulk(inputs: Partial<Entity>[]): Promise<Entity[]>
+  createBulk(
+    inputs: Partial<Entity>[],
+    options?: TransactionOption,
+  ): Promise<Entity[]>
 
   /**
    * Update an entity
    */
-  update(id: EntityId, changes: Partial<Entity>): Promise<Entity>
+  update(
+    id: EntityId,
+    changes: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity>
 
   /**
    * Update entities
@@ -107,17 +135,18 @@ export type Repository<Entity> = {
   updateBulk(
     ids: EntityId[],
     changes: Partial<Entity>,
+    options?: TransactionOption,
   ): Promise<(Entity | null)[]>
 
   /**
    * Destroy an entity
    */
-  destroy(id: EntityId): Promise<void>
+  destroy(id: EntityId, options?: TransactionOption): Promise<void>
 
   /**
    * Destroy entities
    */
-  destroyBulk(ids: EntityId[]): Promise<void>
+  destroyBulk(ids: EntityId[], options?: TransactionOption): Promise<void>
 }
 
 /**
@@ -132,4 +161,6 @@ export type RepositoryDriver = {
  */
 export type Repositories = {
   get<Entity>(sheetName: string): Repository<Entity>
+
+  initialize(): Promise<void>
 }

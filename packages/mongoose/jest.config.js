@@ -34,6 +34,4 @@ module.exports = {
     "/build/",
   ],
   testTimeout: 10000,
-  globalSetup: join(__dirname, "test/tools/globalSetup.js"),
-  globalTeardown: join(__dirname, "test/tools/globalTeardown.js"),
 };

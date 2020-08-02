@@ -12,7 +12,7 @@ import { AggregationEntity } from '../aggregation/aggregation.entity'
 import { ReportEntity } from './report.entity'
 import { ReportModel } from './report.model'
 
-const updateAggregation = async (report: ReportEntity) => {
+const updateAggregation = async (report: ReportEntity, session: any) => {
   const { project } = report
   const month = CalendarMonthInterceptor.fromDate(
     CalendarDateInterceptor.toDate(report.date),
@@ -23,7 +23,9 @@ const updateAggregation = async (report: ReportEntity) => {
       $gte: month * 100 + 1,
       $lt: (month + 1) * 100,
     },
-  }).lean()
+  })
+    .session(session)
+    .lean()
   const hours = reports.reduce(
     (sum, report) => sum + (report.time || 0) / 60,
     0,
@@ -31,26 +33,29 @@ const updateAggregation = async (report: ReportEntity) => {
   const aggregation = await AggregationModel.findOne({
     project,
     month,
-  })
+  }).session(session)
   if (aggregation) {
-    await aggregation.update({ hours })
+    await aggregation.update({ hours }, { session })
   } else {
-    await AggregationModel.create({
-      id: uuid(),
-      project,
-      month,
-      hours,
-    } as CreateQuery<Partial<AggregationEntity>>)
+    await AggregationModel.create(
+      {
+        id: uuid(),
+        project,
+        month,
+        hours,
+      } as CreateQuery<Partial<AggregationEntity>>,
+      { session },
+    )
   }
 }
 
 export const ReportHook: Hook<ReportEntity> = {
-  async onCreate(report, ctx) {
+  async onCreate(report, ctx, options) {
     const { user } = ctx
     await ReportModel.updateOne({ id: report.id }, { user })
-    await updateAggregation(report)
+    await updateAggregation(report, options.transaction)
   },
-  async onUpdate(report) {
-    await updateAggregation(report)
+  async onUpdate(report, _ctx, options) {
+    await updateAggregation(report, options.transaction)
   },
 }
