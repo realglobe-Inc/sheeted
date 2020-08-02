@@ -220,12 +220,18 @@ import { BookEntity } from './book.entity'
 import { BookModel } from './book.model'
 
 export const BookHook: Hook<BookEntity> = {
-  async onCreate(book, ctx) {
+  async onCreate(book, ctx, options) {
     const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
+    if (!user) {
+      throw new Error(`user not found for id "${ctx.user.id}"`)
+    }
     await BookModel.updateOne(
       { id: book.id },
       {
         buyer: user,
+      },
+      {
+        session: options.transaction,
       },
     )
   },
@@ -339,6 +345,12 @@ export const BookView: View<BookEntity> = {
       title: 'COMMENT',
       style: {
         minWidth: '15em',
+      },
+    },
+    updatedAt: {
+      title: 'LAST UPDATED',
+      numericOptions: {
+        formatAsDate: 'YYYY/MM/DD HH:mm',
       },
     },
   },

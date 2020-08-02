@@ -29,10 +29,7 @@ import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
 import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 import { SortBuilder } from './concern/SortBuilder'
-import {
-  RelatedEntityTransaction,
-  RestrictViolationError,
-} from './concern/DeleteRelatedEntities'
+import { RelatedEntityTransaction } from './concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
 
 export class EntityController {
@@ -334,16 +331,7 @@ export class EntityController {
             this.sheet.name,
             entity,
           )
-          try {
-            await this.deleteTransaction.transact(related, { transaction: t })
-          } catch (e) {
-            if (e instanceof RestrictViolationError) {
-              // TODO:
-              throw new HttpError('', 400)
-            } else {
-              throw e
-            }
-          }
+          await this.deleteTransaction.transact(related, { transaction: t })
           await this.repository.destroy(entity.id, { transaction: t })
           await this.hook.triggerDestroy(entity, { transaction: t })
         })
@@ -351,6 +339,7 @@ export class EntityController {
         if (process.env.NODE_ENV !== 'test') {
           console.error(e)
         }
+        // TODO: RestrictViolationError の扱い
         failedIds.push(entity.id)
       }
     }
