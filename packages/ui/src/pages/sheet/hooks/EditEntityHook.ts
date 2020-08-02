@@ -12,7 +12,6 @@ import { useApi } from '../../../hooks/ApiHook'
 import { convertInput } from '../converters/InputConverter'
 
 import { useInputErrorContext } from './InputErrorContextHook'
-import { useEditingContext } from './EditingContextHook'
 
 export const useEditEntity = (
   sheet: SheetInfo | null,
@@ -28,7 +27,6 @@ export const useEditEntity = (
   const api = useApi()
   const { enqueueSnackbar } = useSnackbar()
   const { setErrors, reset: resetErrors } = useInputErrorContext()
-  const { editing } = useEditingContext()
   const isEditable = useCallback(
     (entity: Entity) => {
       return (
@@ -63,7 +61,7 @@ export const useEditEntity = (
     [api, sheet, l, enqueueSnackbar, setErrors, resetErrors],
   )
   // material-table provides no prop such as "isAddable".
-  const canAdd = Boolean(sheet?.permissions.creates && !editing)
+  const canAdd = Boolean(sheet?.permissions.creates)
   const onRowAdd = useCallback(
     async (newEntityRaw: Entity) => {
       if (!sheet) {
