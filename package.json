@@ -17,6 +17,7 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "husky": "^4.2.5",
     "include-file-cli": "^1.0.1",
     "jest": "^26.0.1",
     "mongoose": "^5.9.3",
@@ -27,6 +28,11 @@
     "typescript": "^3.8.2"
   },
   "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "./misc/git-hooks/pre-commit.sh"
+    }
+  },
   "keywords": [
     "Low-Code",
     "Sheet"
