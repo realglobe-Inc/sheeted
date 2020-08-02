@@ -23,6 +23,9 @@ test('MongoDriver/01 simple schema', async () => {
       type: Types.Text,
     },
   }
+  const model = compileModel('model1', schema)
+  await model.deleteMany({})
+
   const repository = new MongoDriver<Entity>('model1', schema)
 
   const created = await repository.create({
@@ -84,6 +87,7 @@ test('MongoDriver/02 complex queries', async () => {
     },
   }
   const subModel = compileModel('Sub', subSchema)
+  await subModel.deleteMany({})
   const [sub1, sub2] = (
     await subModel.insertMany([
       {
@@ -121,6 +125,8 @@ test('MongoDriver/02 complex queries', async () => {
       },
     },
   }
+  const model = compileModel('model2', schema)
+  await model.deleteMany({})
   const repository = new MongoDriver<Entity>('model2', schema)
   const inputs = [
     {
@@ -243,7 +249,7 @@ test('MongoDriver/02 complex queries', async () => {
   }
 })
 
-test('Should be able to set createdAt / updatedAt', async () => {
+test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
   interface Entity extends EntityBase {
     name: string
   }
@@ -252,6 +258,8 @@ test('Should be able to set createdAt / updatedAt', async () => {
       type: Types.Text,
     },
   }
+  const model = compileModel('model3', schema)
+  await model.deleteMany({})
   const repository = new MongoDriver<Entity>('model3', schema)
 
   const entity = {
@@ -271,4 +279,61 @@ test('Should be able to set createdAt / updatedAt', async () => {
   }
   const updated = await repository.update(entity.id, changes)
   expect(updated).toMatchObject(changes)
+})
+
+test('MongoDriver/04 Transaction', async () => {
+  interface Entity extends EntityBase {
+    name: string
+  }
+  const schema: Schema<Entity> = {
+    name: {
+      type: Types.Text,
+    },
+  }
+
+  const model = compileModel('model4', schema)
+  await model.deleteMany({})
+  const repository = new MongoDriver<Entity>('model4', schema)
+  await repository.initialize()
+
+  const id = await repository.transaction(async (t) => {
+    const created = await repository.create(
+      {
+        name: 'abc',
+      },
+      {
+        transaction: t,
+      },
+    )
+    return created.id
+  })
+
+  expect(await repository.findById(id)).toMatchObject({
+    name: 'abc',
+  })
+
+  await expect(() =>
+    repository.transaction(async (t) => {
+      const updated = await repository.update(
+        id,
+        { name: 'abcd' },
+        { transaction: t },
+      )
+      expect(updated.name).toBe('abcd')
+      await repository.create({ name: 'aaa' }, { transaction: t })
+
+      expect(await repository.findOne({ name: 'abcd' })).toBeNull()
+      expect(
+        await repository.findOne({ name: 'abcd' }, { transaction: t }),
+      ).not.toBeNull()
+
+      // transaction should be aborted
+      throw new Error()
+    }),
+  ).rejects.toBeTruthy()
+
+  expect(await repository.findById(id)).toMatchObject({
+    name: 'abc',
+  })
+  expect(await model.countDocuments({})).toBe(1)
 })

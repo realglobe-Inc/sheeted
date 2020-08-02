@@ -7,6 +7,19 @@ services:
       - "$MONGO_PORT:27017"
     volumes:
       - ./var/mongo:/data/db
+    command: mongod --replSet $MONGO_REPLICA_SET
+    environment:
+      MONGO_REPLICA_SET: $MONGO_REPLICA_SET
+  mongo-setup:
+    image: mongo:4
+    volumes:
+      - ./misc/mongo/setup-mongo.sh:/setup-mongo.sh
+    command: /setup-mongo.sh
+    depends_on:
+      - mongo
+    environment:
+      MONGO_PORT: $MONGO_PORT
+      MONGO_REPLICA_SET: $MONGO_REPLICA_SET
   saml-idp:
     image: kristophjunge/test-saml-idp:1.15
     ports:

@@ -20,7 +20,6 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "include-file-cli": "^1.0.1",
     "jest": "^26.0.1",
-    "mongodb-memory-server": "^6.5.0",
     "mongoose": "^5.9.3",
     "prettier": "^2.0.2",
     "rimraf": "^3.0.2",
