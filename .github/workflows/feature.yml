@@ -18,7 +18,6 @@ jobs:
     - name: Install
       run: |
         docker-compose up -d
-        sleep 10
         yarn install
     - name: Test
       run: |
