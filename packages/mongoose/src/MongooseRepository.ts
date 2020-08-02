@@ -1,4 +1,4 @@
-import { Document, Model as MongoModel, CreateQuery } from 'mongoose'
+import mongoose, { Document, Model as MongoModel, CreateQuery } from 'mongoose'
 import {
   Repository,
   RepositoryDriver,
@@ -7,6 +7,7 @@ import {
   EntityBase,
   EntityId,
   Schema,
+  TransactionOption,
 } from '@sheeted/core'
 
 import { compileModel } from './MongooseModel'
@@ -17,6 +18,25 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
 
   constructor(name: string, schema: Schema<Entity>) {
     this.model = compileModel<EntityBase>(name, schema)
+  }
+
+  async initialize(): Promise<void> {
+    await this.model.createCollection()
+  }
+
+  async transaction<R>(callback: (transaction: any) => Promise<R>): Promise<R> {
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    try {
+      const result = await callback(session)
+      await session.commitTransaction()
+      return result
+    } catch (e) {
+      await session.abortTransaction()
+      throw e
+    } finally {
+      session.endSession()
+    }
   }
 
   async find(
@@ -82,18 +102,38 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     return (doc?.toJSON() as Entity) || null
   }
 
-  async create(input: Partial<Entity>): Promise<Entity> {
-    const doc = await this.model.create(input as CreateQuery<Entity>)
+  async create(
+    input: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity> {
+    const [doc] = await this.model.create([input as CreateQuery<Entity>], {
+      session: options?.transaction,
+    })
     return doc.toJSON() as Entity
   }
 
-  async createBulk(inputs: Partial<Entity>[]): Promise<Entity[]> {
-    const docs = await this.model.create(inputs as CreateQuery<Entity>[])
+  async createBulk(
+    inputs: Partial<Entity>[],
+    options?: TransactionOption,
+  ): Promise<Entity[]> {
+    const docs = await this.model.create(inputs as CreateQuery<Entity>[], {
+      session: options?.transaction,
+    })
     return docs.map((doc) => doc.toJSON() as Entity)
   }
 
-  async update(id: EntityId, input: Partial<Entity>): Promise<Entity> {
-    await this.model.updateOne({ id }, { updatedAt: Date.now(), ...input })
+  async update(
+    id: EntityId,
+    input: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity> {
+    await this.model.updateOne(
+      { id },
+      { updatedAt: Date.now(), ...input },
+      {
+        session: options?.transaction,
+      },
+    )
     const updated = await this.findById(id)
     return updated!
   }
@@ -101,6 +141,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
   async updateBulk(
     ids: EntityId[],
     changes: Partial<Entity>,
+    options?: TransactionOption,
   ): Promise<(Entity | null)[]> {
     await this.model.updateMany(
       {
@@ -109,6 +150,9 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       {
         updatedAt: Date.now(),
         ...changes,
+      },
+      {
+        session: options?.transaction,
       },
     )
     const docs = await this.model.find({ id: { $in: ids } })
@@ -122,12 +166,25 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     )
   }
 
-  async destroy(id: EntityId): Promise<void> {
-    await this.model.deleteOne({ id })
+  async destroy(id: EntityId, options?: TransactionOption): Promise<void> {
+    await this.model.deleteOne(
+      { id },
+      {
+        session: options?.transaction,
+      },
+    )
   }
 
-  async destroyBulk(ids: EntityId[]): Promise<void> {
-    await this.model.deleteMany({ id: { $in: ids } })
+  async destroyBulk(
+    ids: EntityId[],
+    options?: TransactionOption,
+  ): Promise<void> {
+    await this.model.deleteMany(
+      { id: { $in: ids } },
+      {
+        session: options?.transaction,
+      },
+    )
   }
 }
 

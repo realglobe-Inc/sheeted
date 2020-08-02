@@ -76,7 +76,7 @@ export type Repository<Entity> = {
   /**
    * Create transaction block
    */
-  transaction(callback: (transaction: any) => Promise<void>): Promise<void>
+  transaction<R>(callback: (transaction: any) => Promise<R>): Promise<R>
 
   /**
    * Find entities by condition
