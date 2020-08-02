@@ -296,6 +296,7 @@ test('MongoDriver/04 Transaction', async () => {
   const repository = new MongoDriver<Entity>('model4', schema)
   await repository.initialize()
 
+  // create 1 entity
   const id = await repository.transaction(async (t) => {
     const created = await repository.create(
       {
@@ -312,6 +313,7 @@ test('MongoDriver/04 Transaction', async () => {
     name: 'abc',
   })
 
+  // update 1 entity and create 1 entity
   await expect(() =>
     repository.transaction(async (t) => {
       const updated = await repository.update(
@@ -336,4 +338,20 @@ test('MongoDriver/04 Transaction', async () => {
     name: 'abc',
   })
   expect(await model.countDocuments({})).toBe(1)
+
+  const [x, y] = await repository.createBulk([
+    {
+      name: 'x',
+    },
+    {
+      name: 'y',
+    },
+  ])
+  // bulk update and bulk delete
+  await repository.transaction(async (t) => {
+    await repository.updateBulk([x.id], { name: 'z' }, { transaction: t })
+    await repository.destroyBulk([y.id], { transaction: t })
+  })
+  expect(await repository.findOne({ name: 'z' })).toBeTruthy()
+  expect(await repository.findOne({ name: 'y' })).toBeNull()
 })
