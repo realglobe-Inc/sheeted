@@ -330,15 +330,12 @@ export class EntityController {
       }
       try {
         await this.repository.transaction(async (t) => {
-          await this.repository.destroy(entity.id, { transaction: t })
-          await this.hook.triggerDestroy(entity, { transaction: t })
           const related = await this.deleteTransaction.find(
             this.sheet.name,
             entity,
           )
           try {
-            // TODO: use transaction session
-            await this.deleteTransaction.transact(related)
+            await this.deleteTransaction.transact(related, { transaction: t })
           } catch (e) {
             if (e instanceof RestrictViolationError) {
               // TODO:
@@ -347,6 +344,8 @@ export class EntityController {
               throw e
             }
           }
+          await this.repository.destroy(entity.id, { transaction: t })
+          await this.hook.triggerDestroy(entity, { transaction: t })
         })
       } catch (e) {
         if (process.env.NODE_ENV !== 'test') {

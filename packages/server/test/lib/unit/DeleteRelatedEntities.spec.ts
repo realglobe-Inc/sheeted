@@ -190,7 +190,10 @@ test('RelatedEntityFinder', async () => {
   const transaction = new RelatedEntityTransaction(relation, repositories)
 
   const entities = await transaction.find(SheetNames.A, a1)
-  await transaction.transact(entities)
+  const repository = repositories.get<AEntity>(SheetNames.A)
+  await repository.transaction(async (t) => {
+    await transaction.transact(entities, { transaction: t })
+  })
 
   expect(await BModel.count({ a: a2 })).toBe(1)
   expect(await BModel.count({ a: undefined })).toBe(2) // Query does not distinguish between null and undefined

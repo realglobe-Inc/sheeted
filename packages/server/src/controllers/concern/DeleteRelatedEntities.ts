@@ -1,4 +1,4 @@
-import { EntityBase, Repositories } from '@sheeted/core'
+import { EntityBase, Repositories, TransactionOption } from '@sheeted/core'
 
 import { IterableFinder } from './RepositoryHelper'
 import { EntityDeleteRelation } from './EntityDeleteRelation'
@@ -111,15 +111,18 @@ export class RelatedEntityTransaction {
     return result.value
   }
 
-  async transact(entities: RelatedEntities): Promise<void> {
+  async transact(
+    entities: RelatedEntities,
+    options: TransactionOption,
+  ): Promise<void> {
     const { repositories } = this
     for (const { sheetName, ids, changes } of entities.update) {
       const repository = repositories.get<EntityBase>(sheetName)
-      await repository.updateBulk(ids, changes)
+      await repository.updateBulk(ids, changes, options)
     }
     for (const [sheetName, ids] of Object.entries(entities.delete)) {
       const repository = repositories.get<EntityBase>(sheetName)
-      await repository.destroyBulk(ids)
+      await repository.destroyBulk(ids, options)
     }
   }
 }
