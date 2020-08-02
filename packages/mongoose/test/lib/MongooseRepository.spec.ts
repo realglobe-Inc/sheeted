@@ -313,8 +313,19 @@ test('MongoDriver/04 Transaction', async () => {
 
   await expect(() =>
     repository.transaction(async (t) => {
-      await repository.update(id, { name: 'abcd' }, { transaction: t })
+      const updated = await repository.update(
+        id,
+        { name: 'abcd' },
+        { transaction: t },
+      )
+      expect(updated.name).toBe('abcd')
       await repository.create({ name: 'aaa' }, { transaction: t })
+
+      expect(await repository.findOne({ name: 'abcd' })).toBeNull()
+      expect(
+        await repository.findOne({ name: 'abcd' }, { transaction: t }),
+      ).not.toBeNull()
+
       // transaction should be aborted
       throw new Error()
     }),

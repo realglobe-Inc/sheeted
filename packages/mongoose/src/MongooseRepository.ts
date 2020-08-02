@@ -41,6 +41,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
 
   async find(
     condition: FindListQuery<Entity>,
+    options?: TransactionOption,
   ): Promise<FindListResult<Entity>> {
     const { page, limit, sort, search, filter = {} } = condition
     const skip = limit * (page - 1)
@@ -67,9 +68,10 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       .sort(sortQuery)
       .limit(limit)
       .skip(skip)
+      .session(options?.transaction)
     const [entities, total] = await Promise.all([
       (await query).map((doc) => doc.toJSON() as Entity),
-      this.model.countDocuments(conditions),
+      this.model.countDocuments(conditions).session(options?.transaction),
     ])
     return {
       page,
@@ -79,17 +81,25 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     }
   }
 
-  async findById(id: EntityId): Promise<Entity | null> {
-    const doc = await this.model.findOne({ id })
+  async findById(
+    id: EntityId,
+    options?: TransactionOption,
+  ): Promise<Entity | null> {
+    const doc = await this.model.findOne({ id }).session(options?.transaction)
     return (doc?.toJSON() as Entity) || null
   }
 
-  async findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }> {
-    const docs = await this.model.find({
-      $or: ids.map((id) => ({
-        id,
-      })),
-    })
+  async findByIds(
+    ids: EntityId[],
+    options?: TransactionOption,
+  ): Promise<{ [id: string]: Entity | null }> {
+    const docs = await this.model
+      .find({
+        $or: ids.map((id) => ({
+          id,
+        })),
+      })
+      .session(options?.transaction)
     const map = Object.fromEntries(
       docs.map((doc) => [doc.id, doc.toJSON()] as [string, Entity]),
     )
@@ -97,8 +107,11 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     return entities
   }
 
-  async findOne(filter: Partial<Entity>): Promise<Entity | null> {
-    const doc = await this.model.findOne(filter)
+  async findOne(
+    filter: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity | null> {
+    const doc = await this.model.findOne(filter).session(options?.transaction)
     return (doc?.toJSON() as Entity) || null
   }
 
@@ -134,7 +147,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
         session: options?.transaction,
       },
     )
-    const updated = await this.findById(id)
+    const updated = await this.findById(id, options)
     return updated!
   }
 
@@ -155,7 +168,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
         session: options?.transaction,
       },
     )
-    const docs = await this.model.find({ id: { $in: ids } })
+    const docs = await this.model.find({ id: { $in: ids } }, options)
     const entities = docs.map((doc) => doc.toJSON() as Entity)
     return ids.map(
       (id) =>

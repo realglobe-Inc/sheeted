@@ -89,17 +89,23 @@ export type Repository<Entity> = {
   /**
    * Find an entity by id
    */
-  findById(id: EntityId): Promise<Entity | null>
+  findById(id: EntityId, options?: TransactionOption): Promise<Entity | null>
 
   /**
    * Find entities by ids
    */
-  findByIds(ids: EntityId[]): Promise<{ [id: string]: Entity | null }>
+  findByIds(
+    ids: EntityId[],
+    options?: TransactionOption,
+  ): Promise<{ [id: string]: Entity | null }>
 
   /**
    * Find an entity
    */
-  findOne(filter: Partial<Entity>): Promise<Entity | null>
+  findOne(
+    filter: Partial<Entity>,
+    options?: TransactionOption,
+  ): Promise<Entity | null>
 
   /**
    * Create an entity
@@ -155,4 +161,6 @@ export type RepositoryDriver = {
  */
 export type Repositories = {
   get<Entity>(sheetName: string): Repository<Entity>
+
+  initialize(): Promise<void>
 }
