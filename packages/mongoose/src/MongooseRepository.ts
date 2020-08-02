@@ -168,7 +168,9 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
         session: options?.transaction,
       },
     )
-    const docs = await this.model.find({ id: { $in: ids } }, options)
+    const docs = await this.model
+      .find({ id: { $in: ids } })
+      .session(options?.transaction)
     const entities = docs.map((doc) => doc.toJSON() as Entity)
     return ids.map(
       (id) =>

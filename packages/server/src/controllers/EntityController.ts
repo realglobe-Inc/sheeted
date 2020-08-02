@@ -29,6 +29,8 @@ import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
 import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 import { SortBuilder } from './concern/SortBuilder'
+import { RelatedEntityTransaction } from './concern/DeleteRelatedEntities'
+import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
 
 export class EntityController {
   /**
@@ -49,7 +51,18 @@ export class EntityController {
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
     const repository = repositories.get<any>(sheetName)
-    return new EntityController(sheet, ctx, displays, repository)
+    const relation = createEntityDeleteRelation(sheets)
+    const deleteTransaction = new RelatedEntityTransaction(
+      relation,
+      repositories,
+    )
+    return new EntityController(
+      sheet,
+      ctx,
+      displays,
+      repository,
+      deleteTransaction,
+    )
   }
 
   private readonly schema: { [field: string]: SchemaField<any> }
@@ -65,6 +78,7 @@ export class EntityController {
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
     private readonly repository: Repository<EntityBase>,
+    private readonly deleteTransaction: RelatedEntityTransaction,
   ) {
     this.schema = {
       ...sheet.Schema,
@@ -313,6 +327,11 @@ export class EntityController {
       }
       try {
         await this.repository.transaction(async (t) => {
+          const related = await this.deleteTransaction.find(
+            this.sheet.name,
+            entity,
+          )
+          await this.deleteTransaction.transact(related, { transaction: t })
           await this.repository.destroy(entity.id, { transaction: t })
           await this.hook.triggerDestroy(entity, { transaction: t })
         })
@@ -320,6 +339,7 @@ export class EntityController {
         if (process.env.NODE_ENV !== 'test') {
           console.error(e)
         }
+        // TODO: RestrictViolationError の扱い
         failedIds.push(entity.id)
       }
     }
