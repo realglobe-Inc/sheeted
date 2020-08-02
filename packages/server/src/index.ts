@@ -39,6 +39,9 @@ export const createApp = (
   const sheets = [IAMUserSheet].concat(application.Sheets)
   const repositories = createRepositories(sheets, application.DatabaseDriver)
 
+  // FIXME: await is preffered
+  void repositories.initialize()
+
   const app = Express()
   app.set('trust proxy', true)
   app.use(cookieParser())

@@ -26,6 +26,6 @@ export type Action<Entity = any> = {
   perform: (
     entities: Entity[],
     context: Context<any>,
-    options?: TransactionOption,
+    options: TransactionOption,
   ) => Promise<void> | void
 }

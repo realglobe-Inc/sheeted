@@ -242,17 +242,16 @@ export class EntityController {
     }
     await this.validator.validate(input, null)
     const creating = this.converter.beforeSave(input)
-    const entity = await this.repository.create(creating)
-    try {
-      await this.hook.triggerCreate(entity)
-    } catch (e) {
-      // roleback
-      await this.repository.destroy(entity.id)
-      throw e
-    }
-    // hook により entity が変化したかもしれない
-    const final = (await this.repository.findById(entity.id))!
-    return this.converter.beforeSend(final)
+    const created = await this.repository.transaction(async (t) => {
+      const entity = await this.repository.create(creating, { transaction: t })
+      await this.hook.triggerCreate(entity, { transaction: t })
+      // hook により entity が変化したかもしれない
+      const created = (await this.repository.findById(entity.id, {
+        transaction: t,
+      }))!
+      return created
+    })
+    return this.converter.beforeSend(created)
   }
 
   async update(id: string, changes: Record<string, any>): Promise<any> {
@@ -269,17 +268,16 @@ export class EntityController {
     }
     await this.validator.validate(changes, current)
     const updating = this.converter.beforeSave(changes)
-    const entity = await this.repository.update(id, updating)
-    try {
-      await this.hook.triggerUpdate(entity)
-    } catch (e) {
-      // rollback
-      await this.repository.update(id, current)
-      throw e
-    }
-    // hook により entity が変化したかもしれない
-    const final = (await this.repository.findById(entity.id))!
-    return this.converter.beforeSend(final)
+    const updated = await this.repository.transaction(async (t) => {
+      const entity = await this.repository.update(id, updating, {
+        transaction: t,
+      })
+      await this.hook.triggerUpdate(entity, { transaction: t })
+      // hook により entity が変化したかもしれない
+      const updated = (await this.repository.findById(id, { transaction: t }))!
+      return updated
+    })
+    return this.converter.beforeSend(updated)
   }
 
   async delete(ids: string[]): Promise<any> {
@@ -308,32 +306,22 @@ export class EntityController {
         HttpStatuses.FORBIDDEN,
       )
     }
-    await this.repository.destroyBulk(ids)
-    const failedIds = (
-      await Promise.all(
-        ids.map(async (id) => {
-          const entity = entities[id]
-          if (!entity) {
-            return Promise.resolve(null)
-          }
-          try {
-            await this.hook.triggerDestroy(entity)
-            return null
-          } catch (e) {
-            if (process.env.NODE_ENV !== 'test') {
-              console.error(e)
-            }
-            return id
-          }
-        }),
-      )
-    ).filter((id): id is string => Boolean(id))
-    if (failedIds.length > 0) {
-      // mongoose _id を含めて復元できるか？
-      const rollbacking = failedIds
-        .map((id) => entities[id])
-        .filter((id): id is EntityBase => Boolean(id))
-      await this.repository.createBulk(rollbacking)
+    const failedIds: string[] = []
+    for (const entity of Object.values(entities)) {
+      if (!entity) {
+        continue
+      }
+      try {
+        await this.repository.transaction(async (t) => {
+          await this.repository.destroy(entity.id, { transaction: t })
+          await this.hook.triggerDestroy(entity, { transaction: t })
+        })
+      } catch (e) {
+        if (process.env.NODE_ENV !== 'test') {
+          console.error(e)
+        }
+        failedIds.push(entity.id)
+      }
     }
     return {
       destroyedIds: ids.filter((id) => !failedIds.includes(id)),
@@ -378,6 +366,8 @@ export class EntityController {
     const entities = Object.values(
       entityMap,
     ).filter((entity): entity is EntityBase => Boolean(entity))
-    await action.perform(entities, ctx)
+    await this.repository.transaction(async (t) => {
+      await action.perform(entities, ctx, { transaction: t })
+    })
   }
 }

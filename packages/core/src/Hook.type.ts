@@ -8,16 +8,16 @@ export type Hook<Entity> = {
   onCreate?: (
     entity: Entity,
     context: Context<any>,
-    options?: TransactionOption,
+    options: TransactionOption,
   ) => Promise<void> | void
   onUpdate?: (
     entity: Entity,
     context: Context<any>,
-    options?: TransactionOption,
+    options: TransactionOption,
   ) => Promise<void> | void
   onDestroy?: (
     entity: Entity,
     context: Context<any>,
-    options?: TransactionOption,
+    options: TransactionOption,
   ) => Promise<void> | void
 }

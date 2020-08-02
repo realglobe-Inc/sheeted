@@ -19,6 +19,11 @@ export const createRepositories = (
     get(sheetName: string): Repository<any> {
       return map.get(sheetName)!
     },
+    async initialize(): Promise<void> {
+      for (const repository of map.values()) {
+        await repository.initialize()
+      }
+    },
   }
   return repositories
 }
