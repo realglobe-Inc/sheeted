@@ -33,7 +33,7 @@ import { useDetailCallback } from './hooks/DetailCallbackHook'
 import { useMColumns } from './hooks/MColumnsHook'
 import { EditingContextProvider } from './hooks/EditingContextHook'
 
-const tableOptions: TableOptions = {
+const tableOptions: TableOptions<any> = {
   addRowPosition: 'first',
   pageSize: 10,
   pageSizeOptions: [10, 20, 30],
