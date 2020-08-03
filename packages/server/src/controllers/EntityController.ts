@@ -343,6 +343,7 @@ export class EntityController {
         failedIds.push(entity.id)
       }
     }
+    // TODO: UI 側に結果を表示する
     return {
       destroyedIds: ids.filter((id) => !failedIds.includes(id)),
       failedIds,
