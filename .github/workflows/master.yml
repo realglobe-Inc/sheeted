@@ -15,7 +15,9 @@ jobs:
         node-version: 12.x
         registry-url: 'https://registry.npmjs.org'
     - name: Install
-      run: yarn install
+      run: |
+        docker-compose up -d
+        yarn install
     - name: Test
       run: |
         yarn lint
