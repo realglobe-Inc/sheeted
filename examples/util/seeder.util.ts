@@ -12,7 +12,7 @@ export class Seeder<E extends EntityBase> implements ISeeder {
   ) {}
 
   async seed(): Promise<void> {
-    for (const entity of this.data) {
+    for (const entity of this.data.reverse()) {
       const found = await this.model.findOne({ id: entity.id })
       if (!found) {
         const created = await this.model.create(entity)

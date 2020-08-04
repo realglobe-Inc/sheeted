@@ -10,7 +10,7 @@ import { useTableLocalization } from '../hooks/TableLocalizationHook'
 
 import { SheetContainer } from './SheetContainer'
 
-const tableOptions: TableOptions = {
+const tableOptions: TableOptions<any> = {
   pageSize: 10,
   paging: false,
   padding: 'dense',
