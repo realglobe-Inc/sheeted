@@ -328,10 +328,7 @@ test('EntityController rollback with hook', async () => {
   // rollbacked
   await expect(controller.one(entity.id)).resolves.toEqual(entity)
 
-  // n = 99 にすると Hook でエラーになる
-  await expect(controller.delete([entity.id])).resolves.toMatchObject({
-    destroyedIds: [],
-    failedIds: [entity.id],
-  })
+  // n = 99 にすると Hook で失敗する
+  expect((await controller.delete([entity.id])).failure).toHaveLength(1)
   await expect(controller.one(entity.id)).resolves.toEqual(entity)
 })
