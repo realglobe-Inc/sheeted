@@ -20,11 +20,6 @@ export type SchemaField<E> = {
   readonly?: true
 
   /**
-   * If set true, the field is contained in the search target.
-   */
-  searchable?: true
-
-  /**
    * If set true, the field value cannot be duplicated.
    */
   unique?: true

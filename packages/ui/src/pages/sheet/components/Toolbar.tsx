@@ -39,8 +39,6 @@ export const Toolbar: FC<{ disabled?: boolean } & Record<string, any>> = (
 ) => {
   const classes = useStyles()
   const { isOpen, openMenu } = useMenuContext()
-  const { result: info } = useSheetInfoContext()
-  const search = Boolean(info?.columns.find((column) => column.searchable))
   return (
     <div className={classes.root}>
       <div className={clsx(classes.menuButton, isOpen && classes.hide)}>
@@ -54,7 +52,7 @@ export const Toolbar: FC<{ disabled?: boolean } & Record<string, any>> = (
         </IconButton>
       </div>
       <div className={classes.toolbar}>
-        {!props.disabled && <MTableToolbar {...props} search={search} />}
+        {!props.disabled && <MTableToolbar {...props} search />}
       </div>
     </div>
   )

@@ -8,11 +8,9 @@ export const buildIAMUserSchema = <Role extends string>(
   const IAMUserSchema: Schema<IAMUserEntity<Role>> = {
     name: {
       type: Types.Text,
-      searchable: true,
     },
     email: {
       type: Types.Text,
-      searchable: true,
       unique: true,
     },
     roles: {

@@ -7,7 +7,6 @@ import { BookEntity } from './book.entity'
 export const BookSchema: Schema<BookEntity> = {
   title: {
     type: Types.Text,
-    searchable: true,
     unique: true,
   },
   like: {
