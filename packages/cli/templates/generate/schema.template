@@ -5,7 +5,6 @@ import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
 export const <%= entityNamePascal %>Schema: Schema<<%= entityNamePascal %>Entity> = {
   name: {
     type: Types.Text,
-    searchable: true,
     optional: true,
   },
 }

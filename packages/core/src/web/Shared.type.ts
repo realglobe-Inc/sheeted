@@ -15,7 +15,6 @@ export type Column = {
   formOptions?: any
   index: number
 
-  searchable?: boolean
   readonly?: boolean
   // based on access policy
   readonlyOnCreate?: boolean

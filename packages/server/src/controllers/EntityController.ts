@@ -141,7 +141,6 @@ export class EntityController {
           form: schemaField.type.form,
           formOptions: schemaField.type.formOptions,
           index,
-          searchable: schemaField.searchable || undefined,
           // access policy で readonly になることがある
           readonly: schemaField.readonly || undefined,
           readonlyOnCreate:
@@ -209,7 +208,7 @@ export class EntityController {
     const { Schema } = this.sheet
     const { queryFilter = {} } = readPolicy
     const searchFields = Object.keys(Schema).filter(
-      (field) => Schema[field]?.searchable,
+      (field) => Schema[field]?.type.rawType === 'text',
     )
     const words = search.split(/\s/).filter(Boolean)
     const searchQuery: SearchQuery<any> | undefined =
