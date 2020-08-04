@@ -13,6 +13,7 @@ import {
   ListResult,
   Column,
   ActionInfo,
+  DeleteResult,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
@@ -29,7 +30,10 @@ import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
 import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
 import { SortBuilder } from './concern/SortBuilder'
-import { RelatedEntityTransaction } from './concern/DeleteRelatedEntities'
+import {
+  RelatedEntityTransaction,
+  RestrictViolationError,
+} from './concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
 
 export class EntityController {
@@ -294,7 +298,7 @@ export class EntityController {
     return this.converter.beforeSend(updated)
   }
 
-  async delete(ids: string[]): Promise<any> {
+  async delete(ids: string[]): Promise<DeleteResult> {
     if (
       !(ids && Array.isArray(ids) && ids.every((id) => typeof id === 'string'))
     ) {
@@ -304,28 +308,47 @@ export class EntityController {
     if (!deletePolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const entities = await this.repository.findByIds(ids)
-    const forbiddenIds = Object.values(entities)
-      .filter((entity): entity is EntityBase =>
-        Boolean(
-          entity &&
-            deletePolicy.condition?.(entity, this.ctx as Context<any>) ===
-              false,
-        ),
-      )
-      .map(({ id }) => id)
-    if (forbiddenIds.length > 0) {
-      throw new HttpError(
-        `Permission denied for entities: ${forbiddenIds.join(', ')}`,
-        HttpStatuses.FORBIDDEN,
-      )
+    const result: DeleteResult = {
+      success: [],
+      failure: [],
     }
-    const failedIds: string[] = []
-    for (const entity of Object.values(entities)) {
+    const entities = await this.repository.findByIds(ids)
+
+    const isFound = (id: string) => Boolean(entities[id])
+    const notFound = ids
+      .filter((id) => !isFound(id))
+      .map((id) => ({
+        entity: this.converter.beforeSend(entities[id]!) as any,
+        reason: 'NOT_FOUND' as const,
+      }))
+    result.failure = result.failure.concat(notFound)
+
+    const isPermitted = (id: string) =>
+      Boolean(
+        isFound(id) &&
+          deletePolicy &&
+          (deletePolicy.condition
+            ? deletePolicy.condition(entities[id], this.ctx as Context<any>)
+            : true),
+      )
+    const forbidden = ids
+      .filter((id) => isFound(id) && !isPermitted(id))
+      .map((id) => ({
+        entity: this.converter.beforeSend(entities[id]!) as any,
+        reason: 'RESTRICT' as const,
+      }))
+    result.failure = result.failure.concat(forbidden)
+
+    const targedIds = ids.filter((id) => isFound(id) && isPermitted(id))
+
+    for (const id of targedIds) {
+      const entity = entities[id]
       if (!entity) {
         continue
       }
+      const converted = this.converter.beforeSend(entity) as any
       try {
+        // transaction for each entity
         await this.repository.transaction(async (t) => {
           const related = await this.deleteTransaction.find(
             this.sheet.name,
@@ -335,19 +358,26 @@ export class EntityController {
           await this.repository.destroy(entity.id, { transaction: t })
           await this.hook.triggerDestroy(entity, { transaction: t })
         })
+        result.success.push(converted)
       } catch (e) {
         if (process.env.NODE_ENV !== 'test') {
           console.error(e)
         }
-        // TODO: RestrictViolationError の扱い
-        failedIds.push(entity.id)
+        if (e instanceof RestrictViolationError) {
+          result.failure.push({
+            entity: converted,
+            reason: 'RESTRICT',
+          })
+        } else {
+          result.failure.push({
+            entity: converted,
+            reason: 'OTHER',
+            message: (e as Error).message || 'Unexpected error',
+          })
+        }
       }
     }
-    // TODO: UI 側に結果を表示する
-    return {
-      destroyedIds: ids.filter((id) => !failedIds.includes(id)),
-      failedIds,
-    }
+    return result
   }
 
   async performAction(actionId: string, ids: string[]): Promise<any> {

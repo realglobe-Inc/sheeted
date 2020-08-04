@@ -32,6 +32,8 @@ import { useRefreshTable } from './hooks/RefreshTableHook'
 import { useDetailCallback } from './hooks/DetailCallbackHook'
 import { useMColumns } from './hooks/MColumnsHook'
 import { EditingContextProvider } from './hooks/EditingContextHook'
+import { DeleteResultContextProvider } from './hooks/DeleteResultContext'
+import { DeleteResultDialog } from './components/DeleteResultDialog'
 
 const tableOptions: TableOptions<any> = {
   addRowPosition: 'first',
@@ -52,14 +54,17 @@ export const SheetPage: FC = () => {
         <InputErrorContextProvider>
           <EntityDialogContextProvider>
             <EditingContextProvider>
-              <PageLayout>
-                {ready && sheet && user && (
-                  <SheetPageTable user={user} sheet={sheet} />
-                )}
-                {ready && !sheet && <SheetNotFound />}
-                <EntitySelectDialog />
-                <ActionDialog />
-              </PageLayout>
+              <DeleteResultContextProvider>
+                <PageLayout>
+                  {ready && sheet && user && (
+                    <SheetPageTable user={user} sheet={sheet} />
+                  )}
+                  {ready && !sheet && <SheetNotFound />}
+                  <EntitySelectDialog />
+                  <ActionDialog />
+                  <DeleteResultDialog />
+                </PageLayout>
+              </DeleteResultContextProvider>
             </EditingContextProvider>
           </EntityDialogContextProvider>
         </InputErrorContextProvider>

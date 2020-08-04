@@ -110,8 +110,8 @@ export const EntityRoute = ({
             sheets,
             repositories,
           )
-          await controller.delete(ids)
-          res.json({ ok: true })
+          const result = await controller.delete(ids)
+          res.json(result)
         },
       )
       // update

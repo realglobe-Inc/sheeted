@@ -1,5 +1,6 @@
 import { InputForm } from '../Type.type'
 import { SheetGroup } from '../SheetGroup.type'
+import { EntityBase } from '../EntityBase.type'
 
 import { ENTITY_META_FIELD } from './Consts'
 
@@ -91,6 +92,21 @@ export type ListResult = {
   total: number
   page: number
   pages: number
+}
+
+export type DeleteFailureReason =
+  | 'PERMISSION_DENIED'
+  | 'RESTRICT'
+  | 'NOT_FOUND'
+  | 'OTHER'
+
+export type DeleteResult = {
+  success: (EntityBase & WithEntityMetaField)[]
+  failure: {
+    entity: EntityBase & WithEntityMetaField
+    reason: DeleteFailureReason
+    message?: string
+  }[]
 }
 
 export type Sheets = {

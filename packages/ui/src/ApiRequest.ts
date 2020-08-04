@@ -6,6 +6,7 @@ import {
   SheetInfo,
   ListQuery,
   ListResult,
+  DeleteResult,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
@@ -131,7 +132,10 @@ export class ApiRequest {
     return result
   }
 
-  async deleteEntities(sheetName: string, entityIds: string[]): Promise<void> {
+  async deleteEntities(
+    sheetName: string,
+    entityIds: string[],
+  ): Promise<DeleteResult> {
     const resp = await this.fetch(
       this.apiPaths.entitiesDeletePath({ sheetName }),
       {
@@ -143,6 +147,8 @@ export class ApiRequest {
       const { error }: ErrorResponse = await resp.json()
       throw new HttpError(error.message, resp.status)
     }
+    const result: DeleteResult = await resp.json()
+    return result
   }
 
   async performAction(
