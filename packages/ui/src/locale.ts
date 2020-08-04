@@ -17,6 +17,18 @@ export const locale = {
     EntitySelectDialog: {
       title: (name: string): string => `${name}を選択`,
     },
+    DeleteResultDialog: {
+      title: '削除結果',
+      reason: {
+        restrict: '関連するデータがあるため削除できませんでした',
+        permissionDenied: '削除する権限がありません',
+        notFound: 'データがありません',
+      },
+      labels: {
+        success: '成功',
+        failure: '失敗',
+      },
+    },
   },
   errors: {
     unexpectedError: '予期せぬエラーが発生しました',

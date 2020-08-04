@@ -9,6 +9,7 @@ import { useLocale } from '../../../hooks/LocaleContextHook'
 import { useApi } from '../../../hooks/ApiHook'
 
 import { useActionContext } from './ActionContextHook'
+import { useDeleteResultContext } from './DeleteResultContext'
 
 export const useTableActions = (
   sheet: SheetInfo | null,
@@ -23,6 +24,7 @@ export const useTableActions = (
   const { startAction } = useActionContext()
   const [entities, setEntities] = useState<Entity[]>([])
   const { enqueueSnackbar } = useSnackbar()
+  const { setResult: setDeleteResult } = useDeleteResultContext()
   const toggleFilterAction: TableAction<Entity> = useMemo(() => {
     return {
       tooltip: l.actions.filter,
@@ -48,10 +50,17 @@ export const useTableActions = (
           entities,
           doAction: async () => {
             try {
-              await api.deleteEntities(sheet?.sheetName || '', ids)
-              enqueueSnackbar(l.snackbars.deleteComplete, {
-                variant: 'success',
-              })
+              const result = await api.deleteEntities(
+                sheet?.sheetName || '',
+                ids,
+              )
+              if (result.failure.length > 0) {
+                setDeleteResult(result)
+              } else {
+                enqueueSnackbar(l.snackbars.deleteComplete, {
+                  variant: 'success',
+                })
+              }
               refreshTable(0)
             } catch (e) {
               console.error(e)
@@ -72,6 +81,7 @@ export const useTableActions = (
     enqueueSnackbar,
     startAction,
     refreshTable,
+    setDeleteResult,
   ])
   const customActions: TableAction<Entity>[] = useMemo(() => {
     return (sheet?.actions || []).map((action) => {

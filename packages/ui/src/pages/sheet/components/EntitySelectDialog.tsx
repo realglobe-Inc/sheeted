@@ -28,7 +28,7 @@ export const EntitySelectDialog: FC = () => {
       sheetProp?.onSelect(entity)
       closeDialog()
     },
-    [closeDialog, sheetProp?.onSelect],
+    [closeDialog, sheetProp],
   )
   if (!sheetProp) {
     return null

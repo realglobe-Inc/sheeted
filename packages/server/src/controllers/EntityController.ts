@@ -318,7 +318,7 @@ export class EntityController {
     const notFound = ids
       .filter((id) => !isFound(id))
       .map((id) => ({
-        id,
+        entity: this.converter.beforeSend(entities[id]!) as any,
         reason: 'NOT_FOUND' as const,
       }))
     result.failure = result.failure.concat(notFound)
@@ -334,7 +334,7 @@ export class EntityController {
     const forbidden = ids
       .filter((id) => isFound(id) && !isPermitted(id))
       .map((id) => ({
-        id,
+        entity: this.converter.beforeSend(entities[id]!) as any,
         reason: 'RESTRICT' as const,
       }))
     result.failure = result.failure.concat(forbidden)
@@ -346,6 +346,7 @@ export class EntityController {
       if (!entity) {
         continue
       }
+      const converted = this.converter.beforeSend(entity) as any
       try {
         // transaction for each entity
         await this.repository.transaction(async (t) => {
@@ -357,19 +358,19 @@ export class EntityController {
           await this.repository.destroy(entity.id, { transaction: t })
           await this.hook.triggerDestroy(entity, { transaction: t })
         })
-        result.success.push({ id })
+        result.success.push(converted)
       } catch (e) {
         if (process.env.NODE_ENV !== 'test') {
           console.error(e)
         }
         if (e instanceof RestrictViolationError) {
           result.failure.push({
-            id,
+            entity: converted,
             reason: 'RESTRICT',
           })
         } else {
           result.failure.push({
-            id,
+            entity: converted,
             reason: 'OTHER',
             message: (e as Error).message || 'Unexpected error',
           })
