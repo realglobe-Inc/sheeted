@@ -93,6 +93,17 @@ export type ListResult = {
   pages: number
 }
 
+export type DeleteResult = {
+  success: {
+    id: string
+  }[]
+  failure: {
+    id: string
+    reason: 'PERMISSION_DENIED' | 'RESTRICT' | 'NOT_FOUND' | 'OTHER'
+    message?: string
+  }[]
+}
+
 export type Sheets = {
   groups: SheetGroup[]
   sheets: SheetOverview[]
