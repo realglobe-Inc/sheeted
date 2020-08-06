@@ -20,6 +20,7 @@ import { RouterBuilder } from './types/Router.type'
 import { createRepositories } from './server/Repositories'
 import { JWTGuard } from './guards/JWTGuard'
 import { ApiTokenGuard } from './guards/ApiTokenGuard'
+import { onListen } from './utils/expressUtil'
 
 export type { ApplicationConfig }
 
@@ -39,10 +40,10 @@ export const createApp = (
   const sheets = [IAMUserSheet].concat(application.Sheets)
   const repositories = createRepositories(sheets, application.DatabaseDriver)
 
-  // FIXME: await is preffered
-  void repositories.initialize()
-
   const app = Express()
+  onListen(app, () => {
+    void repositories.initialize()
+  })
   app.set('trust proxy', true)
   app.use(cookieParser())
   app.use(Logger(process.env.NODE_ENV === 'production' ? 'common' : 'dev'))
