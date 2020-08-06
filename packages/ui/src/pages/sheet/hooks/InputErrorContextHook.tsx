@@ -6,15 +6,15 @@ import React, {
   useCallback,
   FC,
 } from 'react'
-import { InputValidationErrors } from '@sheeted/core/build/web/Shared.type'
+import { InputErrors } from '@sheeted/core/build/web/Shared.type'
 
-export type InputErrors = {
+export type InputErrorRecord = {
   [field: string]: string | undefined
 }
 
 export type InputErrorContextValues = {
-  errors: InputErrors
-  setErrors: (errors: InputValidationErrors) => void
+  errors: InputErrorRecord
+  setErrors: (errors: InputErrors) => void
   reset: (field?: string) => void
 }
 
@@ -31,12 +31,12 @@ export const useInputErrorFromContext = (field: string): string | undefined => {
 export const InputErrorContextProvider: FC<{ children: ReactChild }> = (
   props,
 ) => {
-  const [errors, set] = useState<InputErrors>({})
+  const [errors, set] = useState<InputErrorRecord>({})
   const setErrors = useCallback(
-    (err: InputValidationErrors) =>
+    (errors: InputErrors) =>
       set(
         Object.fromEntries(
-          err.errors.map(({ field, message }) => [field, message]),
+          errors.map(({ field, message }) => [field, message]),
         ),
       ),
     [set],

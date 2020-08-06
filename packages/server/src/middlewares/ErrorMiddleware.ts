@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
-import { InputValidationErrors } from '@sheeted/core/build/web/Shared.type'
+import { ErrorResponse, InputErrors } from '@sheeted/core/build/web/Shared.type'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
-export class HttpValidationError extends Error
-  implements InputValidationErrors {
+export class HttpValidationError extends Error {
   status = HttpStatuses.UNPROCESSABLE_ENTITY
-  constructor(public errors: { message: string; field: string }[]) {
+  constructor(public errors: InputErrors) {
     super()
   }
 }
@@ -20,17 +19,21 @@ export const handleError = (
   next: NextFunction,
 ): void => {
   if (err instanceof HttpError) {
-    res.status(err.status).json({
+    const resp: ErrorResponse = {
       error: {
         message: err.message,
       },
-    })
+    }
+    res.status(err.status).json(resp)
   } else if (err instanceof HttpValidationError) {
-    const error: InputValidationErrors = {
-      errors: err.errors.map((e) => ({
-        message: e.message,
-        field: e.field,
-      })),
+    const error: ErrorResponse = {
+      error: {
+        message: 'Validation Error',
+        inputErrors: err.errors.map((e) => ({
+          message: e.message,
+          field: e.field,
+        })),
+      },
     }
     res.status(err.status).json(error)
   } else {
