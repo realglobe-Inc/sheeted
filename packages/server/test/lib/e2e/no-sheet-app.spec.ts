@@ -219,10 +219,10 @@ it('should fail to create IAMUser with invalid input', async () => {
     .set(...authCookie)
     .expect(422)
     .then((resp) => {
-      expect(resp.body).toHaveProperty(['errors', '0', 'message'])
-      expect(resp.body).toHaveProperty(['errors', '0', 'field'])
-      expect(resp.body).toHaveProperty(['errors', '1', 'message'])
-      expect(resp.body).toHaveProperty(['errors', '1', 'field'])
+      expect(resp.body).toHaveProperty(['error', 'inputErrors', '0', 'message'])
+      expect(resp.body).toHaveProperty(['error', 'inputErrors', '0', 'field'])
+      expect(resp.body).toHaveProperty(['error', 'inputErrors', '1', 'message'])
+      expect(resp.body).toHaveProperty(['error', 'inputErrors', '1', 'field'])
     })
 })
 
