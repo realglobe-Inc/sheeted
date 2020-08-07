@@ -7,22 +7,12 @@ import {
   ListQuery,
   ListResult,
   DeleteResult,
+  ErrorResponse,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
 import { Entity } from './types/Entity.type'
 import { bind } from './utils/ObjectUtil'
-
-// TODO: server 側と共通化
-type ErrorResponse = {
-  error: {
-    message: string
-  }
-  errors?: {
-    message: string
-    field: string
-  }[]
-}
 
 export class ApiRequest {
   apiPaths: ApiPathFuncs
@@ -91,12 +81,10 @@ export class ApiRequest {
       body: JSON.stringify(entity),
     })
     if (!resp.ok) {
-      const { error, errors }: ErrorResponse = await resp.json()
-      if (errors) {
-        // validation errors
-        const err = new Error()
-        Object.assign(err, { errors })
-        throw err
+      const { error }: ErrorResponse = await resp.json()
+      if (error.inputErrors) {
+        // validation error はそのまま throw
+        throw error
       } else {
         throw new HttpError(error.message, resp.status)
       }
@@ -118,12 +106,10 @@ export class ApiRequest {
       },
     )
     if (!resp.ok) {
-      const { error, errors }: ErrorResponse = await resp.json()
-      if (errors) {
-        // validation errors
-        const err = new Error()
-        Object.assign(err, { errors })
-        throw err
+      const { error }: ErrorResponse = await resp.json()
+      if (error.inputErrors) {
+        // validation error はそのまま throw
+        throw error
       } else {
         throw new HttpError(error.message, resp.status)
       }

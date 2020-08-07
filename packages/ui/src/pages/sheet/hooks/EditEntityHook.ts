@@ -1,7 +1,4 @@
-import {
-  SheetInfo,
-  InputValidationErrors,
-} from '@sheeted/core/build/web/Shared.type'
+import { SheetInfo, InputErrors } from '@sheeted/core/build/web/Shared.type'
 import { useCallback } from 'react'
 import { useSnackbar } from 'notistack'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
@@ -52,8 +49,10 @@ export const useEditEntity = (
         enqueueSnackbar(l.snackbars.editFaield, {
           variant: 'error',
         })
-        if (Object.getOwnPropertyDescriptor(e, 'errors')) {
-          setErrors(e as InputValidationErrors)
+        const inputErrors = Object.getOwnPropertyDescriptor(e, 'inputErrors')
+        if (inputErrors) {
+          const errors: InputErrors = inputErrors.value
+          setErrors(errors)
         }
         throw e
       }
@@ -78,9 +77,10 @@ export const useEditEntity = (
         enqueueSnackbar(l.snackbars.createFailed, {
           variant: 'error',
         })
-        console.log(e)
-        if (Object.getOwnPropertyDescriptor(e, 'errors')) {
-          setErrors(e as InputValidationErrors)
+        const inputErrors = Object.getOwnPropertyDescriptor(e, 'inputErrors')
+        if (inputErrors) {
+          const errors: InputErrors = inputErrors.value
+          setErrors(errors)
         }
         throw e
       }

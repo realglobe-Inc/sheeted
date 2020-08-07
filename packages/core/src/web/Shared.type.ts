@@ -120,8 +120,13 @@ export type SheetOverview = {
   icon?: string
 }
 
-export type InputValidationErrors = {
-  errors: { message: string; field: string }[]
+export type InputErrors = { message: string; field: string }[]
+
+export type ErrorResponse = {
+  error: {
+    message: string
+    inputErrors?: InputErrors
+  }
 }
 
 export type ActionInfo = {
