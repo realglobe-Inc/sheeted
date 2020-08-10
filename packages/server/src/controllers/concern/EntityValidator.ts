@@ -34,19 +34,21 @@ export class EntityValidator {
         }
         continue
       }
-      if (value == null) {
-        // FIXME:
-        if (!schemaValue.optional && currentEntity?.[field] == null) {
+      if (!schemaValue.optional) {
+        if (
+          // null をセット
+          value === null ||
+          // 単純に値がない
+          (value === undefined && currentEntity?.[field] == null)
+        ) {
           result.appendError({
             field,
             message: 'Required field',
           })
           continue
-        } else {
-          continue
         }
       }
-      if (schemaValue.unique) {
+      if (schemaValue.unique && value != null) {
         // DBレベルで unique バリデーションをしたほうがパフォーマンスが高いがここで行ったほうがコードがきれいなので
         const val =
           schemaValue.type.rawType === 'entity'
