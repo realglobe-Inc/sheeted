@@ -7,6 +7,7 @@ import { EntityCEntity } from './entity-c.entity'
 export const EntityCSchema: Schema<EntityCEntity> = {
   a: {
     type: Types.Entity,
+    unique: true,
     entityProperties: {
       sheetName: SheetNames.EntityA,
       onDelete: 'CASCADE',

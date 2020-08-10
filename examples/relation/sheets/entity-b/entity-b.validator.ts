@@ -8,10 +8,14 @@ export const EntityBValidator: Validator<EntityBEntity> = (_ctx) => (
 ): ValidationResult<EntityBEntity> => {
   const result = new ValidationResult<EntityBEntity>()
   // entity can have only one field of cascade, restrict, or setNull
-  const isCascade = Boolean(input.cascade || current?.cascade)
-  const isRestrict = Boolean(input.restrict || current?.restrict)
-  const isSetNull = Boolean(input.setNull || current?.setNull)
-  if ([isCascade, isRestrict, isSetNull].filter(Boolean).length !== 1) {
+  const merged: Partial<EntityBEntity> = {
+    ...(current || {}),
+    ...input,
+  }
+  const hasCascade = Boolean(merged.cascade)
+  const hasRestrict = Boolean(merged.restrict)
+  const hasSetNull = Boolean(merged.setNull)
+  if ([hasCascade, hasRestrict, hasSetNull].filter(Boolean).length !== 1) {
     result.appendError({
       field: 'cascade',
       message: 'can have only 1 field',
