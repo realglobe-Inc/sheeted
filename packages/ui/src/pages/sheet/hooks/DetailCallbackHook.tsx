@@ -4,6 +4,8 @@ import { useCallback } from 'react'
 import { useUIPaths } from '../../../hooks/UIPathHook'
 import { Entity } from '../../../types/Entity.type'
 
+// TODO: remove this file
+
 export const useDetailCallback = (
   sheetName: string,
 ): ((event: any, entity: any) => void) => {

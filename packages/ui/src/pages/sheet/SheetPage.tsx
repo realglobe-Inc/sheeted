@@ -29,7 +29,6 @@ import { ActionContextProvider } from './hooks/ActionContextHook'
 import { ActionDialog } from './components/ActionDialog'
 import { useTableActions } from './hooks/TableActionsHook'
 import { useRefreshTable } from './hooks/RefreshTableHook'
-import { useDetailCallback } from './hooks/DetailCallbackHook'
 import { useMColumns } from './hooks/MColumnsHook'
 import { EditingContextProvider } from './hooks/EditingContextHook'
 import { DeleteResultContextProvider } from './hooks/DeleteResultContext'
@@ -99,8 +98,6 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   }, [sheetName, trigger])
   const forbidden = error?.status === HttpStatuses.FORBIDDEN
   const localization = useTableLocalization({ forbidden })
-  const goToDetail = useDetailCallback(sheetName)
-  const onRowClick = info?.enableDetail ? goToDetail : undefined
   return (
     <MaterialTable
       title={sheet.title}
@@ -113,7 +110,6 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
         onRowUpdate,
       }}
       actions={actions}
-      onRowClick={onRowClick}
       onSelectionChange={onSelectionChange}
       localization={localization}
       components={{
