@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import MLink, { LinkProps as MLinkProps } from '@material-ui/core/Link'
 
-export const Link = React.forwardRef(function Link(
+export const InternalLink = React.forwardRef(function Link(
   props: RouterLinkProps & MLinkProps,
   ref: any,
 ) {
