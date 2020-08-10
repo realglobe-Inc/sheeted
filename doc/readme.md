@@ -2,6 +2,9 @@
 
 # Sheeted
 
+![build status](https://github.com/realglobe-Inc/sheeted/workflows/master/badge.svg)
+![npm version](https://badge.fury.io/js/%40sheeted%2Fcore.svg)
+
 Table UI web application development framework.
 
 Sheeted aims to make it extremely easy to develop sheet-based web applications which are often used for organizations internal use and for some management use. With Sheeted, you will be released from boring coding not concerned with business rules. You can develop practical Table UI web applications 10x faster with Sheeted.
