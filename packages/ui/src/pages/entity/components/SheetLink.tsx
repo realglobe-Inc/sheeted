@@ -17,6 +17,7 @@ export const SheetLink: FC<{ title: string; sheetName: string }> = ({
       to={path}
       startIcon={<ArrowBackIosIcon fontSize="small" />}
       color="primary"
+      size="large"
     >
       {title}
     </Button>
