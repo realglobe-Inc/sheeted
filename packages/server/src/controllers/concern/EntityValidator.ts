@@ -2,11 +2,14 @@ import { Schema, Validate, Repository } from '@sheeted/core'
 
 import { HttpValidationError } from '../../middlewares/ErrorMiddleware'
 
+import { EntityConverter } from './EntityConverter'
+
 export class EntityValidator {
   constructor(
     private readonly schema: Schema,
     private readonly validateEntity: Validate,
     private readonly repository: Repository<any>,
+    private readonly converter: EntityConverter,
   ) {}
 
   async validate(
@@ -32,6 +35,7 @@ export class EntityValidator {
         continue
       }
       if (value == null) {
+        // FIXME:
         if (!schemaValue.optional && currentEntity?.[field] == null) {
           result.appendError({
             field,
@@ -44,8 +48,12 @@ export class EntityValidator {
       }
       if (schemaValue.unique) {
         // DBレベルで unique バリデーションをしたほうがパフォーマンスが高いがここで行ったほうがコードがきれいなので
-        const found = await this.repository.findOne({ [field]: value })
-        if (found) {
+        const val =
+          schemaValue.type.rawType === 'entity'
+            ? this.converter.beforeSave(value)
+            : value
+        const exists = await this.repository.findOne({ [field]: val })
+        if (exists) {
           result.appendError({
             field,
             message: 'Duplicate value',

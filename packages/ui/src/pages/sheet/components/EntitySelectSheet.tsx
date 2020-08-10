@@ -7,6 +7,7 @@ import { useQueryEntities } from '../hooks/QueryEntitiesHook'
 import { convertColumn } from '../converters/ColumnConverter'
 import { tableIcons } from '../assets/icons'
 import { useTableLocalization } from '../hooks/TableLocalizationHook'
+import { omit } from '../../../utils/ObjectUtil'
 
 import { SheetContainer } from './SheetContainer'
 
@@ -32,7 +33,8 @@ export const EntitySelectSheet: FC<{
       columns={columns}
       data={queryEntities}
       options={tableOptions}
-      onRowClick={(_event, entity) => {
+      onRowClick={(_event, raw) => {
+        const entity = omit(raw, ['tableData'])
         onSelect(entity)
       }}
       components={{

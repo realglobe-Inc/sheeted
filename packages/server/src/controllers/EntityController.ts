@@ -108,6 +108,7 @@ export class EntityController {
       this.schema,
       sheet.Validator(ctx),
       repository,
+      this.converter,
     )
     this.sortBuilder = new SortBuilder(sheet)
   }

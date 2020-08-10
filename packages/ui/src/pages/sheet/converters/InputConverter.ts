@@ -9,8 +9,13 @@ const diff = (newEntity: Entity, oldEntity: Entity | null) => {
       // meta fields
       continue
     }
+    const newValue = newEntity[field]
+    const oldValue = oldEntity?.[field]
     const isEqual =
-      JSON.stringify(newEntity[field]) === JSON.stringify(oldEntity?.[field])
+      // object なら entity field である
+      typeof newValue === 'object' && newValue !== null
+        ? (newValue as Entity).id === ((oldValue || {}) as Entity).id
+        : newValue === oldValue
     if (!isEqual) {
       changes[field] = newEntity[field]
     }
@@ -22,7 +27,7 @@ export const convertInput = (
   newEntity: Entity,
   oldEntity: Entity | null,
   columns: Column[],
-): any => {
+): Record<string, any> => {
   const changes = diff(newEntity, oldEntity)
   for (const field of Object.keys(changes)) {
     const column = columns.find((column) => column.field === field)
