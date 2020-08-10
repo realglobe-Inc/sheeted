@@ -19,7 +19,7 @@ import Icon from '@material-ui/core/Icon'
 import Typography from '@material-ui/core/Typography'
 import { IAM_USER_SHEET } from '@sheeted/core'
 
-import { Link } from '../components/Link'
+import { InternalLink } from '../components/InternalLink'
 import { DRAWER_WIDTH } from '../Constants'
 import { useUserContext } from '../hooks/UserContextHook'
 import { useSheetContext } from '../hooks/SheetContextHook'
@@ -112,7 +112,7 @@ export const DrawerMenu: FC = () => {
             .map(({ title, sheetName, icon }) => (
               <ListItem
                 button
-                component={Link}
+                component={InternalLink}
                 key={sheetName}
                 to={uiPaths.sheetPath({ sheetName })}
                 selected={sheetName === currentSheet?.sheetName}
@@ -140,7 +140,7 @@ export const DrawerMenu: FC = () => {
         {iamSheet && (
           <ListItem
             button
-            component={Link}
+            component={InternalLink}
             key={iamSheet.sheetName}
             to={uiPaths.sheetPath({ sheetName: iamSheet.sheetName })}
             selected={iamSheet.sheetName === currentSheet?.sheetName}
@@ -163,7 +163,7 @@ export const DrawerMenu: FC = () => {
       <List className={classes.signOut}>
         <ListItem
           button
-          component={Link}
+          component={InternalLink}
           key="sign-out"
           to={uiPaths.signOutPath()}
           dense

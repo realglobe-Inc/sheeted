@@ -5,8 +5,12 @@ import {
   WithEntityMetaField,
 } from '@sheeted/core/build/web/Shared.type'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+import Button from '@material-ui/core/Button'
+import LaunchIcon from '@material-ui/icons/Launch'
 
 import { ExternalLink } from '../components/ExternalLink'
+import { InternalLink } from '../components/InternalLink'
+import { useUIPaths } from '../hooks/UIPathHook'
 
 type FieldValueProps = {
   entity?: Record<string, any>
@@ -104,13 +108,31 @@ const EnumValueHoc = (column: Column): FC<FieldValueProps> => {
 
 const EntityValueHoc = (column: Column): FC<FieldValueProps> => {
   return function EntityValue({ entity }: FieldValueProps) {
+    const { entityDetailPath } = useUIPaths()
     if (!entity) {
       return null
     }
-    const rawValue = entity[column.field] as WithEntityMetaField
+    const rawValue = entity[column.field] as WithEntityMetaField & {
+      id?: string
+    }
+    const path = entityDetailPath({
+      sheetName: column.custom?.entity?.sheetName || '',
+      entityId: rawValue?.id || '',
+    })
     return (
       <div style={column.style}>
-        {rawValue ? rawValue[ENTITY_META_FIELD].displayText : ''}
+        {rawValue ? (
+          <Button
+            component={InternalLink}
+            to={path}
+            endIcon={<LaunchIcon fontSize="small" />}
+            color="primary"
+          >
+            {rawValue[ENTITY_META_FIELD].displayText}
+          </Button>
+        ) : (
+          ''
+        )}
       </div>
     )
   }

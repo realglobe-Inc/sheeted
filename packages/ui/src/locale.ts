@@ -13,6 +13,9 @@ export const locale = {
     signIn: 'SIGN IN',
     signOut: 'SIGN OUT',
   },
+  columns: {
+    detail: '詳細',
+  },
   dialogs: {
     EntitySelectDialog: {
       title: (name: string): string => `${name}を選択`,
@@ -86,7 +89,7 @@ export const tableLocalization: Localization = {
     editTooltip: '編集',
   },
   header: {
-    actions: 'アクション',
+    actions: '編集',
   },
   grouping: {
     groupedBy: 'グルーピング',

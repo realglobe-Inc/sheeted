@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import Button from '@material-ui/core/Button'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { Link } from '../../../components/Link'
+import { InternalLink } from '../../../components/InternalLink'
 import { useUIPaths } from '../../../hooks/UIPathHook'
 
 export const SheetLink: FC<{ title: string; sheetName: string }> = ({
@@ -13,10 +13,11 @@ export const SheetLink: FC<{ title: string; sheetName: string }> = ({
   const path = uiPaths.sheetPath({ sheetName })
   return (
     <Button
-      component={Link}
+      component={InternalLink}
       to={path}
       startIcon={<ArrowBackIosIcon fontSize="small" />}
       color="primary"
+      size="large"
     >
       {title}
     </Button>
