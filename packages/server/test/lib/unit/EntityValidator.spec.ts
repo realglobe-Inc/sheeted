@@ -2,6 +2,7 @@ import '../../tools/typings'
 import { Schema, Types, ValidationResult, Validate } from '@sheeted/core'
 
 import { EntityValidator } from '../../../src/controllers/concern/EntityValidator'
+import { EntityConverter } from '../../../src/controllers/concern/EntityConverter'
 
 test('EntityValidator', async () => {
   type Entity = {
@@ -42,7 +43,16 @@ test('EntityValidator', async () => {
     }
     return result
   }
-  const validator = new EntityValidator(schema, validate, null as any)
+  const converter: EntityConverter = {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    beforeSave: (e: any) => e,
+  } as any
+  const validator = new EntityValidator(
+    schema,
+    validate,
+    null as any,
+    converter,
+  )
 
   await expect(
     validator.validate({}, { greaterThan0: 1, greaterThanLast: 1 }),

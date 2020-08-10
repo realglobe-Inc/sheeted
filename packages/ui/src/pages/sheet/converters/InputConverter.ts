@@ -12,8 +12,11 @@ const diff = (newEntity: Entity, oldEntity: Entity | null) => {
     const newValue = newEntity[field]
     const oldValue = oldEntity?.[field]
     const isEqual =
-      // object なら entity field である
-      typeof newValue === 'object' && newValue !== null
+      // array なら enum list である
+      Array.isArray(newValue)
+        ? JSON.stringify(newValue) === JSON.stringify(oldValue)
+        : // object なら entity field である
+        typeof newValue === 'object' && newValue !== null
         ? (newValue as Entity).id === ((oldValue || {}) as Entity).id
         : newValue === oldValue
     if (!isEqual) {

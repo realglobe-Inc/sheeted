@@ -48,6 +48,9 @@ export class EntityValidator {
           continue
         }
       }
+      if (value == null) {
+        continue
+      }
       if (schemaValue.unique && value != null) {
         // DBレベルで unique バリデーションをしたほうがパフォーマンスが高いがここで行ったほうがコードがきれいなので
         const val =
