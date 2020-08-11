@@ -25,7 +25,12 @@ export const EntitySelectSheet: FC<{
   const { result: info } = useFetchSheetInfo(sheet.sheetName)
   const queryEntities = useQueryEntities(sheet.sheetName)
   const tableLocalization = useTableLocalization({ forbidden: false })
-  const columns = info ? info.columns.map(convertColumn).filter(Boolean) : []
+  const columns = info
+    ? info.columns
+        .filter((column) => !column.detailPageOnly)
+        .map(convertColumn)
+        .filter(Boolean)
+    : []
   return (
     <MaterialTable
       icons={tableIcons}
