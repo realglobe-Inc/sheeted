@@ -40,7 +40,7 @@ export const EntitySelectDialog: FC = () => {
     return null
   }
   return (
-    <Dialog open={isOpen} onClose={closeDialog} scroll="paper">
+    <Dialog open={isOpen} onClose={closeDialog} scroll="paper" fullWidth>
       <DialogTitle>
         {l.dialogs.EntitySelectDialog.title(sheet.title)}
       </DialogTitle>
