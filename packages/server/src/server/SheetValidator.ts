@@ -31,6 +31,7 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
     const isEntityType = equals(field.type, Types.Entity)
     const isEnumType =
       equals(field.type, Types.Enum) || equals(field.type, Types.EnumList)
+    const isEnumListType = equals(field.type, Types.EnumList)
     if (isEntityType && !field.entityProperties) {
       details.push({
         sheetName,
@@ -61,6 +62,13 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
         sheetName,
         path: `.View.colums.${fieldName}`,
         message: `Property "enumLabels" is required when field type is Enum or EnumList`,
+      })
+    }
+    if (isEnumListType && sheet.Schema[fieldName].unique) {
+      details.push({
+        sheetName,
+        path: `.Schema.${fieldName}`,
+        message: `Property "unique" is not allowed when field type is EnumList`,
       })
     }
     if (
