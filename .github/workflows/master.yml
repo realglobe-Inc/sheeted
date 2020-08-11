@@ -24,8 +24,8 @@ jobs:
         yarn test
     - name: Release
       run: |
-        ./misc/scripts/doc.sh
-        ./misc/scripts/release.sh
+        ./dev/scripts/doc.sh
+        ./dev/scripts/release.sh
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

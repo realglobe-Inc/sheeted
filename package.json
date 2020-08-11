@@ -30,7 +30,7 @@
   "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "./misc/git-hooks/pre-commit.sh"
+      "pre-commit": "./dev/git-hooks/pre-commit.sh"
     }
   },
   "keywords": [

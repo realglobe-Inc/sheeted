@@ -13,7 +13,7 @@ services:
   mongo-setup:
     image: mongo:4
     volumes:
-      - ./misc/mongo/setup-mongo.sh:/setup-mongo.sh
+      - ./dev/mongo/setup-mongo.sh:/setup-mongo.sh
     command: /setup-mongo.sh
     depends_on:
       - mongo
@@ -29,4 +29,4 @@ services:
       SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: $SAML_SP_ACS
       SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: $SAML_SP_LOGOUT_URL
     volumes:
-      - "./misc/dev/saml_authsources.php:/var/www/simplesamlphp/config/authsources.php"
+      - "./dev/saml/saml_authsources.php:/var/www/simplesamlphp/config/authsources.php"
