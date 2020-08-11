@@ -127,6 +127,7 @@ const EntityValueHoc = (column: Column): FC<FieldValueProps> => {
             to={path}
             endIcon={<LaunchIcon fontSize="small" />}
             color="primary"
+            style={{ textTransform: 'none' }}
           >
             {rawValue[ENTITY_META_FIELD].displayText}
           </Button>
