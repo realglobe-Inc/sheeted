@@ -31,6 +31,8 @@ test('SheetValidator.validateSheet()', () => {
         enumList: {
           type: Types.EnumList,
           // enumProperties is required
+          // unique is not allowed
+          unique: true,
         },
         entity: {
           type: Types.Entity,
@@ -70,7 +72,7 @@ test('SheetValidator.validateSheet()', () => {
       },
       AccessPolicies: [],
     }),
-  ).toHaveLength(7)
+  ).toHaveLength(8)
 })
 
 test('SheetValidator.validateSheets()', () => {
