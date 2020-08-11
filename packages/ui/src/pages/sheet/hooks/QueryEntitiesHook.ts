@@ -1,10 +1,14 @@
 import { useCallback } from 'react'
 import { Query as MQuery, QueryResult } from 'material-table'
 import { useSnackbar } from 'notistack'
+import { HttpStatuses } from '@sheeted/core/build/web/Consts'
+import { HttpError } from '@sheeted/core/build/web/Errors'
 
 import { convertQuery } from '../converters/QueryConverter'
 import { useApi } from '../../../hooks/ApiHook'
 import { useLocale } from '../../../hooks/LocaleContextHook'
+
+const IgnoreStatuses: number[] = [HttpStatuses.FORBIDDEN]
 
 export const useQueryEntities = (
   sheetName: string,
@@ -23,10 +27,12 @@ export const useQueryEntities = (
           totalCount: list.total,
         }
       } catch (error) {
-        console.error(error)
-        enqueueSnackbar(l.errors.unexpectedError, {
-          variant: 'error',
-        })
+        if (!IgnoreStatuses.includes((error as HttpError).status)) {
+          console.error(error)
+          enqueueSnackbar(l.errors.unexpectedError, {
+            variant: 'error',
+          })
+        }
         return {
           data: [],
           page: 0,
