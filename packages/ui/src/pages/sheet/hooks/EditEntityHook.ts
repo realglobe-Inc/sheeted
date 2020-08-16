@@ -1,4 +1,4 @@
-import { SheetInfo, InputErrors } from '@sheeted/core/build/web/Shared.type'
+import { SheetInfo, InputError } from '@sheeted/core/build/web/Shared.type'
 import { useCallback } from 'react'
 import { useSnackbar } from 'notistack'
 import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
@@ -33,42 +33,10 @@ export const useEditEntity = (
     },
     [sheet?.permissions?.updates],
   )
-  const onRowUpdate = useCallback(
-    async (newEntity: Entity, oldEntity?: Entity) => {
-      if (!sheet || !oldEntity) {
-        return
-      }
-      const changes = convertInput(newEntity, oldEntity, sheet.columns)
+  const handleEdit = useCallback(
+    async (edit: () => Promise<unknown>) => {
       try {
-        await api.updateEntity(sheet.sheetName, oldEntity.id, changes)
-        enqueueSnackbar(l.snackbars.editComplete, {
-          variant: 'success',
-        })
-        resetErrors()
-      } catch (e) {
-        enqueueSnackbar(l.snackbars.editFaield, {
-          variant: 'error',
-        })
-        const inputErrors = Object.getOwnPropertyDescriptor(e, 'inputErrors')
-        if (inputErrors) {
-          const errors: InputErrors = inputErrors.value
-          setErrors(errors)
-        }
-        throw e
-      }
-    },
-    [api, sheet, l, enqueueSnackbar, setErrors, resetErrors],
-  )
-  // material-table provides no prop such as "isAddable".
-  const canAdd = Boolean(sheet?.permissions.creates)
-  const onRowAdd = useCallback(
-    async (newEntityRaw: Entity) => {
-      if (!sheet) {
-        return
-      }
-      const newEntity = convertInput(newEntityRaw, null, sheet.columns)
-      try {
-        await api.createEntity(sheet.sheetName, newEntity)
+        await edit()
         enqueueSnackbar(l.snackbars.createComplete, {
           variant: 'success',
         })
@@ -79,13 +47,44 @@ export const useEditEntity = (
         })
         const inputErrors = Object.getOwnPropertyDescriptor(e, 'inputErrors')
         if (inputErrors) {
-          const errors: InputErrors = inputErrors.value
+          const errors: InputError[] = inputErrors.value
           setErrors(errors)
         }
         throw e
       }
     },
-    [api, sheet, l, enqueueSnackbar, setErrors, resetErrors],
+    [
+      enqueueSnackbar,
+      l.snackbars.createComplete,
+      l.snackbars.createFailed,
+      resetErrors,
+      setErrors,
+    ],
+  )
+  const onRowUpdate = useCallback(
+    async (newEntity: Entity, oldEntity?: Entity) => {
+      if (!sheet || !oldEntity) {
+        return
+      }
+      const changes = convertInput(newEntity, oldEntity, sheet.columns)
+      const update = () =>
+        api.updateEntity(sheet.sheetName, oldEntity.id, changes)
+      await handleEdit(update)
+    },
+    [sheet, handleEdit, api],
+  )
+  // material-table provides no prop such as "isAddable".
+  const canAdd = Boolean(sheet?.permissions.creates)
+  const onRowAdd = useCallback(
+    async (newEntityRaw: Entity) => {
+      if (!sheet) {
+        return
+      }
+      const newEntity = convertInput(newEntityRaw, null, sheet.columns)
+      const create = () => api.createEntity(sheet.sheetName, newEntity)
+      await handleEdit(create)
+    },
+    [sheet, handleEdit, api],
   )
   return {
     isEditable,
