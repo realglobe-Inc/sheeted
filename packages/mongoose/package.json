@@ -26,7 +26,7 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf build",
     "prepare": "yarn build",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "types": "build/index.d.ts"
 }
