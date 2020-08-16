@@ -1,4 +1,6 @@
 import { Schema, Validate, Repository } from '@sheeted/core'
+import { InputError } from '@sheeted/core/build/web/Shared.type'
+import { ValidationErrorTypes } from '@sheeted/core/build/web/Consts'
 
 import { HttpValidationError } from '../../middlewares/ErrorMiddleware'
 
@@ -17,7 +19,12 @@ export class EntityValidator {
     currentEntity: Record<string, any> | null,
   ): Promise<void> {
     const { schema, validateEntity } = this
-    const result = await validateEntity(changes, currentEntity)
+    const custom = await validateEntity(changes, currentEntity)
+    const errors: InputError[] = custom.errors.map(({ field, message }) => ({
+      type: ValidationErrorTypes.CUSTOM,
+      field,
+      message,
+    }))
     for (const field of Object.keys(schema)) {
       const schemaValue = schema[field]
       const value = changes[field]
@@ -27,9 +34,9 @@ export class EntityValidator {
       }
       if (schemaValue.readonly) {
         if (value) {
-          result.appendError({
+          errors.push({
+            type: ValidationErrorTypes.READONLY,
             field,
-            message: 'Readonly field',
           })
         }
         continue
@@ -41,9 +48,9 @@ export class EntityValidator {
           // 単純に値がない
           (value === undefined && currentEntity?.[field] == null)
         ) {
-          result.appendError({
+          errors.push({
+            type: ValidationErrorTypes.REQUIRED,
             field,
-            message: 'Required field',
           })
           continue
         }
@@ -59,24 +66,25 @@ export class EntityValidator {
             : value
         const exists = await this.repository.findOne({ [field]: val })
         if (exists) {
-          result.appendError({
+          errors.push({
+            type: ValidationErrorTypes.DUPLICATE,
             field,
-            message: 'Duplicate value',
           })
         }
       }
+      // TODO: VALUE_TYPE 系のエラーをもっと充実させる
       if (schemaValue.type.rawType === 'text_list') {
         if (!Array.isArray(value)) {
-          result.appendError({
+          errors.push({
+            type: ValidationErrorTypes.VALUE_TYPE,
             field,
-            message: 'Must be multiple values',
           })
           continue
         }
         if (!value.every((v) => typeof v === 'string')) {
-          result.appendError({
+          errors.push({
+            type: ValidationErrorTypes.VALUE_TYPE,
             field,
-            message: `Array items must be string, but given ${typeof value}`,
           })
           continue
         }
@@ -88,20 +96,16 @@ export class EntityValidator {
             : [value].filter(Boolean)
         for (const v of values) {
           if (!schemaValue.enumProperties.values.includes(v)) {
-            result.appendError({
+            errors.push({
+              type: ValidationErrorTypes.ENUM,
               field,
-              message: `Invalid enum value: "${v}"`,
             })
             continue
           }
         }
       }
     }
-    if (!result.isOk) {
-      const { errors } = result
-      if (process.env.NODE_ENV === 'test') {
-        console.log(errors)
-      }
+    if (errors.length > 0) {
       throw new HttpValidationError(errors)
     }
   }

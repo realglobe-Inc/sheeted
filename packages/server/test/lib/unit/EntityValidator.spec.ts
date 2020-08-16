@@ -2,6 +2,8 @@ import '../../tools/typings'
 import mongoose from 'mongoose'
 import { Schema, Types, ValidationResult, Validate } from '@sheeted/core'
 import { MongoDriver, compileModel } from '@sheeted/mongoose'
+import { InputError } from '@sheeted/core/build/web/Shared.type'
+import { ValidationErrorTypes } from '@sheeted/core/build/web/Consts'
 
 import { connectMongo } from '../../tools/mongoose'
 import { EntityValidator } from '../../../src/controllers/concern/EntityValidator'
@@ -97,6 +99,20 @@ test('EntityValidator', async () => {
       },
     ),
   ).resolves.toBeUndefined()
+
+  const expected: InputError[] = [
+    {
+      type: ValidationErrorTypes.CUSTOM,
+      field: 'greaterThan0',
+      message: 'invalid',
+    },
+    {
+      type: ValidationErrorTypes.CUSTOM,
+      field: 'greaterThanLast',
+      message: 'invalid',
+    },
+    { type: ValidationErrorTypes.READONLY, field: 'readonly' },
+  ]
   await expect(
     validator.validate(
       {
@@ -109,11 +125,7 @@ test('EntityValidator', async () => {
       },
     ),
   ).rejects.toMatchObject({
-    errors: [
-      { message: 'invalid', field: 'greaterThan0' },
-      { message: 'invalid', field: 'greaterThanLast' },
-      { message: 'Readonly field', field: 'readonly' },
-    ],
+    errors: expected,
   })
 
   await repository.create({ uniq: 'dup' })
@@ -139,7 +151,7 @@ test('EntityValidator', async () => {
   ).rejects.toMatchObject({
     errors: [
       {
-        message: 'Duplicate value',
+        type: ValidationErrorTypes.DUPLICATE,
         field: 'uniq',
       },
     ],

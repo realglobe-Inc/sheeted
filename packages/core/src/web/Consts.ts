@@ -9,3 +9,12 @@ export const HttpStatuses = {
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
 } as const
+
+export const ValidationErrorTypes = {
+  READONLY: 'validation_error:readonly',
+  REQUIRED: 'validation_error:required',
+  DUPLICATE: 'validation_error:duplicate',
+  VALUE_TYPE: 'validation_error:value_type',
+  ENUM: 'validation_error:enum',
+  CUSTOM: 'validation_error:custom',
+} as const

@@ -2,7 +2,7 @@ import { InputForm } from '../Type.type'
 import { SheetGroup } from '../SheetGroup.type'
 import { EntityBase } from '../EntityBase.type'
 
-import { ENTITY_META_FIELD } from './Consts'
+import { ENTITY_META_FIELD, ValidationErrorTypes } from './Consts'
 
 export type AppInfo = {
   appTitle: string
@@ -120,12 +120,25 @@ export type SheetOverview = {
   icon?: string
 }
 
-export type InputErrors = { message: string; field: string }[]
+export type ValidationErrorType = typeof ValidationErrorTypes[keyof typeof ValidationErrorTypes]
+
+export type BuiltinInputError = {
+  type: Exclude<ValidationErrorType, 'validation_error:custom'>
+  field: string
+}
+
+export type CustomInputError = {
+  type: 'validation_error:custom'
+  field: string
+  message: string
+}
+
+export type InputError = BuiltinInputError | CustomInputError
 
 export type ErrorResponse = {
   error: {
     message: string
-    inputErrors?: InputErrors
+    inputErrors?: InputError[]
   }
 }
 

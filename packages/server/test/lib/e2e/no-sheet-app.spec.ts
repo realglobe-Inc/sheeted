@@ -5,7 +5,8 @@ import mongoose from 'mongoose'
 import { ApiPathBuilder } from '@sheeted/core/build/web/Paths'
 import { IAM_USER_SHEET, DefaultIAMRoles, EntityBase } from '@sheeted/core'
 import qs from 'qs'
-import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
+import { SheetInfo, InputError } from '@sheeted/core/build/web/Shared.type'
+import { ValidationErrorTypes } from '@sheeted/core/build/web/Consts'
 
 import { connectMongo } from '../../tools/mongoose'
 import { seedUsers, adminUser, userModel } from '../../fixtures/db/users'
@@ -219,10 +220,19 @@ it('should fail to create IAMUser with invalid input', async () => {
     .set(...authCookie)
     .expect(422)
     .then((resp) => {
-      expect(resp.body).toHaveProperty(['error', 'inputErrors', '0', 'message'])
-      expect(resp.body).toHaveProperty(['error', 'inputErrors', '0', 'field'])
-      expect(resp.body).toHaveProperty(['error', 'inputErrors', '1', 'message'])
-      expect(resp.body).toHaveProperty(['error', 'inputErrors', '1', 'field'])
+      const inputErrors: InputError[] = [
+        {
+          type: ValidationErrorTypes.CUSTOM,
+          field: 'email',
+          message: 'Invalid email',
+        },
+        {
+          type: ValidationErrorTypes.ENUM,
+          field: 'roles',
+        },
+      ]
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(resp.body.error.inputErrors).toEqual(inputErrors)
     })
 })
 
