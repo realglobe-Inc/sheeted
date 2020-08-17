@@ -49,34 +49,36 @@ const useGlobalStyles = makeStyles(() =>
   }),
 )
 
-const withSnackbarProvider = (Component: FC) => () => {
-  return (
-    <SnackbarProvider
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      autoHideDuration={6000}
-      dense
-    >
-      <Component />
-    </SnackbarProvider>
-  )
-}
+const withSnackbarProvider = (Component: FC) =>
+  function WithSnackBarProvider() {
+    return (
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        autoHideDuration={6000}
+        dense
+      >
+        <Component />
+      </SnackbarProvider>
+    )
+  }
 
-const withContextProviders = (Component: FC) => () => {
-  return (
-    <MenuContextProvider>
-      <UserContextProvider>
-        <LocaleContextProvider>
-          <SheetContextProvider>
-            <Component />
-          </SheetContextProvider>
-        </LocaleContextProvider>
-      </UserContextProvider>
-    </MenuContextProvider>
-  )
-}
+const withContextProviders = (Component: FC) =>
+  function WithContextProvider() {
+    return (
+      <MenuContextProvider>
+        <UserContextProvider>
+          <LocaleContextProvider>
+            <SheetContextProvider>
+              <Component />
+            </SheetContextProvider>
+          </LocaleContextProvider>
+        </UserContextProvider>
+      </MenuContextProvider>
+    )
+  }
 
 export const AppMain = withContextProviders(() => {
   const { trigger: triggerUserSync } = useUserContext()
