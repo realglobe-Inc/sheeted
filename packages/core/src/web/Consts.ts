@@ -22,10 +22,14 @@ export const ValidationErrorTypes = {
 export const OperationFailureReasons = {
   PERMISSION_DENIED: 'operation_result:permission_denied',
   NOT_FOUND: 'operation_result:not_found',
-  CUSTOM: 'operation_result:not_found',
+  CUSTOM: 'operation_result:custom',
 } as const
 
 export const DeleteFailureReasons = {
   ...OperationFailureReasons,
   RESTRICT: 'operation_result:restrict',
+} as const
+
+export const ActionFailureReasons = {
+  ...OperationFailureReasons,
 } as const

@@ -59,10 +59,8 @@ export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
     {
       id: 'set100',
       title: 'SET 100',
-      perform: async (entities: App1Entity[]): Promise<void> => {
-        for (const entity of entities) {
-          await app1Model.updateOne({ id: entity.id }, { n: 100 })
-        }
+      perform: async (entity: App1Entity): Promise<void> => {
+        await app1Model.updateOne({ id: entity.id }, { n: 100 })
       },
     },
   ],

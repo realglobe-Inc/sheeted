@@ -5,7 +5,7 @@ import {
   ENTITY_META_FIELD,
   ValidationErrorTypes,
   DeleteFailureReasons,
-  OperationFailureReasons,
+  ActionFailureReasons,
 } from './Consts'
 
 export type AppInfo = {
@@ -108,7 +108,7 @@ export type OperationResult<Reason> = {
   }[]
 }
 
-export type ActionFailureReason = typeof OperationFailureReasons[keyof typeof OperationFailureReasons]
+export type ActionFailureReason = typeof ActionFailureReasons[keyof typeof ActionFailureReasons]
 
 export type ActionResult = OperationResult<ActionFailureReason>
 

@@ -19,7 +19,7 @@ import {
 import {
   HttpStatuses,
   DeleteFailureReasons,
-  OperationFailureReasons,
+  ActionFailureReasons,
 } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
@@ -429,7 +429,7 @@ export class EntityController {
       .filter((id) => !isFound(id))
       .map((id) => ({
         id,
-        reason: OperationFailureReasons.NOT_FOUND,
+        reason: ActionFailureReasons.NOT_FOUND,
       }))
     result.failure = result.failure.concat(notFound)
 
@@ -437,7 +437,7 @@ export class EntityController {
       .filter((id) => isFound(id) && !isPermitted(id))
       .map((id) => ({
         id,
-        reason: OperationFailureReasons.PERMISSION_DENIED,
+        reason: ActionFailureReasons.PERMISSION_DENIED,
       }))
     result.failure = result.failure.concat(notPermitted)
 
@@ -460,7 +460,7 @@ export class EntityController {
           JSON.stringify(e)
         result.failure = result.failure.concat({
           id,
-          reason: OperationFailureReasons.CUSTOM,
+          reason: ActionFailureReasons.CUSTOM,
           message,
         })
       }
