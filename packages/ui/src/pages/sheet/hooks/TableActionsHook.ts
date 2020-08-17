@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Action as TableAction } from 'material-table'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { useSnackbar } from 'notistack'
@@ -10,19 +10,17 @@ import { useApi } from '../../../hooks/ApiHook'
 
 import { useActionContext } from './ActionContextHook'
 import { useDeleteResultContext } from './DeleteResultContext'
+import { useEntitySelectionContext } from './EntitySelectionContextHook'
 
 export const useTableActions = (
   sheet: SheetInfo | null,
   refreshTable: (page?: number) => void,
   toggleFiltering: () => void,
-): {
-  actions: TableAction<Entity>[]
-  onSelectionChange: (entities: Entity[]) => void
-} => {
+): TableAction<Entity>[] => {
   const l = useLocale()
   const api = useApi()
   const { startAction } = useActionContext()
-  const [entities, setEntities] = useState<Entity[]>([])
+  const { entities } = useEntitySelectionContext()
   const { enqueueSnackbar } = useSnackbar()
   const { setResult: setDeleteResult } = useDeleteResultContext()
   const toggleFilterAction: TableAction<Entity> = useMemo(() => {
@@ -131,8 +129,6 @@ export const useTableActions = (
     l,
     refreshTable,
   ])
-  return {
-    actions: [...customActions, toggleFilterAction, deletionAction],
-    onSelectionChange: setEntities,
-  }
+
+  return [...customActions, toggleFilterAction, deletionAction]
 }

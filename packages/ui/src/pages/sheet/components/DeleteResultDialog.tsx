@@ -17,6 +17,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import { useLocale } from '../../../hooks/LocaleContextHook'
 import { useDeleteResultContext } from '../hooks/DeleteResultContext'
+import { useEntitySelectionContext } from '../hooks/EntitySelectionContextHook'
+import { Entity } from '../../../types/Entity.type'
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -30,12 +32,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const DeleteResultDialog: FC = () => {
+const SuccessListItem: FC<{ id: string; entities: Entity[] }> = ({
+  id,
+  entities,
+}) => {
   const l = useLocale()
   const classes = useStyles()
-  const { result, setResult } = useDeleteResultContext()
-  const isOpen = Boolean(result)
-  const close = useCallback(() => setResult(null), [setResult])
+  const entityName =
+    entities.find((entity) => entity.id === id)?.[ENTITY_META_FIELD]
+      .displayText || 'NOT_FOUND'
+  return (
+    <ListItem key={id}>
+      <ListItemIcon className={classes.success}>
+        {l.dialogs.DeleteResultDialog.labels.success}
+      </ListItemIcon>
+      <ListItemText primary={entityName} />
+    </ListItem>
+  )
+}
+
+const FailureListItem: FC<{
+  id: string
+  reason: DeleteFailureReason
+  message?: string
+  entities: Entity[]
+}> = ({ id, reason, message, entities }) => {
+  const l = useLocale()
+  const classes = useStyles()
+  const entityName =
+    entities.find((entity) => entity.id === id)?.[ENTITY_META_FIELD]
+      .displayText || 'NOT_FOUND'
   const failureMessage = useCallback(
     ({
       reason,
@@ -58,9 +84,28 @@ export const DeleteResultDialog: FC = () => {
     [l],
   )
   return (
+    <ListItem key={id}>
+      <ListItemIcon className={classes.failure}>
+        {l.dialogs.DeleteResultDialog.labels.failure}
+      </ListItemIcon>
+      <ListItemText
+        primary={entityName}
+        secondary={failureMessage({ reason, message })}
+      />
+    </ListItem>
+  )
+}
+
+export const DeleteResultDialog: FC = () => {
+  const l = useLocale()
+  const classes = useStyles()
+  const { result, reset } = useDeleteResultContext()
+  const { entities } = useEntitySelectionContext()
+  const isOpen = Boolean(result)
+  return (
     <Dialog
       open={isOpen}
-      onClose={close}
+      onClose={reset}
       scroll="paper"
       fullWidth
       maxWidth="sm"
@@ -68,24 +113,17 @@ export const DeleteResultDialog: FC = () => {
       <DialogTitle>{l.dialogs.DeleteResultDialog.title}</DialogTitle>
       <DialogContent className={classes.content}>
         <List dense>
-          {result?.success.map((entity) => (
-            <ListItem key={entity.id}>
-              <ListItemIcon className={classes.success}>
-                {l.dialogs.DeleteResultDialog.labels.success}
-              </ListItemIcon>
-              <ListItemText primary={entity[ENTITY_META_FIELD].displayText} />
-            </ListItem>
+          {result?.success.map(({ id }) => (
+            <SuccessListItem key={id} id={id} entities={entities} />
           ))}
-          {result?.failure.map(({ entity, reason, message }) => (
-            <ListItem key={entity.id}>
-              <ListItemIcon className={classes.failure}>
-                {l.dialogs.DeleteResultDialog.labels.failure}
-              </ListItemIcon>
-              <ListItemText
-                primary={entity[ENTITY_META_FIELD].displayText}
-                secondary={failureMessage({ reason, message })}
-              />
-            </ListItem>
+          {result?.failure.map(({ id, reason, message }) => (
+            <FailureListItem
+              key={id}
+              id={id}
+              reason={reason}
+              message={message}
+              entities={entities}
+            />
           ))}
         </List>
       </DialogContent>

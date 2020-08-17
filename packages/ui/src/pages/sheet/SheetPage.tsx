@@ -33,6 +33,10 @@ import { useMColumns } from './hooks/MColumnsHook'
 import { EditingContextProvider } from './hooks/EditingContextHook'
 import { DeleteResultContextProvider } from './hooks/DeleteResultContext'
 import { DeleteResultDialog } from './components/DeleteResultDialog'
+import {
+  useEntitySelectionContext,
+  EntitySelectionContextProvider,
+} from './hooks/EntitySelectionContextHook'
 
 const tableOptions: TableOptions<any> = {
   addRowPosition: 'first',
@@ -49,25 +53,27 @@ export const SheetPage: FC = () => {
   const { ready, sheet } = useCurrentSheet()
   return (
     <SheetInfoContextProvider>
-      <ActionContextProvider>
-        <InputErrorContextProvider>
-          <EntityDialogContextProvider>
-            <EditingContextProvider>
-              <DeleteResultContextProvider>
-                <PageLayout>
-                  {ready && sheet && user && (
-                    <SheetPageTable user={user} sheet={sheet} />
-                  )}
-                  {ready && !sheet && <SheetNotFound />}
-                  <EntitySelectDialog />
-                  <ActionDialog />
-                  <DeleteResultDialog />
-                </PageLayout>
-              </DeleteResultContextProvider>
-            </EditingContextProvider>
-          </EntityDialogContextProvider>
-        </InputErrorContextProvider>
-      </ActionContextProvider>
+      <EntitySelectionContextProvider>
+        <ActionContextProvider>
+          <InputErrorContextProvider>
+            <EntityDialogContextProvider>
+              <EditingContextProvider>
+                <DeleteResultContextProvider>
+                  <PageLayout>
+                    {ready && sheet && user && (
+                      <SheetPageTable user={user} sheet={sheet} />
+                    )}
+                    {ready && !sheet && <SheetNotFound />}
+                    <EntitySelectDialog />
+                    <ActionDialog />
+                    <DeleteResultDialog />
+                  </PageLayout>
+                </DeleteResultContextProvider>
+              </EditingContextProvider>
+            </EntityDialogContextProvider>
+          </InputErrorContextProvider>
+        </ActionContextProvider>
+      </EntitySelectionContextProvider>
     </SheetInfoContextProvider>
   )
 }
@@ -87,11 +93,8 @@ const SheetPageTable: FC<{ sheet: SheetOverview; user: IAMUserEntity }> = ({
   const { isEditable, onRowUpdate, onRowAdd } = useEditEntity(info)
   const refreshTable = useRefreshTable(tableRef.current)
   const [filtering, toggleFiltering] = useToggle()
-  const { actions, onSelectionChange } = useTableActions(
-    info,
-    refreshTable,
-    toggleFiltering,
-  )
+  const actions = useTableActions(info, refreshTable, toggleFiltering)
+  const { setEntities: onSelectionChange } = useEntitySelectionContext()
   const columns = useMColumns(info)
   useEffect(() => {
     trigger(sheetName)
