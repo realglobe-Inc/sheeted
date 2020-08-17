@@ -14,14 +14,12 @@ import {
   Column,
   ActionInfo,
   DeleteResult,
-  OperationResult,
-  WithEntityMetaField,
+  ActionResult,
 } from '@sheeted/core/build/web/Shared.type'
 import {
   HttpStatuses,
   DeleteFailureReasons,
   OperationFailureReasons,
-  ENTITY_META_FIELD,
 } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
@@ -325,12 +323,7 @@ export class EntityController {
     const notFound = ids
       .filter((id) => !isFound(id))
       .map((id) => ({
-        entity: {
-          id,
-          [ENTITY_META_FIELD]: {
-            displayText: id,
-          },
-        } as EntityBase & WithEntityMetaField,
+        id,
         reason: DeleteFailureReasons.NOT_FOUND,
       }))
     result.failure = result.failure.concat(notFound)
@@ -343,13 +336,13 @@ export class EntityController {
             ? deletePolicy.condition(entities[id], this.ctx as Context<any>)
             : true),
       )
-    const forbidden = ids
+    const notPermitted = ids
       .filter((id) => isFound(id) && !isPermitted(id))
       .map((id) => ({
-        entity: this.converter.beforeSend(entities[id]!) as any,
+        id,
         reason: DeleteFailureReasons.PERMISSION_DENIED,
       }))
-    result.failure = result.failure.concat(forbidden)
+    result.failure = result.failure.concat(notPermitted)
 
     const targedIds = ids.filter((id) => isFound(id) && isPermitted(id))
 
@@ -358,7 +351,6 @@ export class EntityController {
       if (!entity) {
         continue
       }
-      const converted = this.converter.beforeSend(entity) as any
       try {
         // transaction for each entity
         await this.repository.transaction(async (t) => {
@@ -370,21 +362,24 @@ export class EntityController {
           await this.repository.destroy(entity.id, { transaction: t })
           await this.hook.triggerDestroy(entity, { transaction: t })
         })
-        result.success.push(converted)
+        result.success.push({ id })
       } catch (e) {
         if (process.env.NODE_ENV !== 'test') {
           console.error(e)
         }
         if (e instanceof RestrictViolationError) {
           result.failure.push({
-            entity: converted,
+            id,
             reason: DeleteFailureReasons.RESTRICT,
           })
         } else {
+          const message =
+            Object.getOwnPropertyDescriptor(e, 'message')?.value ||
+            JSON.stringify(e)
           result.failure.push({
-            entity: converted,
+            id,
             reason: DeleteFailureReasons.CUSTOM,
-            message: (e as Error).message || 'Unexpected error',
+            message,
           })
         }
       }
@@ -392,10 +387,7 @@ export class EntityController {
     return result
   }
 
-  async performAction(
-    actionId: string,
-    ids: string[],
-  ): Promise<OperationResult> {
+  async performAction(actionId: string, ids: string[]): Promise<ActionResult> {
     const ctx = this.ctx as Context<any>
     const action = (this.sheet.Actions || []).find(
       (action) => action.id === actionId,
@@ -417,7 +409,7 @@ export class EntityController {
     if (!actionPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const result: OperationResult = {
+    const result: ActionResult = {
       success: [],
       failure: [],
     }
@@ -436,12 +428,7 @@ export class EntityController {
     const notFound = Object.keys(entities)
       .filter((id) => !isFound(id))
       .map((id) => ({
-        entity: {
-          id,
-          [ENTITY_META_FIELD]: {
-            displayText: id,
-          },
-        } as EntityBase & WithEntityMetaField,
+        id,
         reason: OperationFailureReasons.NOT_FOUND,
       }))
     result.failure = result.failure.concat(notFound)
@@ -449,8 +436,7 @@ export class EntityController {
     const notPermitted = Object.keys(entities)
       .filter((id) => isFound(id) && !isPermitted(id))
       .map((id) => ({
-        // FIXME: permission なければ失敗するんちゃう？
-        entity: this.converter.beforeSend(entities[id]!) as any,
+        id,
         reason: OperationFailureReasons.PERMISSION_DENIED,
       }))
     result.failure = result.failure.concat(notPermitted)
@@ -460,19 +446,20 @@ export class EntityController {
       .map((id) => entities[id]!)
 
     for (const entity of targets) {
+      const { id } = entity
       try {
         await this.repository.transaction(async (t) => {
           await action.perform(entity, ctx, { transaction: t })
         })
-        result.success = result.success.concat(
-          this.converter.beforeSend(entity) as any,
-        )
+        result.success = result.success.concat({
+          id,
+        })
       } catch (e) {
         const message =
           Object.getOwnPropertyDescriptor(e, 'message')?.value ||
           JSON.stringify(e)
         result.failure = result.failure.concat({
-          entity: this.converter.beforeSend(entity) as any,
+          id,
           reason: OperationFailureReasons.CUSTOM,
           message,
         })

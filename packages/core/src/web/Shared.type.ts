@@ -1,6 +1,5 @@
 import { InputForm } from '../Type.type'
 import { SheetGroup } from '../SheetGroup.type'
-import { EntityBase } from '../EntityBase.type'
 
 import {
   ENTITY_META_FIELD,
@@ -98,27 +97,24 @@ export type ListResult = {
   pages: number
 }
 
-export type OperationFailureReason = typeof OperationFailureReasons[keyof typeof OperationFailureReasons]
-
-export type OperationResult = {
-  success: (EntityBase & WithEntityMetaField)[]
+export type OperationResult<Reason> = {
+  success: {
+    id: string
+  }[]
   failure: {
-    entity: EntityBase & WithEntityMetaField
-    reason: OperationFailureReason
+    id: string
+    reason: Reason
     message?: string
   }[]
 }
+
+export type ActionFailureReason = typeof OperationFailureReasons[keyof typeof OperationFailureReasons]
+
+export type ActionResult = OperationResult<ActionFailureReason>
 
 export type DeleteFailureReason = typeof DeleteFailureReasons[keyof typeof DeleteFailureReasons]
 
-export type DeleteResult = {
-  success: (EntityBase & WithEntityMetaField)[]
-  failure: {
-    entity: EntityBase & WithEntityMetaField
-    reason: DeleteFailureReason
-    message?: string
-  }[]
-}
+export type DeleteResult = OperationResult<DeleteFailureReason>
 
 export type Sheets = {
   groups: SheetGroup[]
