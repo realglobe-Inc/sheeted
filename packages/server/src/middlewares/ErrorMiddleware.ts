@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorResponse, InputErrors } from '@sheeted/core/build/web/Shared.type'
+import { ErrorResponse, InputError } from '@sheeted/core/build/web/Shared.type'
 import { HttpStatuses } from '@sheeted/core/build/web/Consts'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
 export class HttpValidationError extends Error {
   status = HttpStatuses.UNPROCESSABLE_ENTITY
-  constructor(public errors: InputErrors) {
+  constructor(public errors: InputError[]) {
     super()
   }
 }
 
 export const handleError = (
   err: Error,
-  req: Request,
+  _req: Request,
   res: Response,
   // NOTE: Correct express error handler has 4 arguments.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction,
+  _next: NextFunction,
 ): void => {
   if (err instanceof HttpError) {
     const resp: ErrorResponse = {
@@ -29,10 +28,7 @@ export const handleError = (
     const error: ErrorResponse = {
       error: {
         message: 'Validation Error',
-        inputErrors: err.errors.map((e) => ({
-          message: e.message,
-          field: e.field,
-        })),
+        inputErrors: err.errors,
       },
     }
     res.status(err.status).json(error)

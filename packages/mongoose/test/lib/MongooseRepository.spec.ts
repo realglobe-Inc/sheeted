@@ -1,10 +1,15 @@
 import mongoose from 'mongoose'
 
-import { compileModel, MongoDriver } from '../../src'
-import { connectMongo } from '../tools/mongoose'
-import { Schema } from '../../../core/src/Schema.type'
-import { EntityBase } from '../../../core/src/EntityBase.type'
-import { Types } from '../../../core/src/Types'
+import { MongoDriver } from '../../src'
+import { connectMongo, cleanCollections } from '../tools/mongoose'
+import {
+  Entity01,
+  schema01,
+  model01,
+  Entity02,
+  schema02,
+  model02,
+} from '../fixtures/models'
 
 beforeAll(async () => {
   await connectMongo()
@@ -14,19 +19,12 @@ afterAll(async () => {
   await mongoose.disconnect()
 })
 
-test('MongoDriver/01 simple schema', async () => {
-  interface Entity extends EntityBase {
-    name: string
-  }
-  const schema: Schema<Entity> = {
-    name: {
-      type: Types.Text,
-    },
-  }
-  const model = compileModel('model1', schema)
-  await model.deleteMany({})
+beforeEach(async () => {
+  await cleanCollections()
+})
 
-  const repository = new MongoDriver<Entity>('model1', schema)
+test('MongoDriver/01 simple schema', async () => {
+  const repository = new MongoDriver<Entity01>(model01.modelName, schema01)
 
   const created = await repository.create({
     name: 'foo',
@@ -78,18 +76,8 @@ test('MongoDriver/01 simple schema', async () => {
 })
 
 test('MongoDriver/02 complex queries', async () => {
-  interface SubEntity extends EntityBase {
-    name: string
-  }
-  const subSchema: Schema<SubEntity> = {
-    name: {
-      type: Types.Text,
-    },
-  }
-  const subModel = compileModel('Sub', subSchema)
-  await subModel.deleteMany({})
   const [sub1, sub2] = (
-    await subModel.insertMany([
+    await model01.insertMany([
       {
         name: 'sub1',
       },
@@ -97,37 +85,9 @@ test('MongoDriver/02 complex queries', async () => {
         name: 'sub2',
       },
     ])
-  ).map((doc) => doc.toJSON() as SubEntity)
+  ).map((doc) => doc.toJSON() as Entity01)
 
-  interface Entity extends EntityBase {
-    name: string
-    age?: number
-    sub?: SubEntity
-    tags: string[]
-  }
-  const schema: Schema<Entity> = {
-    name: {
-      type: Types.Text,
-    },
-    age: {
-      type: Types.Numeric,
-    },
-    sub: {
-      type: Types.Entity,
-      entityProperties: {
-        sheetName: 'Sub',
-      },
-    },
-    tags: {
-      type: Types.EnumList,
-      enumProperties: {
-        values: ['tag1', 'tag2', 'aaa'],
-      },
-    },
-  }
-  const model = compileModel('model2', schema)
-  await model.deleteMany({})
-  const repository = new MongoDriver<Entity>('model2', schema)
+  const repository = new MongoDriver<Entity02>(model02.modelName, schema02)
   const inputs = [
     {
       name: 'aaa bbb',
@@ -250,17 +210,7 @@ test('MongoDriver/02 complex queries', async () => {
 })
 
 test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
-  interface Entity extends EntityBase {
-    name: string
-  }
-  const schema: Schema<Entity> = {
-    name: {
-      type: Types.Text,
-    },
-  }
-  const model = compileModel('model3', schema)
-  await model.deleteMany({})
-  const repository = new MongoDriver<Entity>('model3', schema)
+  const repository = new MongoDriver<Entity01>(model01.modelName, schema01)
 
   const entity = {
     _id: mongoose.Types.ObjectId.createFromTime(10),
@@ -268,7 +218,7 @@ test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
     name: 'name',
     createdAt: 10000,
     updatedAt: 10000,
-  } as Entity
+  } as Entity01
   const created = await repository.create(entity)
   expect(created).toMatchObject(entity)
 
@@ -282,19 +232,7 @@ test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
 })
 
 test('MongoDriver/04 Transaction', async () => {
-  interface Entity extends EntityBase {
-    name: string
-  }
-  const schema: Schema<Entity> = {
-    name: {
-      type: Types.Text,
-    },
-  }
-
-  const model = compileModel('model4', schema)
-  await model.deleteMany({})
-  const repository = new MongoDriver<Entity>('model4', schema)
-  await repository.initialize()
+  const repository = new MongoDriver<Entity01>(model01.modelName, schema01)
 
   // create 1 entity
   const id = await repository.transaction(async (t) => {
@@ -337,7 +275,7 @@ test('MongoDriver/04 Transaction', async () => {
   expect(await repository.findById(id)).toMatchObject({
     name: 'abc',
   })
-  expect(await model.countDocuments({})).toBe(1)
+  expect(await model01.countDocuments({})).toBe(1)
 
   const [x, y] = await repository.createBulk([
     {

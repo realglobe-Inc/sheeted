@@ -1,4 +1,5 @@
 import { Localization } from 'material-table'
+import { ValidationErrorTypes } from '@sheeted/core/build/web/Consts'
 
 export const locale = {
   actions: {
@@ -69,6 +70,13 @@ export const locale = {
     signInComplete: 'ログインしました',
     signInFailed: 'ログインに失敗しました',
     signOutComplete: 'ログアウトしました',
+  },
+  validationErrors: {
+    [ValidationErrorTypes.DUPLICATE]: 'すでに存在しています',
+    [ValidationErrorTypes.ENUM]: '不正な値です',
+    [ValidationErrorTypes.READONLY]: '変更できません',
+    [ValidationErrorTypes.REQUIRED]: '必須',
+    [ValidationErrorTypes.VALUE_TYPE]: '不正な値です',
   },
 } as const
 

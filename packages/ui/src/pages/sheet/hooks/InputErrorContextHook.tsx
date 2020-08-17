@@ -6,7 +6,10 @@ import React, {
   useCallback,
   FC,
 } from 'react'
-import { InputErrors } from '@sheeted/core/build/web/Shared.type'
+import { InputError } from '@sheeted/core/build/web/Shared.type'
+import { ValidationErrorTypes } from '@sheeted/core/build/web/Consts'
+
+import { useLocale } from '../../../hooks/LocaleContextHook'
 
 export type InputErrorRecord = {
   [field: string]: string | undefined
@@ -14,7 +17,7 @@ export type InputErrorRecord = {
 
 export type InputErrorContextValues = {
   errors: InputErrorRecord
-  setErrors: (errors: InputErrors) => void
+  setErrors: (errors: InputError[]) => void
   reset: (field?: string) => void
 }
 
@@ -31,15 +34,22 @@ export const useInputErrorFromContext = (field: string): string | undefined => {
 export const InputErrorContextProvider: FC<{ children: ReactChild }> = (
   props,
 ) => {
+  const l = useLocale()
   const [errors, set] = useState<InputErrorRecord>({})
   const setErrors = useCallback(
-    (errors: InputErrors) =>
+    (errors: InputError[]) =>
       set(
         Object.fromEntries(
-          errors.map(({ field, message }) => [field, message]),
+          errors.map((err) => {
+            const message =
+              err.type === ValidationErrorTypes.CUSTOM
+                ? err.message
+                : l.validationErrors[err.type]
+            return [err.field, message]
+          }),
         ),
       ),
-    [set],
+    [set, l],
   )
   const reset = useCallback(
     (field?: string) => (field ? set({ [field]: undefined }) : set({})),
