@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react'
-import { DeleteFailureReason } from '@sheeted/core/build/web/Shared.type'
+import { ActionFailureReason } from '@sheeted/core/build/web/Shared.type'
 import {
-  DeleteFailureReasons,
+  ActionFailureReasons,
   ENTITY_META_FIELD,
 } from '@sheeted/core/build/web/Consts'
 import Button from '@material-ui/core/Button'
@@ -16,7 +16,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { useLocale } from '../../../hooks/LocaleContextHook'
-import { useDeleteResultContext } from '../hooks/DeleteResultContext'
+import { useActionResultContext } from '../hooks/ActionResultContext'
 import { useEntitySelectionContext } from '../hooks/EntitySelectionContextHook'
 import { Entity } from '../../../types/Entity.type'
 
@@ -44,7 +44,7 @@ const SuccessListItem: FC<{ id: string; entities: Entity[] }> = ({
   return (
     <ListItem key={id}>
       <ListItemIcon className={classes.success}>
-        {l.dialogs.DeleteResultDialog.labels.success}
+        {l.dialogs.ActionResultDialog.labels.success}
       </ListItemIcon>
       <ListItemText primary={entityName} />
     </ListItem>
@@ -53,7 +53,7 @@ const SuccessListItem: FC<{ id: string; entities: Entity[] }> = ({
 
 const FailureListItem: FC<{
   id: string
-  reason: DeleteFailureReason
+  reason: ActionFailureReason
   message?: string
   entities: Entity[]
 }> = ({ id, reason, message, entities }) => {
@@ -67,16 +67,14 @@ const FailureListItem: FC<{
       reason,
       message,
     }: {
-      reason: DeleteFailureReason
+      reason: ActionFailureReason
       message?: string
     }) => {
       switch (reason) {
-        case DeleteFailureReasons.RESTRICT:
-          return l.dialogs.DeleteResultDialog.reason.restrict
-        case DeleteFailureReasons.PERMISSION_DENIED:
-          return l.dialogs.DeleteResultDialog.reason.permissionDenied
-        case DeleteFailureReasons.NOT_FOUND:
-          return l.dialogs.DeleteResultDialog.reason.notFound
+        case ActionFailureReasons.PERMISSION_DENIED:
+          return l.dialogs.ActionResultDialog.reason.permissionDenied
+        case ActionFailureReasons.NOT_FOUND:
+          return l.dialogs.ActionResultDialog.reason.notFound
         default:
           return message || ''
       }
@@ -86,7 +84,7 @@ const FailureListItem: FC<{
   return (
     <ListItem key={id}>
       <ListItemIcon className={classes.failure}>
-        {l.dialogs.DeleteResultDialog.labels.failure}
+        {l.dialogs.ActionResultDialog.labels.failure}
       </ListItemIcon>
       <ListItemText
         primary={entityName}
@@ -96,10 +94,10 @@ const FailureListItem: FC<{
   )
 }
 
-export const DeleteResultDialog: FC = () => {
+export const ActionResultDialog: FC = () => {
   const l = useLocale()
   const classes = useStyles()
-  const { result, reset } = useDeleteResultContext()
+  const { result, reset } = useActionResultContext()
   const { entities } = useEntitySelectionContext()
   const isOpen = Boolean(result)
   return (
@@ -110,7 +108,7 @@ export const DeleteResultDialog: FC = () => {
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle>{l.dialogs.DeleteResultDialog.title}</DialogTitle>
+      <DialogTitle>{l.dialogs.ActionResultDialog.title}</DialogTitle>
       <DialogContent className={classes.content}>
         <List dense>
           {result?.success.map(({ id }) => (

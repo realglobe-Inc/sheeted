@@ -33,6 +33,8 @@ import { useMColumns } from './hooks/MColumnsHook'
 import { EditingContextProvider } from './hooks/EditingContextHook'
 import { DeleteResultContextProvider } from './hooks/DeleteResultContext'
 import { DeleteResultDialog } from './components/DeleteResultDialog'
+import { ActionResultContextProvider } from './hooks/ActionResultContext'
+import { ActionResultDialog } from './components/ActionResultDialog'
 import {
   useEntitySelectionContext,
   EntitySelectionContextProvider,
@@ -59,15 +61,18 @@ export const SheetPage: FC = () => {
             <EntityDialogContextProvider>
               <EditingContextProvider>
                 <DeleteResultContextProvider>
-                  <PageLayout>
-                    {ready && sheet && user && (
-                      <SheetPageTable user={user} sheet={sheet} />
-                    )}
-                    {ready && !sheet && <SheetNotFound />}
-                    <EntitySelectDialog />
-                    <ActionDialog />
-                    <DeleteResultDialog />
-                  </PageLayout>
+                  <ActionResultContextProvider>
+                    <PageLayout>
+                      {ready && sheet && user && (
+                        <SheetPageTable user={user} sheet={sheet} />
+                      )}
+                      {ready && !sheet && <SheetNotFound />}
+                      <EntitySelectDialog />
+                      <ActionDialog />
+                      <DeleteResultDialog />
+                      <ActionResultDialog />
+                    </PageLayout>
+                  </ActionResultContextProvider>
                 </DeleteResultContextProvider>
               </EditingContextProvider>
             </EntityDialogContextProvider>

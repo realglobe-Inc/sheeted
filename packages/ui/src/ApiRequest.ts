@@ -8,6 +8,7 @@ import {
   ListResult,
   DeleteResult,
   ErrorResponse,
+  ActionResult,
 } from '@sheeted/core/build/web/Shared.type'
 import { HttpError } from '@sheeted/core/build/web/Errors'
 
@@ -141,7 +142,7 @@ export class ApiRequest {
     sheetName: string,
     actionId: string,
     entityIds: string[],
-  ): Promise<void> {
+  ): Promise<ActionResult> {
     const resp = await this.fetch(
       this.apiPaths.actionOnePath({ sheetName, actionId }),
       {
@@ -153,6 +154,8 @@ export class ApiRequest {
       const { error }: ErrorResponse = await resp.json()
       throw new HttpError(error.message, resp.status)
     }
+    const result: ActionResult = await resp.json()
+    return result
   }
 
   async signOut(): Promise<void> {
