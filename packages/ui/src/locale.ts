@@ -25,7 +25,18 @@ export const locale = {
       title: '削除結果',
       reason: {
         restrict: '関連するデータがあるため削除できませんでした',
-        permissionDenied: '削除する権限がありません',
+        permissionDenied: '権限がありません',
+        notFound: 'データがありません',
+      },
+      labels: {
+        success: '成功',
+        failure: '失敗',
+      },
+    },
+    ActionResultDialog: {
+      title: 'アクション結果',
+      reason: {
+        permissionDenied: '権限がありません',
         notFound: 'データがありません',
       },
       labels: {

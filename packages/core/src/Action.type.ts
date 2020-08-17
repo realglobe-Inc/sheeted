@@ -24,7 +24,7 @@ export type Action<Entity = any> = {
    * The function which is executed on performing the action.
    */
   perform: (
-    entities: Entity[],
+    entity: Entity,
     context: Context<any>,
     options: TransactionOption,
   ) => Promise<void> | void

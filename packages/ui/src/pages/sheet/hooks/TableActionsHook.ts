@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Action as TableAction } from 'material-table'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import { useSnackbar } from 'notistack'
@@ -10,21 +10,21 @@ import { useApi } from '../../../hooks/ApiHook'
 
 import { useActionContext } from './ActionContextHook'
 import { useDeleteResultContext } from './DeleteResultContext'
+import { useEntitySelectionContext } from './EntitySelectionContextHook'
+import { useActionResultContext } from './ActionResultContext'
 
 export const useTableActions = (
   sheet: SheetInfo | null,
   refreshTable: (page?: number) => void,
   toggleFiltering: () => void,
-): {
-  actions: TableAction<Entity>[]
-  onSelectionChange: (entities: Entity[]) => void
-} => {
+): TableAction<Entity>[] => {
   const l = useLocale()
   const api = useApi()
   const { startAction } = useActionContext()
-  const [entities, setEntities] = useState<Entity[]>([])
+  const { entities } = useEntitySelectionContext()
   const { enqueueSnackbar } = useSnackbar()
   const { setResult: setDeleteResult } = useDeleteResultContext()
+  const { setResult: setActionResult } = useActionResultContext()
   const toggleFilterAction: TableAction<Entity> = useMemo(() => {
     return {
       tooltip: l.actions.filter,
@@ -96,14 +96,18 @@ export const useTableActions = (
           entities,
           doAction: async () => {
             try {
-              await api.performAction(
+              const result = await api.performAction(
                 sheet?.sheetName || '',
                 action.id,
                 entityIds,
               )
-              enqueueSnackbar(l.snackbars.actionComplete, {
-                variant: 'success',
-              })
+              if (result.failure.length > 0) {
+                setActionResult(result)
+              } else {
+                enqueueSnackbar(l.snackbars.actionComplete, {
+                  variant: 'success',
+                })
+              }
               refreshTable()
             } catch (e) {
               console.error(e)
@@ -127,12 +131,12 @@ export const useTableActions = (
     entities,
     startAction,
     api,
-    enqueueSnackbar,
-    l,
     refreshTable,
+    setActionResult,
+    enqueueSnackbar,
+    l.snackbars.actionComplete,
+    l.snackbars.actionFailed,
   ])
-  return {
-    actions: [...customActions, toggleFilterAction, deletionAction],
-    onSelectionChange: setEntities,
-  }
+
+  return [...customActions, toggleFilterAction, deletionAction]
 }

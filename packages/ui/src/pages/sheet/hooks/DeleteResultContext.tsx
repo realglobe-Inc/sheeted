@@ -4,12 +4,14 @@ import React, {
   FC,
   ReactChild,
   useState,
+  useCallback,
 } from 'react'
 import { DeleteResult } from '@sheeted/core/build/web/Shared.type'
 
 export type DeleteResultContextValues = {
   result: DeleteResult | null
-  setResult(result: DeleteResult | null): void
+  setResult(result: DeleteResult): void
+  reset(): void
 }
 
 export const DeleteResultContext = createContext<DeleteResultContextValues>(
@@ -22,11 +24,11 @@ export const useDeleteResultContext = (): DeleteResultContextValues =>
 export const DeleteResultContextProvider: FC<{ children: ReactChild }> = (
   props,
 ) => {
-  const [result, setResult] = useState<DeleteResultContextValues['result']>(
-    null,
-  )
+  const [result, set] = useState<DeleteResultContextValues['result']>(null)
+  const setResult = useCallback((result: DeleteResult) => set(result), [set])
+  const reset = useCallback(() => set(null), [set])
   return (
-    <DeleteResultContext.Provider value={{ result, setResult }}>
+    <DeleteResultContext.Provider value={{ result, setResult, reset }}>
       {props.children}
     </DeleteResultContext.Provider>
   )

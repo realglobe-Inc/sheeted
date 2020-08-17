@@ -1,8 +1,12 @@
 import { InputForm } from '../Type.type'
 import { SheetGroup } from '../SheetGroup.type'
-import { EntityBase } from '../EntityBase.type'
 
-import { ENTITY_META_FIELD, ValidationErrorTypes } from './Consts'
+import {
+  ENTITY_META_FIELD,
+  ValidationErrorTypes,
+  DeleteFailureReasons,
+  ActionFailureReasons,
+} from './Consts'
 
 export type AppInfo = {
   appTitle: string
@@ -93,20 +97,24 @@ export type ListResult = {
   pages: number
 }
 
-export type DeleteFailureReason =
-  | 'PERMISSION_DENIED'
-  | 'RESTRICT'
-  | 'NOT_FOUND'
-  | 'OTHER'
-
-export type DeleteResult = {
-  success: (EntityBase & WithEntityMetaField)[]
+export type OperationResult<Reason> = {
+  success: {
+    id: string
+  }[]
   failure: {
-    entity: EntityBase & WithEntityMetaField
-    reason: DeleteFailureReason
+    id: string
+    reason: Reason
     message?: string
   }[]
 }
+
+export type ActionFailureReason = typeof ActionFailureReasons[keyof typeof ActionFailureReasons]
+
+export type ActionResult = OperationResult<ActionFailureReason>
+
+export type DeleteFailureReason = typeof DeleteFailureReasons[keyof typeof DeleteFailureReasons]
+
+export type DeleteResult = OperationResult<DeleteFailureReason>
 
 export type Sheets = {
   groups: SheetGroup[]

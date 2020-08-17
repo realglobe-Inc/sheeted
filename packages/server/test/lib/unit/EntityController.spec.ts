@@ -8,7 +8,10 @@ import {
   Sheet,
 } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
-import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
+import {
+  ENTITY_META_FIELD,
+  ActionFailureReasons,
+} from '@sheeted/core/build/web/Consts'
 import { buildIAMUserSheet } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSheetBuilder'
 import { MongoDriver } from '@sheeted/mongoose'
 
@@ -270,14 +273,23 @@ test('EntityController.performAction()', async () => {
     n: 10,
   } as any)
   // n が10以下なら100にするアクション
-  await controller.performAction('set100', [entity.id])
+  expect(await controller.performAction('set100', [entity.id])).toEqual({
+    success: [{ id: entity.id }],
+    failure: [],
+  })
   expect(await app1Model.findOne({ id: entity.id })).toMatchObject({
     n: 100,
   })
   // n がすでに100なら失敗する
-  await expect(() =>
-    controller.performAction('set100', [entity.id]),
-  ).rejects.toBeTruthy()
+  expect(await controller.performAction('set100', [entity.id])).toEqual({
+    success: [],
+    failure: [
+      {
+        id: entity.id,
+        reason: ActionFailureReasons.PERMISSION_DENIED,
+      },
+    ],
+  })
 })
 
 test('EntityController rollback with hook', async () => {
