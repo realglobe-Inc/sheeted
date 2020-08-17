@@ -18,3 +18,14 @@ export const ValidationErrorTypes = {
   ENUM: 'validation_error:enum',
   CUSTOM: 'validation_error:custom',
 } as const
+
+export const OperationFailureReasons = {
+  PERMISSION_DENIED: 'operation_result:permission_denied',
+  NOT_FOUND: 'operation_result:not_found',
+  CUSTOM: 'operation_result:not_found',
+} as const
+
+export const DeleteFailureReasons = {
+  ...OperationFailureReasons,
+  RESTRICT: 'operation_result:restrict',
+} as const

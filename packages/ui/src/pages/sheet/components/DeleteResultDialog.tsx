@@ -1,5 +1,9 @@
 import React, { FC, useCallback } from 'react'
 import { DeleteFailureReason } from '@sheeted/core/build/web/Shared.type'
+import {
+  DeleteFailureReasons,
+  ENTITY_META_FIELD,
+} from '@sheeted/core/build/web/Consts'
 import Button from '@material-ui/core/Button'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
@@ -41,11 +45,11 @@ export const DeleteResultDialog: FC = () => {
       message?: string
     }) => {
       switch (reason) {
-        case 'RESTRICT':
+        case DeleteFailureReasons.RESTRICT:
           return l.dialogs.DeleteResultDialog.reason.restrict
-        case 'PERMISSION_DENIED':
+        case DeleteFailureReasons.PERMISSION_DENIED:
           return l.dialogs.DeleteResultDialog.reason.permissionDenied
-        case 'NOT_FOUND':
+        case DeleteFailureReasons.NOT_FOUND:
           return l.dialogs.DeleteResultDialog.reason.notFound
         default:
           return message || ''
@@ -69,7 +73,7 @@ export const DeleteResultDialog: FC = () => {
               <ListItemIcon className={classes.success}>
                 {l.dialogs.DeleteResultDialog.labels.success}
               </ListItemIcon>
-              <ListItemText primary={entity.$meta.displayText} />
+              <ListItemText primary={entity[ENTITY_META_FIELD].displayText} />
             </ListItem>
           ))}
           {result?.failure.map(({ entity, reason, message }) => (
@@ -78,7 +82,7 @@ export const DeleteResultDialog: FC = () => {
                 {l.dialogs.DeleteResultDialog.labels.failure}
               </ListItemIcon>
               <ListItemText
-                primary={entity.$meta.displayText}
+                primary={entity[ENTITY_META_FIELD].displayText}
                 secondary={failureMessage({ reason, message })}
               />
             </ListItem>

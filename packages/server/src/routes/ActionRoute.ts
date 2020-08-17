@@ -31,7 +31,7 @@ export const ActionRoute = ({
         sheets,
         repositories,
       )
-      await controller.performAction(actionId, ids)
-      res.json({ ok: true })
+      const result = await controller.performAction(actionId, ids)
+      res.json(result)
     },
   )
