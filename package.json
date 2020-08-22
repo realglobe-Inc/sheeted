@@ -48,6 +48,7 @@
     "doc": "include-file doc/readme.md README.md",
     "format": "prettier --write '(packages|examples)/**/*.ts?(x)' --ignore-path .eslintignore",
     "lint": "eslint --ext .ts,.tsx --cache --cache-location tmp/.eslintcache packages examples",
+    "preinstall": "./dev/scripts/only-yarn.js",
     "prepare": "yarn build",
     "test": "yarn w/core test && yarn w/server test && yarn w/cli test && yarn w/mongoose test && yarn w/ui test",
     "typecheck": "tsc -p tsconfig.eslint.json",
