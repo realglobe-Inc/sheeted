@@ -5,16 +5,20 @@
 ![build status](https://github.com/realglobe-Inc/sheeted/workflows/master/badge.svg)
 ![npm version](https://badge.fury.io/js/%40sheeted%2Fcore.svg)
 
-Table UI web application development framework.
+<!-- START doctoc -->
+<!-- END doctoc -->
 
-Sheeted aims to make it extremely easy to develop sheet-based web applications which are often used for organizations internal use and for some management use. With Sheeted, you will be released from boring coding not concerned with business rules. You can develop practical Table UI web applications 10x faster with Sheeted.
+## Overview
 
-## Features
+Sheeted is a table UI web application framework.
 
-* REST API and UI are auto generated
-* Support SAML Authentication
-* Easy to deploy
-* and more
+It aims to make it extremely easy to develop table-based web applications, which are often used for organizations internal use or for some management use. With Sheeted, you will be released from boring coding not concerned with business rules. You can develop practical Table UI web applications 10x faster with Sheeted.
+
+Features:
+
+* Auto generated REST API and UI
+* Flexibility to define business rules such as data structure, validations, and access policies
+* Authentication with SAML
 
 ## Installation
 

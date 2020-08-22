@@ -18,7 +18,6 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.0.0",
     "husky": "^4.2.5",
-    "include-file-cli": "^1.0.1",
     "jest": "^26.0.1",
     "mongoose": "^5.9.3",
     "prettier": "^2.0.2",
@@ -45,7 +44,7 @@
   },
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/cli build && yarn w/example build",
-    "doc": "include-file doc/readme.md README.md",
+    "doc": "npx include-file-cli doc/readme.md README.md && npx doctoc --github README.md",
     "format": "prettier --write '(packages|examples)/**/*.ts?(x)' --ignore-path .eslintignore",
     "lint": "eslint --ext .ts,.tsx --cache --cache-location tmp/.eslintcache packages examples",
     "preinstall": "./dev/scripts/only-yarn.js",
