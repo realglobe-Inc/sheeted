@@ -11,7 +11,7 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
   },
   {
     action: 'create',
-    role: Roles.EDITOR_ROLE,
+    role: Roles.DEFAULT_ROLE,
   },
   {
     action: 'update',

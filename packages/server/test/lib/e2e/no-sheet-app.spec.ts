@@ -61,7 +61,7 @@ it('should succeed to get IAMUser sheet info', async () => {
     columns: [
       {
         field: 'name',
-        title: 'User name',
+        title: 'Name',
         form: 'text',
         index: 0,
         style: {},
@@ -94,34 +94,6 @@ it('should succeed to get IAMUser sheet info', async () => {
                 value: DefaultIAMRoles.DEFAULT_ROLE,
               },
             ],
-          },
-        },
-      },
-      {
-        field: 'createdAt',
-        title: '作成日時',
-        form: 'number',
-        detailPageOnly: true,
-        index: 3,
-        readonly: true,
-        style: {},
-        custom: {
-          numeric: {
-            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
-          },
-        },
-      },
-      {
-        field: 'updatedAt',
-        title: '更新日時',
-        form: 'number',
-        detailPageOnly: true,
-        index: 4,
-        readonly: true,
-        style: {},
-        custom: {
-          numeric: {
-            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
           },
         },
       },

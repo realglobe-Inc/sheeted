@@ -7,18 +7,21 @@ export const buildIAMUserView = (roleLabels: {
   const IAMUserView: View<IAMUserEntity<string>> = {
     title: 'IAM User',
     display: (user) => user.name,
-    columns: {
-      name: {
-        title: 'User name',
+    columns: [
+      {
+        field: 'name',
+        title: 'Name',
       },
-      email: {
+      {
+        field: 'email',
         title: 'Email',
       },
-      roles: {
+      {
+        field: 'roles',
         title: 'Roles',
         enumLabels: roleLabels,
       },
-    },
+    ],
   }
   return IAMUserView
 }

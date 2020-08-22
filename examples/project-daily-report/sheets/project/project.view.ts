@@ -5,15 +5,18 @@ import { ProjectEntity } from './project.entity'
 export const ProjectView: View<ProjectEntity> = {
   title: 'Projects',
   display: (entity) => entity.name,
-  columns: {
-    name: {
+  columns: [
+    {
+      field: 'name',
       title: 'Name',
     },
-    startDate: {
+    {
+      field: 'startDate',
       title: 'Start Date',
     },
-    finishDate: {
+    {
+      field: 'finishDate',
       title: 'Finish Date',
     },
-  },
+  ],
 }

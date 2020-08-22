@@ -6,15 +6,18 @@ export const AccountPlanView: View<AccountPlanEntity> = {
   title: 'Account Plans',
   icon: 'assignment',
   display: (entity) => `${entity.account.name}(${entity.plan.name})`,
-  columns: {
-    plan: {
+  columns: [
+    {
+      field: 'plan',
       title: 'Plan',
     },
-    account: {
+    {
+      field: 'account',
       title: 'Account',
     },
-    startDate: {
+    {
+      field: 'startDate',
       title: 'Start Date',
     },
-  },
+  ],
 }
