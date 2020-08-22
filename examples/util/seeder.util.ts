@@ -12,13 +12,17 @@ export class Seeder<E extends EntityBase> implements ISeeder {
   ) {}
 
   async seed(): Promise<void> {
+    let count = 0
     for (const entity of this.data.reverse()) {
       const found = await this.model.findOne({ id: entity.id })
       if (!found) {
-        const created = await this.model.create(entity)
-        console.log('CREATED:', JSON.stringify(created))
+        await this.model.create(entity)
+        count++
       }
     }
+    console.log(
+      `[SEED] Created ${count} new entities in ${this.model.modelName} collection`,
+    )
   }
 }
 
@@ -27,6 +31,7 @@ export const reduce = (seederList: Seeder<any>[]): ISeeder => ({
     for (const seeder of seederList) {
       await seeder.seed()
     }
+    console.log('')
   },
 })
 
