@@ -13,7 +13,7 @@ export const useCurrentSheet = (): {
   sheet: SheetOverview | null
 } => {
   const { sheets, ready: sheetsReady } = useSheetContext()
-  const { sheetName } = useParams()
+  const { sheetName } = useParams<{ sheetName: string }>()
   const [current, setCurrent] = useState('')
   const sheet =
     sheets.sheets.find((sheet) => sheet.sheetName === sheetName) || null

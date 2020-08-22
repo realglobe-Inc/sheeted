@@ -20,7 +20,7 @@ export const compileModel = <Entity>(
 ): MongoModel<Document & Partial<Entity>> => {
   const exists = modelNames().includes(name)
   if (exists) {
-    return model<Document & Entity>(name)
+    return model<Document & Partial<Entity>>(name)
   }
   const definition = Object.fromEntries(
     Object.entries<SchemaField<Entity>>(schema).map(([field, { type }]) => {
