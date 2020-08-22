@@ -21,7 +21,10 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
   }
 
   async initialize(): Promise<void> {
-    await this.model.createCollection()
+    // See https://mongoosejs.com/docs/api/model.html#model_Model.createCollection
+    // > Note 1: You may need to call this before starting a transaction
+    // > Note 2: You don't have to call this if your schema contains index or unique field. In that case, just use Model.init()
+    await this.model.init()
   }
 
   async transaction<R>(callback: (transaction: any) => Promise<R>): Promise<R> {
