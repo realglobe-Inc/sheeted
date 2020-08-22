@@ -3,11 +3,12 @@ import { View } from '@sheeted/core'
 import { <%= entityNamePascal %>Entity } from './<%= entityNameParam %>.entity'
 
 export const <%= entityNamePascal %>View: View<<%= entityNamePascal %>Entity> = {
-  title: 'Sheet Title',
+  title: '<%= entityNamePascal %>',
   display: (entity) => entity.name,
-  columns: {
-    name: {
+  columns: [
+    {
+      field: 'name',
       title: 'NAME',
     },
-  },
+  ],
 }
