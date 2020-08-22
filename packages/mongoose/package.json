@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/mongoose",
   "description": "Mongoose support of Sheeted framework",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
     "mongoose-autopopulate": "^0.12.2",
@@ -16,7 +16,7 @@
   "license": "UNLICENSED",
   "main": "build",
   "peerDependencies": {
-    "@sheeted/core": "0.13.0",
+    "@sheeted/core": "0.13.1",
     "mongoose": "^5.9.3"
   },
   "publishConfig": {
