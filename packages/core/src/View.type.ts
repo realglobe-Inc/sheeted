@@ -1,11 +1,17 @@
 import * as CSS from 'csstype'
 
+import { Field } from './EntityBase.type'
 import { SortQuery } from './Repository.type'
 
 /**
  * Column view
  */
-export type ColumnView = {
+export type ColumnView<Field> = {
+  /**
+   * Field name. This is a key of the entity.
+   */
+  field: Field
+
   /**
    * Field title
    */
@@ -88,7 +94,5 @@ export type View<Entity = any> = {
   /**
    * Column views
    */
-  columns: {
-    [P in keyof Entity]?: ColumnView
-  }
+  columns: ColumnView<Field<Entity>>[]
 }
