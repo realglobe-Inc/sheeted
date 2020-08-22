@@ -77,7 +77,7 @@ test('EntityController with IAMUser with admin', async () => {
     columns: [
       {
         field: 'name',
-        title: 'User name',
+        title: 'Name',
         index: 0,
         form: 'text',
         style: {},
@@ -110,34 +110,6 @@ test('EntityController with IAMUser with admin', async () => {
                 value: DefaultIAMRoles.DEFAULT_ROLE,
               },
             ],
-          },
-        },
-      },
-      {
-        field: 'createdAt',
-        title: '作成日時',
-        form: 'number',
-        detailPageOnly: true,
-        index: 3,
-        readonly: true,
-        style: {},
-        custom: {
-          numeric: {
-            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
-          },
-        },
-      },
-      {
-        field: 'updatedAt',
-        title: '更新日時',
-        form: 'number',
-        detailPageOnly: true,
-        index: 4,
-        readonly: true,
-        style: {},
-        custom: {
-          numeric: {
-            formatAsDate: 'YYYY/MM/DD HH:mm:ss',
           },
         },
       },

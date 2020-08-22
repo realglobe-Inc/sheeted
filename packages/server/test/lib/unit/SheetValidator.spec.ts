@@ -14,7 +14,7 @@ test('SheetValidator.validateSheet()', () => {
       View: {
         title: 'a',
         display: () => '',
-        columns: {},
+        columns: [],
       },
       AccessPolicies: [],
     }),
@@ -55,20 +55,23 @@ test('SheetValidator.validateSheet()', () => {
       View: {
         title: 'a',
         display: () => '',
-        columns: {
-          enum: {
+        columns: [
+          {
+            field: 'enum',
             title: 'enum',
             // enumLabels is required.
           },
-          enumList: {
+          {
+            field: 'enumList',
             title: 'enumList',
             // enumLabels is required.
           },
-          detailPage: {
+          {
+            field: 'detailPage',
             title: 'detailPage',
             detailPageOnly: true,
           },
-        },
+        ],
       },
       AccessPolicies: [],
     }),

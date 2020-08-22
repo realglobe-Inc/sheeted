@@ -45,7 +45,7 @@ export const App1Sheet: Sheet<App1Entity, DefaultIAMRole> = {
   View: {
     title: '',
     display: (): string => '',
-    columns: {},
+    columns: [],
   },
   AccessPolicies: [
     {
