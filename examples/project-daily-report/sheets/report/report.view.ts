@@ -5,21 +5,26 @@ import { ReportEntity } from './report.entity'
 export const ReportView: View<ReportEntity> = {
   title: 'Reports',
   display: (entity) => `${entity.project.name}(${entity.user.name})`,
-  columns: {
-    user: {
+  columns: [
+    {
+      field: 'user',
       title: 'User',
     },
-    project: {
+    {
+      field: 'project',
       title: 'Project',
     },
-    date: {
+    {
+      field: 'date',
       title: 'Working Date',
     },
-    time: {
+    {
+      field: 'time',
       title: 'Working Time',
     },
-    detail: {
+    {
+      field: 'detail',
       title: 'Detail',
     },
-  },
+  ],
 }

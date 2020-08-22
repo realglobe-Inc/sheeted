@@ -16,15 +16,18 @@ export const EntityBView: View<EntityBEntity> = {
     }
     return '-'
   },
-  columns: {
-    cascade: {
+  columns: [
+    {
+      field: 'cascade',
       title: 'A (CASCADE)',
     },
-    restrict: {
+    {
+      field: 'restrict',
       title: 'A (RESTRICT)',
     },
-    setNull: {
+    {
+      field: 'setNull',
       title: 'A (SET_NULL)',
     },
-  },
+  ],
 }

@@ -6,8 +6,9 @@ export const PlanView: View<PlanEntity> = {
   title: 'Plans',
   icon: 'attach_money',
   display: (entity) => entity.name,
-  columns: {
-    name: {
+  columns: [
+    {
+      field: 'name',
       title: 'Plan name',
       enumLabels: {
         free: 'FREE',
@@ -16,8 +17,9 @@ export const PlanView: View<PlanEntity> = {
         canceled: 'CANCELED',
       },
     },
-    price: {
+    {
+      field: 'price',
       title: 'Monthly price',
     },
-  },
+  ],
 }

@@ -32,6 +32,9 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
     const isEnumType =
       equals(field.type, Types.Enum) || equals(field.type, Types.EnumList)
     const isEnumListType = equals(field.type, Types.EnumList)
+    const column = sheet.View.columns.find(
+      (column) => column.field === fieldName,
+    )
     if (isEntityType && !field.entityProperties) {
       details.push({
         sheetName,
@@ -57,7 +60,7 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
         message: `Property "enumProperties" is required when field type is Enum or EnumList`,
       })
     }
-    if (isEnumType && !sheet.View.columns[fieldName]?.enumLabels) {
+    if (isEnumType && !column?.enumLabels) {
       details.push({
         sheetName,
         path: `.View.colums.${fieldName}`,
@@ -72,7 +75,7 @@ export const validateSheet = (sheet: Sheet): ErrorDetail[] => {
       })
     }
     if (
-      sheet.View.columns[fieldName]?.detailPageOnly &&
+      column?.detailPageOnly &&
       !(sheet.View.enableDetail && field.readonly)
     ) {
       details.push({

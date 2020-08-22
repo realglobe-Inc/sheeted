@@ -33,7 +33,7 @@ import { EntityConverter } from './concern/EntityConverter'
 import { EntityValidator } from './concern/EntityValidator'
 import { UserAccessPolicy } from './concern/UserAccessPolicy'
 import { HookTrigger } from './concern/HookTrigger'
-import { EntityBaseSchema, EntityBaseColumns } from './concern/EntityBase'
+import { EntityBaseSchema } from './concern/EntityBase'
 import { SortBuilder } from './concern/SortBuilder'
 import {
   RelatedEntityTransaction,
@@ -125,22 +125,18 @@ export class EntityController {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
     const { schema } = this
-    const viewColumns = {
-      // EntityBaseColumns は上書きできる
-      ...EntityBaseColumns,
-      ...View.columns,
-    }
-    const columns: SheetInfo['columns'] = Object.keys(schema).map(
-      (field, index) => {
-        const schemaField = schema[field]
+    const columns: SheetInfo['columns'] = View.columns.map(
+      (rawColumn, index) => {
         const {
+          field,
           title,
           style = {},
           detailPageOnly,
           enumLabels,
           textOptions,
           numericOptions,
-        } = viewColumns[field] || {}
+        } = rawColumn
+        const schemaField = schema[field]
         const column: Column = dropUndef({
           field,
           title: title || field,

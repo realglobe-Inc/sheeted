@@ -5,9 +5,18 @@ import { AggregationEntity } from './aggregation.entity'
 export const AggregationView: View<AggregationEntity> = {
   title: 'Monthly Aggregation',
   display: (entity) => String(entity.month),
-  columns: {
-    project: { title: 'Project' },
-    month: { title: 'Month' },
-    hours: { title: 'Total Hours' },
-  },
+  columns: [
+    {
+      field: 'project',
+      title: 'Project',
+    },
+    {
+      field: 'month',
+      title: 'Month',
+    },
+    {
+      field: 'hours',
+      title: 'Total Hours',
+    },
+  ],
 }

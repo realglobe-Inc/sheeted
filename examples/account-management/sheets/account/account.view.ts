@@ -6,15 +6,18 @@ export const AccountView: View<AccountEntity> = {
   title: 'Accounts',
   icon: 'account_box',
   display: (entity) => entity.name,
-  columns: {
-    name: {
+  columns: [
+    {
+      field: 'name',
       title: 'User name',
     },
-    email: {
+    {
+      field: 'email',
       title: 'Email',
     },
-    currentPlan: {
+    {
+      field: 'currentPlan',
       title: 'Current plan',
     },
-  },
+  ],
 }
