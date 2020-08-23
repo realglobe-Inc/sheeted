@@ -30,8 +30,6 @@ $ npm add @sheeted/core @sheeted/server @sheeted/mongoose
 
 ## Usage
 
-To create a sheet, define some type and objects as below.
-
 [EntityBase]:https://realglobe-inc.github.io/sheeted/core/interfaces/_entitybase_type_.entitybase.html
 [Schema]:https://realglobe-inc.github.io/sheeted/core/modules/_schema_type_.html#schema
 [AccessPolicy]: https://realglobe-inc.github.io/sheeted/core/modules/_accesspolicy_type_.html#accesspolicy
@@ -41,66 +39,99 @@ To create a sheet, define some type and objects as below.
 [View]:https://realglobe-inc.github.io/sheeted/core/modules/_view_type_.html#view
 [Sheet]:https://realglobe-inc.github.io/sheeted/core/modules/_sheet_type_.html#sheet
 
-* Entity: a raw data shape. Interface which extends [EntityBase][EntityBase].
-* [Schema][Schema]: defines properties of each field in Entity.
-* AccessPolicies: Access policies based on roles. Array of [AccessPolicy][AccessPolicy].
-* Actions: Custom operations to entities. Array of [Action][Action].
-* [Hook][Hook]: functions which will be executed after creating / updating / destroying entities.
-* [Validator][Validator]: defines validations on creating / updating entities.
-* [View][View]: about UI such as column titles.
-* [Sheet][Sheet]: the main object bundling above objects.
+A Sheeted web application consists of Sheets, which represent tables. A Sheet conststs of one type and some objects as below.
 
-After defining sheets, you can create application server with `createApp()` of `@sheeted/server`. This function just returns [express](https://expressjs.com/) app.
+- Entity type
+- Schema
+- View
+- AccessPolicies
+- Hook
+- Validator
+- Actions
 
-Here are examples.
+Let's take a look one by one.
 
-Entity:
+### Entity type
+
+Entity type is the data format of a row in Sheet. It's an interface in TypeScript. Every Entity must have "id" for unique identity. To ensure this, Entity type extends [EntityBase][EntityBase].
+
+Example:
 
 ```ts
 $include ../examples/book/sheets/book/book.entity.ts
 ```
 
-Schema:
+### Schema
+
+[Schema][Schema] can define some properties of each field in Entitiy. It has the same fields as Entity's.
+
+Example:
 
 ```ts
 $include ../examples/book/sheets/book/book.schema.ts
 ```
 
-AccessPolicies:
+### View
 
-```ts
-$include ../examples/book/sheets/book/book.access-policies.ts
-```
+[View][View] is about UI such as a column title.
 
-Actions:
-
-```ts
-$include ../examples/book/sheets/book/book.actions.ts
-```
-
-Hook:
-
-```ts
-$include ../examples/book/sheets/book/book.hook.ts
-```
-
-Validator:
-
-```ts
-$include ../examples/book/sheets/book/book.validator.ts
-```
-
-View:
+Example:
 
 ```ts
 $include ../examples/book/sheets/book/book.view.ts
 ```
 
-Sheet:
+### AccessPolicies
+
+AccessPolicies is a set of access policies based on roles. It's an array of [AccessPolicy][AccessPolicy].
+
+```ts
+$include ../examples/book/sheets/book/book.access-policies.ts
+```
+
+### Hook
+
+[Hook][Hook] is a set of functions which will be executed after creating / updating / destroying entities.
+
+Example:
+
+```ts
+$include ../examples/book/sheets/book/book.hook.ts
+```
+
+### Validator
+
+[Validator][Validator] defines validations on creating / updating entities.
+
+Example:
+
+```ts
+$include ../examples/book/sheets/book/book.validator.ts
+```
+
+### Actions
+
+Actions represents custom operations to entities. It's an array of [Action][Action].
+
+Example:
+
+```ts
+$include ../examples/book/sheets/book/book.actions.ts
+```
+
+### Sheet
+
+Now we can define [Sheet][Sheet]. It's the main object bundling above objects.
+
+Example:
 
 ```ts
 $include ../examples/book/sheets/book/book.sheet.ts
 ```
+
+### Creating app
+
+After defining sheets, you can create application server with `createApp()`. This function just returns [express](https://expressjs.com/) app.
 
 Function `createApp()` needs arguments as below.
 
@@ -110,15 +141,21 @@ Function `createApp()` needs arguments as below.
 * DatabaseDriver: database driver. Currently only supported driver is mongo driver.
 * ApiUsers: array of an api user which has userId and accessToken. This is used for API access.
 
+Example:
+
 ```ts
 $include ../examples/book/app.ts
 ```
+
+### Using sheet templates
 
 You can create sheet source files via CLI.
 
 ```console
 $ npx @sheeted/cli generate dir/to/sheet-name
 ```
+
+### More information
 
 For more information about usage, please visit:
 

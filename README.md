@@ -12,6 +12,17 @@
 - [Overview](#overview)
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Entity type](#entity-type)
+  - [Schema](#schema)
+  - [View](#view)
+  - [AccessPolicies](#accesspolicies)
+  - [Hook](#hook)
+  - [Validator](#validator)
+  - [Actions](#actions)
+  - [Sheet](#sheet)
+  - [Creating app](#creating-app)
+  - [Using sheet templates](#using-sheet-templates)
+  - [More information](#more-information)
 - [Generated REST API](#generated-rest-api)
   - [Common request headers](#common-request-headers)
   - [List all sheets](#list-all-sheets)
@@ -47,8 +58,6 @@ $ npm add @sheeted/core @sheeted/server @sheeted/mongoose
 
 ## Usage
 
-To create a sheet, define some type and objects as below.
-
 [EntityBase]:https://realglobe-inc.github.io/sheeted/core/interfaces/_entitybase_type_.entitybase.html
 [Schema]:https://realglobe-inc.github.io/sheeted/core/modules/_schema_type_.html#schema
 [AccessPolicy]: https://realglobe-inc.github.io/sheeted/core/modules/_accesspolicy_type_.html#accesspolicy
@@ -58,20 +67,23 @@ To create a sheet, define some type and objects as below.
 [View]:https://realglobe-inc.github.io/sheeted/core/modules/_view_type_.html#view
 [Sheet]:https://realglobe-inc.github.io/sheeted/core/modules/_sheet_type_.html#sheet
 
-* Entity: a raw data shape. Interface which extends [EntityBase][EntityBase].
-* [Schema][Schema]: defines properties of each field in Entity.
-* AccessPolicies: Access policies based on roles. Array of [AccessPolicy][AccessPolicy].
-* Actions: Custom operations to entities. Array of [Action][Action].
-* [Hook][Hook]: functions which will be executed after creating / updating / destroying entities.
-* [Validator][Validator]: defines validations on creating / updating entities.
-* [View][View]: about UI such as column titles.
-* [Sheet][Sheet]: the main object bundling above objects.
+A Sheeted web application consists of Sheets, which represent tables. A Sheet conststs of one type and some objects as below.
 
-After defining sheets, you can create application server with `createApp()` of `@sheeted/server`. This function just returns [express](https://expressjs.com/) app.
+- Entity type
+- Schema
+- View
+- AccessPolicies
+- Hook
+- Validator
+- Actions
 
-Here are examples.
+Let's take a look one by one.
 
-Entity:
+### Entity type
+
+Entity type is the data format of a row in Sheet. It's an interface in TypeScript. Every Entity must have "id" for unique identity. To ensure this, Entity type extends [EntityBase][EntityBase].
+
+Example:
 
 ```ts
 import { EntityBase, IAMUserEntity } from '@sheeted/core'
@@ -94,7 +106,11 @@ export interface BookEntity extends EntityBase {
 }
 ```
 
-Schema:
+### Schema
+
+[Schema][Schema] can define some properties of each field in Entitiy. It has the same fields as Entity's.
+
+Example:
 
 ```ts
 import { Types, IAM_USER_SHEET, Schema } from '@sheeted/core'
@@ -158,138 +174,11 @@ export const BookSchema: Schema<BookEntity> = {
 }
 ```
 
-AccessPolicies:
+### View
 
-```ts
-import { AccessPolicy, Context } from '@sheeted/core'
+[View][View] is about UI such as a column title.
 
-import { Roles, Role, ActionIds } from '../../constants'
-
-import { BookEntity } from './book.entity'
-
-export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
-  {
-    action: 'read',
-    role: Roles.DEFAULT_ROLE,
-  },
-  {
-    action: 'create',
-    role: Roles.DEFAULT_ROLE,
-  },
-  {
-    action: 'update',
-    role: Roles.EDITOR_ROLE,
-    column: {
-      effect: 'deny',
-      columns: ['genre'],
-    },
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
-  },
-  {
-    action: 'delete',
-    role: Roles.EDITOR_ROLE,
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
-  },
-  {
-    action: 'custom',
-    role: Roles.DEFAULT_ROLE,
-    customActionId: ActionIds.LIKE,
-  },
-]
-```
-
-Actions:
-
-```ts
-import { Action } from '@sheeted/core'
-
-import { ActionIds } from '../../constants'
-
-import { BookEntity } from './book.entity'
-import { BookModel } from './book.model'
-
-export const BookActions: Action<BookEntity>[] = [
-  {
-    id: ActionIds.LIKE,
-    title: 'Increment like count',
-    icon: 'exposure_plus_1',
-    perform: async (entity: BookEntity): Promise<void> => {
-      await BookModel.updateOne(
-        {
-          id: entity.id,
-        },
-        {
-          $inc: {
-            like: 1,
-          },
-        },
-      )
-    },
-  },
-]
-```
-
-Hook:
-
-```ts
-import { Hook } from '@sheeted/core'
-import { IAMUserModel } from '@sheeted/mongoose'
-
-import { BookEntity } from './book.entity'
-import { BookModel } from './book.model'
-
-export const BookHook: Hook<BookEntity> = {
-  async onCreate(book, ctx, options) {
-    const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
-    if (!user) {
-      throw new Error(`user not found for id "${ctx.user.id}"`)
-    }
-    await BookModel.updateOne(
-      { id: book.id },
-      {
-        buyer: user,
-      },
-      {
-        session: options.transaction,
-      },
-    )
-  },
-}
-```
-
-Validator:
-
-```ts
-import { Validator, ValidationResult } from '@sheeted/core'
-
-import { BookEntity } from './book.entity'
-
-export const BookValidator: Validator<BookEntity> = (_ctx) => (
-  input: Partial<BookEntity>,
-  _current: BookEntity | null,
-): ValidationResult<BookEntity> => {
-  const result = new ValidationResult<BookEntity>()
-  if (input.price) {
-    if (!Number.isInteger(input.price)) {
-      result.appendError({
-        field: 'price',
-        message: 'Must be integer',
-      })
-    }
-    if (input.price < 0) {
-      result.appendError({
-        field: 'price',
-        message: 'Must be greater than or equal to 0',
-      })
-    }
-  }
-  return result
-}
-```
-
-View:
+Example:
 
 ```ts
 import { View } from '@sheeted/core'
@@ -345,7 +234,156 @@ export const BookView: View<BookEntity> = {
 }
 ```
 
-Sheet:
+### AccessPolicies
+
+AccessPolicies is a set of access policies based on roles. It's an array of [AccessPolicy][AccessPolicy].
+
+```ts
+import { AccessPolicy, Context } from '@sheeted/core'
+
+import { Roles, Role, ActionIds } from '../../constants'
+
+import { BookEntity } from './book.entity'
+
+export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
+  {
+    action: 'read',
+    role: Roles.DEFAULT_ROLE,
+  },
+  {
+    action: 'create',
+    role: Roles.DEFAULT_ROLE,
+  },
+  {
+    action: 'update',
+    role: Roles.EDITOR_ROLE,
+    column: {
+      effect: 'deny',
+      columns: ['genre'],
+    },
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
+  },
+  {
+    action: 'delete',
+    role: Roles.EDITOR_ROLE,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
+      ctx?.user.id === book.buyer.id,
+  },
+  {
+    action: 'custom',
+    role: Roles.DEFAULT_ROLE,
+    customActionId: ActionIds.LIKE,
+  },
+]
+```
+
+### Hook
+
+[Hook][Hook] is a set of functions which will be executed after creating / updating / destroying entities.
+
+Example:
+
+```ts
+import { Hook } from '@sheeted/core'
+import { IAMUserModel } from '@sheeted/mongoose'
+
+import { BookEntity } from './book.entity'
+import { BookModel } from './book.model'
+
+export const BookHook: Hook<BookEntity> = {
+  async onCreate(book, ctx, options) {
+    const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
+    if (!user) {
+      throw new Error(`user not found for id "${ctx.user.id}"`)
+    }
+    await BookModel.updateOne(
+      { id: book.id },
+      {
+        buyer: user,
+      },
+      {
+        session: options.transaction,
+      },
+    )
+  },
+}
+```
+
+### Validator
+
+[Validator][Validator] defines validations on creating / updating entities.
+
+Example:
+
+```ts
+import { Validator, ValidationResult } from '@sheeted/core'
+
+import { BookEntity } from './book.entity'
+
+export const BookValidator: Validator<BookEntity> = (_ctx) => (
+  input: Partial<BookEntity>,
+  _current: BookEntity | null,
+): ValidationResult<BookEntity> => {
+  const result = new ValidationResult<BookEntity>()
+  if (input.price) {
+    if (!Number.isInteger(input.price)) {
+      result.appendError({
+        field: 'price',
+        message: 'Must be integer',
+      })
+    }
+    if (input.price < 0) {
+      result.appendError({
+        field: 'price',
+        message: 'Must be greater than or equal to 0',
+      })
+    }
+  }
+  return result
+}
+```
+
+### Actions
+
+Actions represents custom operations to entities. It's an array of [Action][Action].
+
+Example:
+
+```ts
+import { Action } from '@sheeted/core'
+
+import { ActionIds } from '../../constants'
+
+import { BookEntity } from './book.entity'
+import { BookModel } from './book.model'
+
+export const BookActions: Action<BookEntity>[] = [
+  {
+    id: ActionIds.LIKE,
+    title: 'Increment like count',
+    icon: 'exposure_plus_1',
+    perform: async (entity: BookEntity): Promise<void> => {
+      await BookModel.updateOne(
+        {
+          id: entity.id,
+        },
+        {
+          $inc: {
+            like: 1,
+          },
+        },
+      )
+    },
+  },
+]
+```
+
+### Sheet
+
+Now we can define [Sheet][Sheet]. It's the main object bundling above objects.
+
+Example:
 
 ```ts
 import { Sheet } from '@sheeted/core'
@@ -371,6 +409,10 @@ export const BookSheet: Sheet<BookEntity, Role> = {
 }
 ```
 
+### Creating app
+
+After defining sheets, you can create application server with `createApp()`. This function just returns [express](https://expressjs.com/) app.
+
 Function `createApp()` needs arguments as below.
 
 * AppTitle: title of application.
@@ -378,6 +420,8 @@ Function `createApp()` needs arguments as below.
 * Roles: role objects array.
 * DatabaseDriver: database driver. Currently only supported driver is mongo driver.
 * ApiUsers: array of an api user which has userId and accessToken. This is used for API access.
+
+Example:
 
 ```ts
 import { createApp } from '@sheeted/server'
@@ -407,11 +451,15 @@ export const app = createApp(
 )
 ```
 
+### Using sheet templates
+
 You can create sheet source files via CLI.
 
 ```console
 $ npx @sheeted/cli generate dir/to/sheet-name
 ```
+
+### More information
 
 For more information about usage, please visit:
 
