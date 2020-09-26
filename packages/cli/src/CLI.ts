@@ -9,6 +9,8 @@ import { generateSheet } from './GenerateSheet'
 const { version: VERSION } = require('../package.json') as { version: string }
 const COMMAND_NAME = 'sheeted'
 
+const bold = (str: string) => '\x1b[1m' + str + '\x1b[0m'
+
 export function CLI(argv: string[]): void {
   program.name(COMMAND_NAME).version(VERSION)
 
@@ -37,6 +39,14 @@ export function CLI(argv: string[]): void {
         console.error(e)
         process.exit(1)
       })
+      console.log(`
+A new Sheeted project is created in ${bold(projectName)}/.
+Move to the project and enjoy your development!
+
+\`\`\`
+$ cd ${projectName}/
+$ cat README.md
+\`\`\``)
     })
 
   program.parse(argv)
