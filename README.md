@@ -550,6 +550,12 @@ Set JSON of entity ids to be deleted as below.
 
 ## Development
 
+Requirements:
+
+- Node.js >= 14
+- docker-compose
+- direnv
+
 Install. This project uses [yarn workspaces](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/).
 
 ```console

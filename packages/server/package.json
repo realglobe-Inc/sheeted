@@ -1,10 +1,10 @@
 {
   "name": "@sheeted/server",
   "description": "Server of Sheeted framework",
-  "version": "0.15.2",
+  "version": "1.0.0",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
-    "@sheeted/core": "0.15.2",
+    "@sheeted/core": "1.0.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "csstype": "^2.6.10",
@@ -28,7 +28,7 @@
     "@types/supertest": "^2.0.8",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.2",
-    "supertest": "^4.0.2"
+    "supertest": "^5.0.0"
   },
   "engines": {
     "node": ">=14"
@@ -37,11 +37,13 @@
     "assets",
     "build"
   ],
-  "license": "UNLICENSED",
+  "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "license": "Apache-2.0",
   "main": "build",
   "publishConfig": {
     "access": "public"
   },
+  "repository": "realglobe-Inc/sheeted",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf build",

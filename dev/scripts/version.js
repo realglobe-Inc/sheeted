@@ -5,7 +5,7 @@
  */
 const fs = require('fs').promises
 const { join } = require('path')
-const { version: currentVersion, engines } = require('../../package.json')
+const rootPkg = require('../../package.json')
 
 const editJson = async (filePath, update) => {
   const json = JSON.parse(await fs.readFile(filePath, 'utf-8'))
@@ -22,11 +22,15 @@ const updatePatchVersion = (version) => {
   const [major, minor, patch] = version.split('.').map(Number)
   return [major, minor, patch + 1].join('.')
 }
-const updatePackageVersions = async (version = updatePatchVersion(currentVersion)) => {
+const updatePackageVersions = async (version = updatePatchVersion(rootPkg.version)) => {
   validateVersion(version)
   const updateVersion = (pkg) => {
     pkg.version = version
-    pkg.engines = engines
+    pkg.engines = rootPkg.engines
+    pkg.license = rootPkg.license
+    pkg.author = rootPkg.author
+    pkg.repository = rootPkg.repository
+    pkg.homepage = rootPkg.homepage
     return pkg
   }
   await editJson('package.json', updateVersion)

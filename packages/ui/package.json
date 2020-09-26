@@ -1,7 +1,8 @@
 {
   "name": "@sheeted/ui",
   "description": "UI of Sheeted framework",
-  "version": "0.15.2",
+  "version": "1.0.0",
+  "author": "Sheeted team <sheeted@realglobe.jp>",
   "babel": {
     "presets": [
       "react-app"
@@ -70,8 +71,10 @@
   "engines": {
     "node": ">=14"
   },
-  "license": "UNLICENSED",
+  "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "license": "Apache-2.0",
   "private": true,
+  "repository": "realglobe-Inc/sheeted",
   "scripts": {
     "build": "node scripts/build.js",
     "clean": "rimraf build",

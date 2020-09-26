@@ -2,4 +2,6 @@
 
 The CLI of Sheeted framework.
 
-THIS PROJECT IS IN DEVELOPMENT.
+## Documentation
+
+- https://github.com/realglobe-Inc/sheeted#readme

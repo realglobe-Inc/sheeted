@@ -1,5 +1,13 @@
 # @sheeted/server
 
-Server of Sheeted framework.
+The server of Sheeted framework.
 
-THIS PROJECT IS IN DEVELOPMENT.
+## Installation
+
+```bash
+$ npm install @sheeted/server
+```
+
+## Documentation
+
+- https://github.com/realglobe-Inc/sheeted#readme

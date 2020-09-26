@@ -14,7 +14,14 @@ async function main() {
   })
 
   app.listen(SERVER_PORT, () => {
-    console.log(`http://localhost:${SERVER_PORT}`)
+    console.log(`
+=========================================================
+
+Access to http://localhost:${SERVER_PORT} in your browser
+Login with authentication demo/demo
+
+=========================================================
+`)
   })
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/core",
   "description": "Core library of Sheeted framework",
-  "version": "0.15.2",
+  "version": "1.0.0",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {},
   "engines": {
@@ -10,11 +10,13 @@
   "files": [
     "build"
   ],
-  "license": "UNLICENSED",
+  "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "license": "Apache-2.0",
   "main": "build",
   "publishConfig": {
     "access": "public"
   },
+  "repository": "realglobe-Inc/sheeted",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf build",
