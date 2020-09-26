@@ -18,7 +18,7 @@ const Resources = [
   'view',
 ]
 
-const TEMPLATE_DIR = path.resolve(__dirname, '../templates/generate')
+const TEMPLATE_DIR = path.resolve(__dirname, '../templates/sheet')
 
 export const generateSheet = async (distDir: string): Promise<string[]> => {
   const entityName = path.basename(distDir)
