@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/ui",
   "description": "UI of Sheeted framework",
-  "version": "0.15.0",
+  "version": "0.15.2",
   "babel": {
     "presets": [
       "react-app"
@@ -63,6 +63,13 @@
     "webpack-manifest-plugin": "^2.2.0",
     "workbox-webpack-plugin": "^5.1.2"
   },
+  "devDependencies": {
+    "@testing-library/react-hooks": "^3.3.0",
+    "react-test-renderer": "^16.13.1"
+  },
+  "engines": {
+    "node": ">=14"
+  },
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
@@ -71,9 +78,5 @@
     "deploy": "yarn build && ./deploy/upload.js",
     "start": "API_SERVER_PORT=3001 node scripts/start.js",
     "test": "jest"
-  },
-  "devDependencies": {
-    "@testing-library/react-hooks": "^3.3.0",
-    "react-test-renderer": "^16.13.1"
   }
 }
