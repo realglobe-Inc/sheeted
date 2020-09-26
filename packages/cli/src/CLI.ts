@@ -28,9 +28,12 @@ export function CLI(argv: string[]): void {
   program
     .command('project <name>')
     .description('Create new sheeted project')
-    .action(async function (name: string) {
-      const destDir = join(process.cwd(), name)
-      await generateProject(destDir, name).catch((e) => {
+    .action(async function (projectName: string) {
+      const destDir = join(process.cwd(), projectName)
+      await generateProject(destDir, {
+        projectName,
+        pkgVersion: VERSION,
+      }).catch((e) => {
         console.error(e)
         process.exit(1)
       })

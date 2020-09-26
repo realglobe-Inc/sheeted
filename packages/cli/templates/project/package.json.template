@@ -2,9 +2,8 @@
   "name": "<%= projectName %>",
   "version": "0.1.0",
   "dependencies": {
-    "@sheeted/core": "^0.14.0",
-    "@sheeted/mongoose": "^0.14.0",
-    "@sheeted/server": "^0.14.0",
+    "@sheeted/mongoose": "^<%= pkgVersion %>",
+    "@sheeted/server": "^<%= pkgVersion %>",
     "mongoose": "^5.10.7"
   },
   "devDependencies": {

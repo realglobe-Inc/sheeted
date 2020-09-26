@@ -10,7 +10,13 @@ const TEMPLATES = [{ template: 'package.json.template', dest: 'package.json' }]
 
 export const generateProject = async (
   destDir: string,
-  projectName: string,
+  {
+    projectName,
+    pkgVersion,
+  }: {
+    projectName: string
+    pkgVersion: string
+  },
 ): Promise<void> => {
   assertProjectName(projectName)
   await fs.mkdir(destDir)
@@ -22,6 +28,9 @@ export const generateProject = async (
   for (const { template, dest } of TEMPLATES) {
     const templatePath = path.resolve(TEMPLATE_DIR, template)
     const destPath = path.resolve(destDir, dest)
-    await generateFromTemplate(templatePath, destPath, { projectName })
+    await generateFromTemplate(templatePath, destPath, {
+      projectName,
+      pkgVersion,
+    })
   }
 }
