@@ -1,9 +1,12 @@
 {
   "name": "@sheeted/core",
   "description": "Core library of Sheeted framework",
-  "version": "0.14.0",
+  "version": "0.15.2",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {},
+  "engines": {
+    "node": ">=14"
+  },
   "files": [
     "build"
   ],

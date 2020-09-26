@@ -1,7 +1,7 @@
 {
   "name": "sheeted",
-  "description": "Table UI web application development framework",
-  "version": "0.14.0",
+  "description": "Table UI web application framework",
+  "version": "0.15.2",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bugs": {
     "url": "https://github.com/realglobe-Inc/sheeted/issues"
@@ -26,6 +26,9 @@
     "typedoc": "^0.18.0",
     "typescript": "^4.0.2"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
   "husky": {
     "hooks": {
@@ -34,7 +37,8 @@
   },
   "keywords": [
     "Low-Code",
-    "Sheet"
+    "Sheet",
+    "Web application framework"
   ],
   "license": "UNLICENSED",
   "private": true,
@@ -44,7 +48,7 @@
   },
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/cli build && yarn w/example build",
-    "doc": "npx include-file-cli doc/readme.md README.md && npx doctoc --github README.md",
+    "doc": "npx include-file-cli dev/doc/readme.template.md README.md && npx doctoc --github README.md",
     "format": "prettier --write '(packages|examples)/**/*.ts?(x)' --ignore-path .eslintignore",
     "lint": "eslint --ext .ts,.tsx --cache --cache-location tmp/.eslintcache packages examples",
     "preinstall": "./dev/scripts/only-yarn.js",
