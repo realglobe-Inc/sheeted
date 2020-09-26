@@ -18,6 +18,7 @@ async function main() {
 =========================================================
 
 Access to http://localhost:${SERVER_PORT} in your browser
+Login with authentication demo/demo
 
 =========================================================
 `)
