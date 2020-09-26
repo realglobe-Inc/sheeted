@@ -1,3 +1,5 @@
+import { type } from 'os'
+
 import { Type } from './Type.type'
 import {
   CalendarDateInterceptor,
@@ -103,4 +105,10 @@ export const Types = {
   Enum,
   EnumList,
   Entity,
+}
+
+export const typeEquals = (typeA: Type<any>, typeB: Type<any>): boolean => {
+  return (Object.keys(typeA) as (keyof Type<any>)[]).every(
+    (key) => typeA[key] === typeB[key],
+  )
 }
