@@ -58,7 +58,7 @@ Entity type is the data format of a row in Sheet. It's an interface in TypeScrip
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.entity.ts
+$include ../../examples/book/sheets/book/book.entity.ts
 ```
 
 ### Schema
@@ -68,7 +68,7 @@ $include ../examples/book/sheets/book/book.entity.ts
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.schema.ts
+$include ../../examples/book/sheets/book/book.schema.ts
 ```
 
 ### View
@@ -78,7 +78,7 @@ $include ../examples/book/sheets/book/book.schema.ts
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.view.ts
+$include ../../examples/book/sheets/book/book.view.ts
 ```
 
 ### AccessPolicies
@@ -86,7 +86,7 @@ $include ../examples/book/sheets/book/book.view.ts
 AccessPolicies is a set of access policies based on roles. It's an array of [AccessPolicy][AccessPolicy].
 
 ```ts
-$include ../examples/book/sheets/book/book.access-policies.ts
+$include ../../examples/book/sheets/book/book.access-policies.ts
 ```
 
 ### Hook
@@ -96,7 +96,7 @@ $include ../examples/book/sheets/book/book.access-policies.ts
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.hook.ts
+$include ../../examples/book/sheets/book/book.hook.ts
 ```
 
 ### Validator
@@ -106,7 +106,7 @@ $include ../examples/book/sheets/book/book.hook.ts
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.validator.ts
+$include ../../examples/book/sheets/book/book.validator.ts
 ```
 
 ### Actions
@@ -116,7 +116,7 @@ Actions represents custom operations to entities. It's an array of [Action][Acti
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.actions.ts
+$include ../../examples/book/sheets/book/book.actions.ts
 ```
 
 ### Sheet
@@ -126,7 +126,7 @@ Now we can define [Sheet][Sheet]. It's the main object bundling above objects.
 Example:
 
 ```ts
-$include ../examples/book/sheets/book/book.sheet.ts
+$include ../../examples/book/sheets/book/book.sheet.ts
 ```
 
 ### Creating app
@@ -144,7 +144,7 @@ Function `createApp()` needs arguments as below.
 Example:
 
 ```ts
-$include ../examples/book/app.ts
+$include ../../examples/book/app.ts
 ```
 
 ### Using sheet templates
