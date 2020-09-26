@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/mongoose",
   "description": "Mongoose support of Sheeted framework",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "dependencies": {
     "mongoose-autopopulate": "^0.12.2",
@@ -16,15 +16,17 @@
   "files": [
     "build"
   ],
-  "license": "UNLICENSED",
+  "homepage": "https://github.com/realglobe-Inc/sheeted#readme",
+  "license": "Apache-2.0",
   "main": "build",
   "peerDependencies": {
-    "@sheeted/core": "0.15.2",
+    "@sheeted/core": "0.15.3",
     "mongoose": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"
   },
+  "repository": "realglobe-Inc/sheeted",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf build",

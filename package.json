@@ -1,7 +1,7 @@
 {
   "name": "sheeted",
   "description": "Table UI web application framework",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bugs": {
     "url": "https://github.com/realglobe-Inc/sheeted/issues"
@@ -40,12 +40,9 @@
     "Sheet",
     "Web application framework"
   ],
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/realglobe-Inc/sheeted.git"
-  },
+  "repository": "realglobe-Inc/sheeted",
   "scripts": {
     "build": "yarn w/core build && yarn w/mongoose build && yarn w/server build && yarn w/cli build && yarn w/example build",
     "doc": "npx include-file-cli dev/doc/readme.template.md README.md && npx doctoc --github README.md && ./dev/scripts/doc.sh",
