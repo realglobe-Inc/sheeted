@@ -10,7 +10,7 @@
 
 
 - [Overview](#overview)
-- [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Usage](#usage)
   - [Entity type](#entity-type)
   - [Schema](#schema)
@@ -48,12 +48,19 @@ Features:
 * Flexibility to define business rules such as data structure, validations, and access policies
 * Authentication with SAML
 
-## Installation
+## Getting Started
 
-Install the server library (@sheeted/server) and the database driver library (@sheeted/mongoose).
+Sheeted provides CLI to create Sheeted app project. Run the command below:
 
 ```console
-$ npm add @sheeted/server @sheeted/mongoose
+$ npx @sheeted/cli project <your_project_name>
+```
+
+The command creates a directory named `<your_project_name>` and files all you need such as package.json. Then you can start to develop in the project.
+
+```console
+$ cd <your_project_name>
+$ cat README.md # You will find how to setup the project.
 ```
 
 ## Usage
