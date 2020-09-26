@@ -1,5 +1,5 @@
 {
-  "name": "<%= entityNamePascal %>",
+  "name": "<%= projectName %>",
   "version": "0.1.0",
   "dependencies": {
     "@sheeted/core": "^0.14.0",
