@@ -6,6 +6,9 @@ import {
   SearchQuery,
   EntityBase,
   SchemaField,
+  typeEquals,
+  Types,
+  Type,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -209,8 +212,10 @@ export class EntityController {
     }
     const { Schema } = this.sheet
     const { queryFilter = {} } = readPolicy
-    const searchFields = Object.keys(Schema).filter(
-      (field) => Schema[field]?.type.rawType === 'text',
+    const searchFields = Object.keys(Schema).filter((field) =>
+      [Types.Text, Types.LongText].some((type) =>
+        typeEquals(type, Schema[field]?.type || ({} as Type<any>)),
+      ),
     )
     const words = search.split(/\s/).filter(Boolean)
     const searchQuery: SearchQuery<any> | undefined =
