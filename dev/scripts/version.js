@@ -38,7 +38,7 @@ const updatePackageVersions = async (version = updatePatchVersion(currentVersion
   })
   await editJson('packages/server/package.json', (pkg) => {
     pkg = updateVersion(pkg)
-    pkg.peerDependencies['@sheeted/core'] = version
+    pkg.dependencies['@sheeted/core'] = version
     return pkg
   })
   await editJson('packages/ui/package.json', updateVersion)

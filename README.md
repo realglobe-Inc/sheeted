@@ -50,10 +50,10 @@ Features:
 
 ## Installation
 
-Install the core library (@sheeted/core), the server library (@sheeted/server), and the database driver library (@sheeted/mongoose).
+Install the server library (@sheeted/server) and the database driver library (@sheeted/mongoose).
 
 ```console
-$ npm add @sheeted/core @sheeted/server @sheeted/mongoose
+$ npm add @sheeted/server @sheeted/mongoose
 ```
 
 ## Usage
