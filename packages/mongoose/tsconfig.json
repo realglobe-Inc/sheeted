@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "build",
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "incremental": true,
+    "tsBuildInfoFile": "tmp/tsconfig.tsbuildinfo"
   },
   "include": [
     "src"
