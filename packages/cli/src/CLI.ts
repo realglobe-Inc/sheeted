@@ -10,7 +10,7 @@ export function CLI(argv: string[]): void {
   program.name(COMMAND_NAME).version(VERSION)
 
   program
-    .command('generate <path>')
+    .command('sheet <path>')
     .description('Generate sheet files')
     .action(async function (distDir) {
       const destPaths = await generateSheet(distDir).catch((e) => {

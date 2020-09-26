@@ -152,7 +152,7 @@ $include ../examples/book/app.ts
 You can create sheet source files via CLI.
 
 ```console
-$ npx @sheeted/cli generate dir/to/sheet-name
+$ npx @sheeted/cli sheet dir/to/sheet-name
 ```
 
 ### More information
