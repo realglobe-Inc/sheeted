@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/cli",
   "description": "CLI of Sheeted framework",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "bin": {
     "sheeted": "./bin/sheeted.js"
