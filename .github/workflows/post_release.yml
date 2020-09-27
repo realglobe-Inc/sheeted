@@ -8,20 +8,20 @@ on:
       - completed
 
 jobs:
-  test:
+  test_after_release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: 14.x
     - name: Create a project
       run: |
-        npx @sheeted/cli project hello-world
-    - name: Install and run
+        npm install -g @sheeted/cli
+        sheeted project hello-world
+    - name: Install
       run: |
-        docker-compose up -d
         npm install
+        npm run build
       working-directory: hello-world
     - name: Test
       run: |
