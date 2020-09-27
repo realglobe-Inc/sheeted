@@ -11,19 +11,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: 14.x
     - name: Create a project
       run: |
         npx @sheeted/cli project hello-world
-      working-directory: node
     - name: Install and run
       run: |
         docker-compose up -d
         npm install
-      working-directory: node/hello-world
+      working-directory: hello-world
     - name: Test
       run: |
         node build/app.js
-      working-directory: node/hello-world
+      working-directory: hello-world
