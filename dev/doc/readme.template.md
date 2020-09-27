@@ -8,7 +8,7 @@
 <!-- START doctoc -->
 <!-- END doctoc -->
 
-## Overview
+## :paperclip: Overview
 
 Sheeted is a table UI web application framework.
 
@@ -20,7 +20,7 @@ Features:
 * Flexibility to define business rules such as data structure, validations, and access policies
 * Authentication with SAML
 
-## Getting Started
+## :paperclip: Getting Started
 
 Sheeted provides CLI to create Sheeted app project. Run the command below:
 
@@ -35,7 +35,7 @@ $ cd <your_project_name>
 $ cat README.md # You will find how to setup the project.
 ```
 
-## Usage
+## :paperclip: Usage
 
 [EntityBase]:https://realglobe-inc.github.io/sheeted/core/interfaces/_entitybase_type_.entitybase.html
 [Schema]:https://realglobe-inc.github.io/sheeted/core/modules/_schema_type_.html#schema
@@ -154,14 +154,6 @@ Example:
 $include ../../examples/book/app.ts
 ```
 
-### Using sheet templates
-
-You can create sheet source files via CLI.
-
-```console
-$ npx @sheeted/cli sheet dir/to/sheet-name
-```
-
 ### More information
 
 For more information about usage, please visit:
@@ -169,7 +161,21 @@ For more information about usage, please visit:
 * [examples/](./examples)
 * [API Documentation](https://realglobe-inc.github.io/sheeted/)
 
-## Generated REST API
+## :paperclip: TIPS
+
+### Can I add sheet sources easily?
+
+You can create sheet source files via CLI.
+
+```console
+$ npx @sheeted/cli sheet dir/to/sheet-name
+```
+
+### Can I use a raw mongoose model of the sheet?
+
+`@sheeted/mongoose` provides [compileModel()](https://realglobe-inc.github.io/sheeted/mongoose/globals.html#compilemodel) function to access [mongoose Models](https://mongoosejs.com/docs/models.html), or you can use the model from `*.model.ts` if you create a sheet via CLI.
+
+## :paperclip: Generated REST API
 
 You can use the generated REST API. The format of a response is JSON.
 
@@ -244,7 +250,7 @@ Set JSON of entity ids to be deleted as below.
 }
 ```
 
-## Development
+## :paperclip: Development
 
 Requirements:
 
