@@ -8,7 +8,7 @@ on:
       - completed
 
 jobs:
-  release:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-node@v1
@@ -17,12 +17,13 @@ jobs:
     - name: Create a project
       run: |
         npx @sheeted/cli project hello-world
+      working-directory: node
     - name: Install and run
       run: |
         docker-compose up -d
         npm install
-      working-directory: hello-world
+      working-directory: node/hello-world
     - name: Test
       run: |
         node build/app.js
-      working-directory: hello-world
+      working-directory: node/hello-world
