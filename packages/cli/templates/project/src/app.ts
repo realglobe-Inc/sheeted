@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-;(require('dotenv') as { config: () => void }).config()
-
 import { createApp } from '@sheeted/server'
 import { MongoDriver } from '@sheeted/mongoose'
 
