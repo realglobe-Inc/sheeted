@@ -1,0 +1,28 @@
+name: test released packages
+
+on:
+  workflow_run:
+    workflows:
+      - master
+    types:
+      - completed
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Create a project
+      run: |
+        npx @sheeted/cli project hello-world
+    - name: Install and run
+      run: |
+        docker-compose up -d
+        npm install
+      working-directory: hello-world
+    - name: Test
+      run: |
+        node build/app.js
+      working-directory: hello-world
