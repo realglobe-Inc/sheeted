@@ -1,5 +1,3 @@
-import { type } from 'os'
-
 import { Type } from './Type.type'
 import {
   CalendarDateInterceptor,
