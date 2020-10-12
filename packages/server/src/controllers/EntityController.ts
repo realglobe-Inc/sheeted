@@ -3,12 +3,8 @@ import {
   Context,
   Repositories,
   Repository,
-  SearchQuery,
   EntityBase,
   SchemaField,
-  typeEquals,
-  Types,
-  Type,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -43,6 +39,8 @@ import {
   RestrictViolationError,
 } from './concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
+import { SearchBuilder } from './concern/SearchBuilder'
+import { FilterBuilder } from './concern/FilterBuilder'
 
 export class EntityController {
   /**
@@ -62,7 +60,6 @@ export class EntityController {
       )
     }
     const displays: DisplayFunctions = getDisplayFunctions(sheets)
-    const repository = repositories.get<any>(sheetName)
     const relation = createEntityDeleteRelation(sheets)
     const deleteTransaction = new RelatedEntityTransaction(
       relation,
@@ -72,26 +69,30 @@ export class EntityController {
       sheet,
       ctx,
       displays,
-      repository,
+      repositories,
       deleteTransaction,
     )
   }
 
+  private readonly repository: Repository<EntityBase>
   private readonly schema: { [field: string]: SchemaField<any> }
   private readonly userRoles: string[]
   private readonly userAccessPolicy: UserAccessPolicy
   private readonly converter: EntityConverter
   private readonly validator: EntityValidator
   private readonly hook: HookTrigger
+  private readonly filterBuilder: FilterBuilder
+  private readonly searchBuilder: SearchBuilder
   private readonly sortBuilder: SortBuilder
 
   constructor(
     private readonly sheet: Sheet<any, any>,
     private readonly ctx: Context<string>,
     displays: DisplayFunctions,
-    private readonly repository: Repository<EntityBase>,
+    private readonly repositories: Repositories,
     private readonly deleteTransaction: RelatedEntityTransaction,
   ) {
+    this.repository = repositories.get<any>(sheet.name)
     this.schema = {
       ...sheet.Schema,
       // EntityBaseSchema は上書きできない
@@ -115,10 +116,17 @@ export class EntityController {
     this.validator = new EntityValidator(
       this.schema,
       sheet.Validator(ctx),
-      repository,
+      this.repository,
       this.converter,
     )
+    this.filterBuilder = new FilterBuilder(
+      this.schema,
+      repositories,
+      this.converter,
+      this.userAccessPolicy.ofRead?.queryFilter,
+    )
     this.sortBuilder = new SortBuilder(sheet)
+    this.searchBuilder = new SearchBuilder(this.schema)
   }
 
   info(): SheetInfo {
@@ -210,26 +218,12 @@ export class EntityController {
     if (!readPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const { Schema } = this.sheet
-    const { queryFilter = {} } = readPolicy
-    const searchFields = Object.keys(Schema).filter((field) =>
-      [Types.Text, Types.LongText].some((type) =>
-        typeEquals(type, Schema[field]?.type || ({} as Type<any>)),
-      ),
-    )
-    const words = search.split(/\s/).filter(Boolean)
-    const searchQuery: SearchQuery<any> | undefined =
-      searchFields.length > 0 ? { fields: searchFields, words } : undefined
-    const userFilter = this.converter.beforeSave(filter)
     const result = await this.repository.find({
       page,
       limit,
-      search: searchQuery,
+      search: this.searchBuilder.build(search),
       sort: this.sortBuilder.build(sort),
-      filter: {
-        ...userFilter,
-        ...queryFilter,
-      },
+      filter: await this.filterBuilder.build(filter),
     })
     const entities = result.entities.map((entity) =>
       this.converter.beforeSend(entity),
