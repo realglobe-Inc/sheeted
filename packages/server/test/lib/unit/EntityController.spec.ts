@@ -29,6 +29,11 @@ import {
   app1Repository,
   app1Model,
 } from '../../fixtures/apps/app1/Application'
+import {
+  App2Sheet,
+  app2Repository,
+  app2Model,
+} from '../../fixtures/apps/app2/Application'
 import { createEntityDeleteRelation } from '../../../src/controllers/concern/EntityDeleteRelation'
 import { RelatedEntityTransaction } from '../../../src/controllers/concern/DeleteRelatedEntities'
 
@@ -47,6 +52,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await app1Model.deleteMany({})
+  await app2Model.deleteMany({})
   await userModel.deleteMany({})
   await userModel.create(adminUser)
 })
@@ -313,4 +319,61 @@ test('EntityController rollback with hook', async () => {
   // n = 99 にすると Hook で失敗する
   expect((await controller.delete([entity.id])).failure).toHaveLength(1)
   await expect(controller.one(entity.id)).resolves.toEqual(entity)
+})
+
+test('EntityController list() with entity filter', async () => {
+  const userSheet = buildIAMUserSheet(roles)
+  const sheets = [userSheet, App2Sheet] as Sheet[]
+  const repositories = createRepositories(sheets, MongoDriver)
+  const relation = createEntityDeleteRelation(sheets)
+  const deleteTransaction = new RelatedEntityTransaction(relation, repositories)
+
+  const controller = new EntityController(
+    App2Sheet,
+    {
+      user: adminUser,
+    },
+    {},
+    app2Repository,
+    deleteTransaction,
+  )
+
+  const user = await userRepository.create({
+    name: 'user01',
+    email: 'user01@example.com',
+    roles: ['default'],
+  })
+  await app2Repository.create({
+    name: 'abc',
+    user,
+  })
+
+  expect(
+    await controller.list({
+      page: 1,
+      limit: 10,
+      search: '',
+      sort: [],
+      filter: {
+        name: 'abc',
+      },
+    }),
+  ).toMatchObject({
+    total: 1,
+    pages: 1,
+  })
+  expect(
+    await controller.list({
+      page: 1,
+      limit: 10,
+      search: '',
+      sort: [],
+      filter: {
+        user: user.id, // entity は id でフィルタできる
+      },
+    }),
+  ).toMatchObject({
+    total: 1,
+    pages: 1,
+  })
 })
