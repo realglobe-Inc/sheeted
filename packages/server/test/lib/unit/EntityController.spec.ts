@@ -24,11 +24,7 @@ import {
   userModel,
   userRepository,
 } from '../../fixtures/db/users'
-import {
-  App1Sheet,
-  app1Repository,
-  app1Model,
-} from '../../fixtures/apps/app1/Application'
+import { App1Sheet, app1Model } from '../../fixtures/apps/app1/Application'
 import {
   App2Sheet,
   app2Repository,
