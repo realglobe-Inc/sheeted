@@ -72,7 +72,7 @@ test('EntityController with IAMUser with admin', async () => {
     {
       [IAM_USER_SHEET]: sheet.View.display,
     },
-    userRepository,
+    repositories,
     deleteTransaction,
   )
 
@@ -181,7 +181,7 @@ test('EntityController with IAMUser with guest', async () => {
     {
       [IAM_USER_SHEET]: sheet.View.display,
     },
-    userRepository,
+    repositories,
     deleteTransaction,
   )
 
@@ -214,13 +214,14 @@ test('EntityController with IAMUser with guest', async () => {
 })
 
 test('EntityController with a sheet', async () => {
+  const repositories = createRepositories([App1Sheet] as Sheet[], MongoDriver)
   const controller = new EntityController(
     App1Sheet,
     {
       user: adminUser,
     },
     {},
-    app1Repository,
+    repositories,
     {} as any,
   )
 
@@ -237,13 +238,14 @@ test('EntityController with a sheet', async () => {
 })
 
 test('EntityController.performAction()', async () => {
+  const repositories = createRepositories([App1Sheet] as Sheet[], MongoDriver)
   const controller = new EntityController(
     App1Sheet,
     {
       user: defaultUser,
     },
     {},
-    app1Repository,
+    repositories,
     {} as any,
   )
   const entity = await app1Model.create({
@@ -282,7 +284,7 @@ test('EntityController rollback with hook', async () => {
       user: adminUser,
     },
     {},
-    app1Repository,
+    repositories,
     deleteTransaction,
   )
 
@@ -334,7 +336,7 @@ test('EntityController list() with entity filter', async () => {
       user: adminUser,
     },
     {},
-    app2Repository,
+    repositories,
     deleteTransaction,
   )
 
