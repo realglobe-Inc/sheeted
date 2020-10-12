@@ -2,7 +2,6 @@ version: '3.7'
 services:
   mongo:
     image: mongo:4
-    restart: always
     ports:
       - "$MONGO_PORT:27017"
     volumes:
