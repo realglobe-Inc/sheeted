@@ -3,12 +3,8 @@ import {
   Context,
   Repositories,
   Repository,
-  SearchQuery,
   EntityBase,
   SchemaField,
-  typeEquals,
-  Types,
-  Type,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -43,6 +39,7 @@ import {
   RestrictViolationError,
 } from './concern/DeleteRelatedEntities'
 import { createEntityDeleteRelation } from './concern/EntityDeleteRelation'
+import { SearchBuilder } from './concern/SearchBuilder'
 
 export class EntityController {
   /**
@@ -83,6 +80,7 @@ export class EntityController {
   private readonly converter: EntityConverter
   private readonly validator: EntityValidator
   private readonly hook: HookTrigger
+  private readonly searchBuilder: SearchBuilder
   private readonly sortBuilder: SortBuilder
 
   constructor(
@@ -119,6 +117,7 @@ export class EntityController {
       this.converter,
     )
     this.sortBuilder = new SortBuilder(sheet)
+    this.searchBuilder = new SearchBuilder(this.schema)
   }
 
   info(): SheetInfo {
@@ -210,21 +209,12 @@ export class EntityController {
     if (!readPolicy) {
       throw new HttpError('Permission denied', HttpStatuses.FORBIDDEN)
     }
-    const { Schema } = this.sheet
     const { queryFilter = {} } = readPolicy
-    const searchFields = Object.keys(Schema).filter((field) =>
-      [Types.Text, Types.LongText].some((type) =>
-        typeEquals(type, Schema[field]?.type || ({} as Type<any>)),
-      ),
-    )
-    const words = search.split(/\s/).filter(Boolean)
-    const searchQuery: SearchQuery<any> | undefined =
-      searchFields.length > 0 ? { fields: searchFields, words } : undefined
     const userFilter = this.converter.beforeSave(filter)
     const result = await this.repository.find({
       page,
       limit,
-      search: searchQuery,
+      search: this.searchBuilder.build(search),
       sort: this.sortBuilder.build(sort),
       filter: {
         ...userFilter,
