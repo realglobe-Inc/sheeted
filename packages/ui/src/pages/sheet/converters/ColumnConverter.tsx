@@ -2,6 +2,7 @@ import { Column as SColumn } from '@sheeted/core/build/web/Shared.type'
 import { Column as MColumn } from 'material-table'
 
 import { EditCellFor } from '../components/EditCell'
+import { FilterCellFor } from '../components/FilterCell'
 import { Entity } from '../../../types/Entity.type'
 import { EntityFieldValueHoc } from '../../../hoc/EntityFieldValueHoc'
 
@@ -26,7 +27,7 @@ export const convertColumn = (column: SColumn): MColumn<Entity> => {
     : 'always'
   const render = (entity: any) => EntityFieldValueHoc(column)({ entity })
   const lookup = lookupLabel(column)
-  const filtering = column.form === 'entity' ? false : true // entity は filter が難しいのでとりあえず除外
+  const filterComponent = FilterCellFor(column)
   return {
     field: column.field,
     title: column.title,
@@ -34,6 +35,7 @@ export const convertColumn = (column: SColumn): MColumn<Entity> => {
     editComponent,
     render,
     lookup,
-    filtering,
+    filtering: true,
+    filterComponent: filterComponent as any, // 要求する型と実際に値が微妙に違うので型エラーを握りつぶす
   }
 }
