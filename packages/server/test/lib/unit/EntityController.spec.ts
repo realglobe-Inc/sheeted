@@ -6,6 +6,7 @@ import {
   IAMUserEntity,
   EntityBase,
   Sheet,
+  Context,
 } from '@sheeted/core'
 import { SheetInfo } from '@sheeted/core/build/web/Shared.type'
 import {
@@ -30,8 +31,6 @@ import {
   app2Repository,
   app2Model,
 } from '../../fixtures/apps/app2/Application'
-import { createEntityDeleteRelation } from '../../../src/controllers/concern/EntityDeleteRelation'
-import { RelatedEntityTransaction } from '../../../src/controllers/concern/DeleteRelatedEntities'
 
 const roles = [
   { label: 'ADMIN', value: DefaultIAMRoles.ADMIN_ROLE },
@@ -57,19 +56,14 @@ test('EntityController with IAMUser with admin', async () => {
   const sheet = buildIAMUserSheet(roles)
   const sheets = [sheet] as Sheet[]
   const repositories = createRepositories(sheets, MongoDriver)
-  const relation = createEntityDeleteRelation(sheets)
-  const deleteTransaction = new RelatedEntityTransaction(relation, repositories)
-
-  const controller = new EntityController(
-    sheet,
-    {
-      user: adminUser,
-    },
-    {
-      [IAM_USER_SHEET]: sheet.View.display,
-    },
+  const ctx: Context<string> = {
+    user: adminUser,
+  }
+  const controller = EntityController.from(
+    sheet.name,
+    ctx,
+    sheets,
     repositories,
-    deleteTransaction,
   )
 
   const expected: SheetInfo = {
@@ -166,19 +160,14 @@ test('EntityController with IAMUser with guest', async () => {
   const sheet = buildIAMUserSheet(roles)
   const sheets = [sheet] as Sheet[]
   const repositories = createRepositories(sheets, MongoDriver)
-  const relation = createEntityDeleteRelation(sheets)
-  const deleteTransaction = new RelatedEntityTransaction(relation, repositories)
-
-  const controller = new EntityController(
-    sheet,
-    {
-      user: defaultUser,
-    },
-    {
-      [IAM_USER_SHEET]: sheet.View.display,
-    },
+  const ctx: Context<string> = {
+    user: defaultUser,
+  }
+  const controller = EntityController.from(
+    sheet.name,
+    ctx,
+    sheets,
     repositories,
-    deleteTransaction,
   )
 
   await expect(
@@ -210,15 +199,16 @@ test('EntityController with IAMUser with guest', async () => {
 })
 
 test('EntityController with a sheet', async () => {
-  const repositories = createRepositories([App1Sheet] as Sheet[], MongoDriver)
-  const controller = new EntityController(
-    App1Sheet,
-    {
-      user: adminUser,
-    },
-    {},
+  const sheets = [App1Sheet] as Sheet[]
+  const repositories = createRepositories(sheets, MongoDriver)
+  const ctx: Context<string> = {
+    user: adminUser,
+  }
+  const controller = EntityController.from(
+    App1Sheet.name,
+    ctx,
+    sheets,
     repositories,
-    {} as any,
   )
 
   const entity: EntityBase = await controller.create({
@@ -234,16 +224,18 @@ test('EntityController with a sheet', async () => {
 })
 
 test('EntityController.performAction()', async () => {
-  const repositories = createRepositories([App1Sheet] as Sheet[], MongoDriver)
-  const controller = new EntityController(
-    App1Sheet,
-    {
-      user: defaultUser,
-    },
-    {},
+  const sheets = [App1Sheet] as Sheet[]
+  const repositories = createRepositories(sheets, MongoDriver)
+  const ctx: Context<string> = {
+    user: defaultUser,
+  }
+  const controller = EntityController.from(
+    App1Sheet.name,
+    ctx,
+    sheets,
     repositories,
-    {} as any,
   )
+
   const entity = await app1Model.create({
     id: 'entity',
     n: 10,
@@ -271,17 +263,14 @@ test('EntityController.performAction()', async () => {
 test('EntityController rollback with hook', async () => {
   const sheets = [App1Sheet] as Sheet[]
   const repositories = createRepositories(sheets, MongoDriver)
-  const relation = createEntityDeleteRelation(sheets)
-  const deleteTransaction = new RelatedEntityTransaction(relation, repositories)
-
-  const controller = new EntityController(
-    App1Sheet,
-    {
-      user: adminUser,
-    },
-    {},
+  const ctx: Context<string> = {
+    user: adminUser,
+  }
+  const controller = EntityController.from(
+    App1Sheet.name,
+    ctx,
+    sheets,
     repositories,
-    deleteTransaction,
   )
 
   // n = 100 にすると Hook でエラーになる
@@ -323,17 +312,14 @@ test('EntityController list() with entity filter', async () => {
   const userSheet = buildIAMUserSheet(roles)
   const sheets = [userSheet, App2Sheet] as Sheet[]
   const repositories = createRepositories(sheets, MongoDriver)
-  const relation = createEntityDeleteRelation(sheets)
-  const deleteTransaction = new RelatedEntityTransaction(relation, repositories)
-
-  const controller = new EntityController(
-    App2Sheet,
-    {
-      user: adminUser,
-    },
-    {},
+  const ctx: Context<string> = {
+    user: adminUser,
+  }
+  const controller = EntityController.from(
+    App2Sheet.name,
+    ctx,
+    sheets,
     repositories,
-    deleteTransaction,
   )
 
   const user = await userRepository.create({

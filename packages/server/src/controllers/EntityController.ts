@@ -5,6 +5,7 @@ import {
   Repository,
   EntityBase,
   SchemaField,
+  Schema,
 } from '@sheeted/core'
 import {
   SheetInfo,
@@ -65,9 +66,11 @@ export class EntityController {
       relation,
       repositories,
     )
+    const schemas = new Map(sheets.map((sheet) => [sheet.name, sheet.Schema]))
     return new EntityController(
       sheet,
       ctx,
+      schemas,
       displays,
       repositories,
       deleteTransaction,
@@ -88,8 +91,9 @@ export class EntityController {
   constructor(
     private readonly sheet: Sheet<any, any>,
     private readonly ctx: Context<string>,
+    schemas: Map<string, Schema>,
     displays: DisplayFunctions,
-    private readonly repositories: Repositories,
+    repositories: Repositories,
     private readonly deleteTransaction: RelatedEntityTransaction,
   ) {
     this.repository = repositories.get<any>(sheet.name)
@@ -107,7 +111,7 @@ export class EntityController {
     )
     this.converter = new EntityConverter(
       sheet.name,
-      this.schema,
+      schemas,
       this.userAccessPolicy,
       displays,
       ctx,
