@@ -13,6 +13,10 @@ export const EntityAView: View<EntityAEntity> = {
       title: 'NAME',
     },
     {
+      field: 'date',
+      title: 'DATE',
+    },
+    {
       field: 'createdAt',
       title: 'Create Date',
       detailPageOnly: true,
