@@ -6,13 +6,15 @@ import { ENTITY_META_FIELD } from '@sheeted/core/build/web/Consts'
 import { DisplayFunctions } from './DisplayFunctions'
 import { UserAccessPolicy } from './UserAccessPolicy'
 
+type SheetName = string
+
 const displayDefault = (entity: { id: string } | null) =>
   entity ? String(entity.id) : ''
 
 export class EntityConverter {
   constructor(
     private sheetName: string,
-    private schema: Schema,
+    private schemas: Map<SheetName, Schema>,
     private accessPolicy: UserAccessPolicy,
     private displays: DisplayFunctions,
     private ctx: Context<any>,
@@ -86,13 +88,14 @@ export class EntityConverter {
         continue
       }
       const sheetName = schema[field].entityProperties?.sheetName ?? ''
-      const display = displays[sheetName] || displayDefault
-      const withMeta = {
-        [ENTITY_META_FIELD]: {
-          displayText: display(subEntity),
-        },
-      }
-      Object.assign(subEntity, withMeta)
+      const converter = new EntityConverter(
+        sheetName,
+        this.schemas,
+        this.accessPolicy,
+        this.displays,
+        this.ctx,
+      )
+      Object.assign(subEntity, converter.beforeSend(subEntity))
     }
     // Set meta field in entity
     const display = displays[sheetName] || displayDefault
@@ -187,5 +190,14 @@ export class EntityConverter {
       customActions,
     }
     return permissions
+  }
+
+  get schema(): Schema {
+    const { sheetName, schemas } = this
+    const schema = schemas.get(sheetName)
+    if (!schema) {
+      throw new Error(`Sheet "${sheetName}" not found`)
+    }
+    return schema
   }
 }

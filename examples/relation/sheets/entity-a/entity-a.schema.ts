@@ -7,4 +7,8 @@ export const EntityASchema: Schema<EntityAEntity> = {
     type: Types.Text,
     unique: true,
   },
+  date: {
+    type: Types.CalendarDate,
+    optional: true,
+  },
 }

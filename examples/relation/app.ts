@@ -15,7 +15,12 @@ export const app = createApp(
     Sheets: [EntityASheet, EntityBSheet, EntityCSheet, EntityDSheet],
     Roles: RoleLabels,
     DatabaseDriver: MongoDriver,
-    ApiUsers: [],
+    ApiUsers: [
+      {
+        userId: '33466f86-4612-4c98-9f5a-ecfeeed314f9',
+        accessToken: 'xxx',
+      },
+    ],
   },
   {
     ...config,
