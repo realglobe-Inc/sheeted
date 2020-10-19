@@ -1,7 +1,7 @@
 {
   "name": "@sheeted/ui",
   "description": "UI of Sheeted framework",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "Sheeted team <sheeted@realglobe.jp>",
   "babel": {
     "presets": [
