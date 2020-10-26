@@ -11,6 +11,7 @@ import {
 } from '@sheeted/core'
 
 import { compileModel } from './MongooseModel'
+import { deleteMetaFields } from './Utils'
 
 /** @internal */
 class MongoRepositoryImpl<Entity> implements Repository<Entity> {
@@ -76,6 +77,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       (await query).map((doc) => doc.toJSON() as Entity),
       this.model.countDocuments(conditions).session(options?.transaction),
     ])
+    entities.forEach(deleteMetaFields)
     return {
       page,
       pages: Math.ceil(total / limit),
@@ -89,7 +91,12 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     options?: TransactionOption,
   ): Promise<Entity | null> {
     const doc = await this.model.findOne({ id }).session(options?.transaction)
-    return (doc?.toJSON() as Entity) || null
+    const entity = doc?.toJSON()
+    if (!entity) {
+      return null
+    }
+    deleteMetaFields(entity)
+    return entity as Entity
   }
 
   async findByIds(
@@ -106,6 +113,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const map = Object.fromEntries(
       docs.map((doc) => [doc.id, doc.toJSON()] as [string, Entity]),
     )
+    Object.values(map).forEach(deleteMetaFields)
     const entities = Object.fromEntries(ids.map((id) => [id, map[id] || null]))
     return entities
   }
@@ -115,7 +123,12 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     options?: TransactionOption,
   ): Promise<Entity | null> {
     const doc = await this.model.findOne(filter).session(options?.transaction)
-    return (doc?.toJSON() as Entity) || null
+    const entity = doc?.toJSON()
+    if (!entity) {
+      return null
+    }
+    deleteMetaFields(entity)
+    return entity as Entity
   }
 
   async create(
@@ -125,6 +138,8 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const [doc] = await this.model.create([input as CreateQuery<Entity>], {
       session: options?.transaction,
     })
+    const entity: Entity = doc.toJSON()
+    deleteMetaFields(entity)
     return doc.toJSON() as Entity
   }
 
@@ -135,7 +150,9 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const docs = await this.model.create(inputs as CreateQuery<Entity>[], {
       session: options?.transaction,
     })
-    return docs.map((doc) => doc.toJSON() as Entity)
+    const entities = docs.map((doc) => doc.toJSON() as Entity)
+    entities.forEach(deleteMetaFields)
+    return entities
   }
 
   async update(
@@ -151,6 +168,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       },
     )
     const updated = await this.findById(id, options)
+    deleteMetaFields(updated)
     return updated!
   }
 
@@ -175,6 +193,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
       .find({ id: { $in: ids } })
       .session(options?.transaction)
     const entities = docs.map((doc) => doc.toJSON() as Entity)
+    entities.forEach(deleteMetaFields)
     return ids.map(
       (id) =>
         entities.find(
