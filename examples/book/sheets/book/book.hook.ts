@@ -2,7 +2,7 @@ import { Hook } from '@sheeted/core'
 import { IAMUserModel } from '@sheeted/mongoose'
 
 import { BookEntity } from './book.entity'
-import { BookModel } from './book.model'
+import { BookRepository } from './book.repository'
 
 export const BookHook: Hook<BookEntity> = {
   async onCreate(book, ctx, options) {
@@ -10,13 +10,13 @@ export const BookHook: Hook<BookEntity> = {
     if (!user) {
       throw new Error(`user not found for id "${ctx.user.id}"`)
     }
-    await BookModel.updateOne(
-      { id: book.id },
+    await BookRepository.update(
+      book.id,
       {
         buyer: user,
       },
       {
-        session: options.transaction,
+        transaction: options.transaction,
       },
     )
   },

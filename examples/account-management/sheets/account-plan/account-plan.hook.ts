@@ -1,22 +1,29 @@
 import { Hook } from '@sheeted/core'
 
-import { AccountModel } from '../account/account.model'
+import { AccountRepository } from '../account/account.repository'
 
-import { AccountPlanModel } from './account-plan.model'
+import { AccountPlanRepository } from './account-plan.repository'
 import { AccountPlanEntity } from './account-plan.entity'
 
 export const AccountPlanHook: Hook<AccountPlanEntity> = {
   async onCreate(entity, _ctx, options) {
     const { account } = entity
-    const latest = await AccountPlanModel.findOne({ account })
-      .session(options.transaction)
-      .sort('-startDate')
+    const list = await AccountPlanRepository.find(
+      {
+        filter: account,
+        sort: [{ order: 'desc', field: 'startDate' }],
+        limit: 1,
+        page: 1,
+      },
+      { transaction: options.transaction },
+    )
+    const latest = list.entities[0]
     if (latest) {
-      await AccountModel.updateOne(
-        { id: account.id },
+      await AccountRepository.update(
+        account.id,
         { currentPlan: latest.plan },
         {
-          session: options.transaction,
+          transaction: options.transaction,
         },
       )
     }
