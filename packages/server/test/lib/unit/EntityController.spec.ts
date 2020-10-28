@@ -25,7 +25,11 @@ import {
   userModel,
   userRepository,
 } from '../../fixtures/db/users'
-import { App1Sheet, app1Model } from '../../fixtures/apps/app1/Application'
+import {
+  App1Sheet,
+  app1Model,
+  app1Repository,
+} from '../../fixtures/apps/app1/Application'
 import {
   App2Sheet,
   app2Repository,
@@ -236,16 +240,15 @@ test('EntityController.performAction()', async () => {
     repositories,
   )
 
-  const entity = await app1Model.create({
-    id: 'entity',
+  const entity = await app1Repository.create({
     n: 10,
-  } as any)
+  })
   // n が10以下なら100にするアクション
   expect(await controller.performAction('set100', [entity.id])).toEqual({
     success: [{ id: entity.id }],
     failure: [],
   })
-  expect(await app1Model.findOne({ id: entity.id })).toMatchObject({
+  expect(await app1Repository.findById(entity.id)).toMatchObject({
     n: 100,
   })
   // n がすでに100なら失敗する
