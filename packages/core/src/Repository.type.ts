@@ -69,6 +69,11 @@ export type TransactionOption = { transaction: any }
  */
 export type Repository<Entity> = {
   /**
+   * Repository name same as sheet name
+   */
+  name: string
+
+  /**
    * Initialize the repository
    */
   initialize(): Promise<void>
