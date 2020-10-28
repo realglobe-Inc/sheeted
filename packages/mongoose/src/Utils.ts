@@ -24,6 +24,7 @@ export const deleteMetaFields = (obj: Record<string, any> | null): void => {
   }
 }
 
+/** @internal */
 export const convertInput = (
   input: Record<string, any>,
 ): Record<string, any> => {
@@ -34,16 +35,39 @@ export const convertInput = (
   for (const [key, value] of Object.entries(input)) {
     if (value && typeof value === 'object' && 'id' in value) {
       const subEntity: Record<string, any> = value
-      copy[key] = objectIdOrNull(subEntity.id)
+      copy[key] = castObjectIdOrNull(subEntity.id)
     }
   }
   return copy
 }
 
-export const objectIdOrNull = (id: string): MongoTypes.ObjectId | null => {
+/** @internal */
+export const castObjectIdOrNull = (id: string): MongoTypes.ObjectId | null => {
   try {
     return MongoTypes.ObjectId.createFromHexString(id)
   } catch (e) {
     return null
   }
 }
+
+/** @internal */
+export const replaceId = (input: Record<string, any>): Record<string, any> => {
+  let _input = { ...input }
+  // id を _id にすり替える
+  if (_input.id) {
+    _input = {
+      ..._input,
+      _id: _input.id,
+    }
+    delete _input.id
+  }
+  return _input
+}
+
+/**
+ * Create ID string of an entity
+ */
+export const createEntityId = (number?: number): string =>
+  typeof number === 'number'
+    ? MongoTypes.ObjectId.createFromTime(number).toHexString()
+    : MongoTypes.ObjectId().toHexString()

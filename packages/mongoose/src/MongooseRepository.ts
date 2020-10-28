@@ -11,7 +11,12 @@ import {
 } from '@sheeted/core'
 
 import { compileModel } from './MongooseModel'
-import { convertInput, deleteMetaFields, objectIdOrNull } from './Utils'
+import {
+  convertInput,
+  deleteMetaFields,
+  castObjectIdOrNull,
+  replaceId,
+} from './Utils'
 
 /** @internal */
 class MongoRepositoryImpl<Entity> implements Repository<Entity> {
@@ -91,7 +96,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     id: EntityId,
     options?: TransactionOption,
   ): Promise<Entity | null> {
-    const _id = objectIdOrNull(id)
+    const _id = castObjectIdOrNull(id)
     const doc = await this.model.findById(_id).session(options?.transaction)
     const entity = doc?.toJSON()
     if (!entity) {
@@ -108,7 +113,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const docs = await this.model
       .find({
         $or: ids.map((id) => ({
-          _id: objectIdOrNull(id),
+          _id: castObjectIdOrNull(id),
         })),
       })
       .session(options?.transaction)
@@ -125,14 +130,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     options?: TransactionOption,
   ): Promise<Entity | null> {
     let _filter = convertInput(filter)
-    // id を _id にすり替える
-    if (_filter.id) {
-      _filter = {
-        ..._filter,
-        _id: _filter.id,
-      }
-      delete _filter.id
-    }
+    _filter = replaceId(_filter)
     const doc = await this.model.findOne(_filter).session(options?.transaction)
     const entity = doc?.toJSON()
     if (!entity) {
@@ -146,7 +144,8 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     input: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<Entity> {
-    const _input = convertInput(input)
+    let _input = convertInput(input)
+    _input = replaceId(_input)
     const [doc] = await this.model.create([_input as CreateQuery<Entity>], {
       session: options?.transaction,
     })
@@ -193,7 +192,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const _changes = convertInput(changes)
     await this.model.updateMany(
       {
-        _id: { $in: ids.map(objectIdOrNull) },
+        _id: { $in: ids.map(castObjectIdOrNull) },
       },
       {
         updatedAt: Date.now(),
@@ -231,7 +230,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     options?: TransactionOption,
   ): Promise<void> {
     await this.model.deleteMany(
-      { _id: { $in: ids.map(objectIdOrNull) } },
+      { _id: { $in: ids.map(castObjectIdOrNull) } },
       {
         session: options?.transaction,
       },

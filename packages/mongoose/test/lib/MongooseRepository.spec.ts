@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import { MongoDriver } from '../../src'
+import { createEntityId, MongoDriver } from '../../src'
 import { connectMongo, cleanCollections } from '../tools/mongoose'
 import {
   Entity01,
@@ -327,4 +327,13 @@ test('MongoDriver/05 work without _id', async () => {
     sub: sub02,
   })
   expect(updated.sub).toMatchObject({ id: sub02.id })
+})
+
+test('MongoDriver/06 can specify id on creating', async () => {
+  const repository1 = new MongoDriver<Entity01>(model01.modelName, schema01)
+  const id = createEntityId(10)
+  const created = await repository1.create({
+    id,
+  })
+  expect(created.id).toBe(id)
 })
