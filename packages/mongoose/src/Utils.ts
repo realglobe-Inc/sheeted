@@ -2,6 +2,7 @@ const INTERNAL_ID = '_id'
 const INTERNAL_VERSION = '__v'
 
 /**
+ * @internal
  * 再帰的に _id, __v を削除する
  */
 export const deleteMetaFields = (obj: Record<string, any> | null): void => {
