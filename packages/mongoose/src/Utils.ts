@@ -1,3 +1,5 @@
+import { Types as MongoTypes } from 'mongoose'
+
 const INTERNAL_ID = '_id'
 const INTERNAL_VERSION = '__v'
 
@@ -19,5 +21,29 @@ export const deleteMetaFields = (obj: Record<string, any> | null): void => {
     if (value && typeof value === 'object') {
       deleteMetaFields(value)
     }
+  }
+}
+
+export const convertInput = (
+  input: Record<string, any>,
+): Record<string, any> => {
+  if (!input) {
+    return input
+  }
+  const copy = { ...input }
+  for (const [key, value] of Object.entries(input)) {
+    if (value && typeof value === 'object' && 'id' in value) {
+      const subEntity: Record<string, any> = value
+      copy[key] = objectIdOrNull(subEntity.id)
+    }
+  }
+  return copy
+}
+
+export const objectIdOrNull = (id: string): MongoTypes.ObjectId | null => {
+  try {
+    return MongoTypes.ObjectId.createFromHexString(id)
+  } catch (e) {
+    return null
   }
 }

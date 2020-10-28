@@ -11,7 +11,7 @@ import {
 } from '@sheeted/core'
 
 import { compileModel } from './MongooseModel'
-import { deleteMetaFields } from './Utils'
+import { convertInput, deleteMetaFields, objectIdOrNull } from './Utils'
 
 /** @internal */
 class MongoRepositoryImpl<Entity> implements Repository<Entity> {
@@ -55,9 +55,10 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const hasSearchCondition = Boolean(
       search && search.fields.length > 0 && search.words.length > 0,
     )
+    const _filter = convertInput(filter)
     const conditions = hasSearchCondition
       ? {
-          ...filter,
+          ..._filter,
           $or: search!.fields.map((field) => ({
             $and: search!.words.map((word) => ({
               [field]: {
@@ -66,7 +67,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
             })),
           })),
         }
-      : filter
+      : _filter
     const query = this.model
       .find(conditions)
       .sort(sortQuery)
@@ -90,7 +91,8 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     id: EntityId,
     options?: TransactionOption,
   ): Promise<Entity | null> {
-    const doc = await this.model.findOne({ id }).session(options?.transaction)
+    const _id = objectIdOrNull(id)
+    const doc = await this.model.findById(_id).session(options?.transaction)
     const entity = doc?.toJSON()
     if (!entity) {
       return null
@@ -106,7 +108,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     const docs = await this.model
       .find({
         $or: ids.map((id) => ({
-          id,
+          _id: objectIdOrNull(id),
         })),
       })
       .session(options?.transaction)
@@ -122,7 +124,8 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     filter: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<Entity | null> {
-    const doc = await this.model.findOne(filter).session(options?.transaction)
+    const _filter = convertInput(filter)
+    const doc = await this.model.findOne(_filter).session(options?.transaction)
     const entity = doc?.toJSON()
     if (!entity) {
       return null
@@ -135,40 +138,42 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     input: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<Entity> {
-    const [doc] = await this.model.create([input as CreateQuery<Entity>], {
+    const _input = convertInput(input)
+    const [doc] = await this.model.create([_input as CreateQuery<Entity>], {
       session: options?.transaction,
     })
     const entity: Entity = doc.toJSON()
     deleteMetaFields(entity)
-    return doc.toJSON() as Entity
+    return entity
   }
 
   async createBulk(
     inputs: Partial<Entity>[],
     options?: TransactionOption,
   ): Promise<Entity[]> {
-    const docs = await this.model.create(inputs as CreateQuery<Entity>[], {
+    const _inputs = inputs.map(convertInput)
+    const docs = await this.model.create(_inputs as CreateQuery<Entity>[], {
       session: options?.transaction,
     })
-    const entities = docs.map((doc) => doc.toJSON() as Entity)
+    const entities: Entity[] = docs.map((doc) => doc.toJSON() as Entity)
     entities.forEach(deleteMetaFields)
     return entities
   }
 
   async update(
     id: EntityId,
-    input: Partial<Entity>,
+    changes: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<Entity> {
+    const _changes = convertInput(changes)
     await this.model.updateOne(
-      { id },
-      { updatedAt: Date.now(), ...input },
+      { _id: id },
+      { updatedAt: Date.now(), ..._changes },
       {
         session: options?.transaction,
       },
     )
     const updated = await this.findById(id, options)
-    deleteMetaFields(updated)
     return updated!
   }
 
@@ -177,20 +182,21 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     changes: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<(Entity | null)[]> {
+    const _changes = convertInput(changes)
     await this.model.updateMany(
       {
-        id: { $in: ids },
+        _id: { $in: ids.map(objectIdOrNull) },
       },
       {
         updatedAt: Date.now(),
-        ...changes,
+        ..._changes,
       },
       {
         session: options?.transaction,
       },
     )
     const docs = await this.model
-      .find({ id: { $in: ids } })
+      .find({ _id: { $in: ids } })
       .session(options?.transaction)
     const entities = docs.map((doc) => doc.toJSON() as Entity)
     entities.forEach(deleteMetaFields)
@@ -205,7 +211,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
 
   async destroy(id: EntityId, options?: TransactionOption): Promise<void> {
     await this.model.deleteOne(
-      { id },
+      { _id: id },
       {
         session: options?.transaction,
       },
@@ -217,7 +223,7 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     options?: TransactionOption,
   ): Promise<void> {
     await this.model.deleteMany(
-      { id: { $in: ids } },
+      { _id: { $in: ids.map(objectIdOrNull) } },
       {
         session: options?.transaction,
       },

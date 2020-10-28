@@ -76,16 +76,15 @@ test('MongoDriver/01 simple schema', async () => {
 })
 
 test('MongoDriver/02 complex queries', async () => {
-  const [sub1, sub2] = (
-    await model01.insertMany([
-      {
-        name: 'sub1',
-      },
-      {
-        name: 'sub2',
-      },
-    ])
-  ).map((doc) => doc.toJSON() as Entity01)
+  const subRepository = new MongoDriver<Entity01>(model01.modelName, schema01)
+  const [sub1, sub2] = await subRepository.createBulk([
+    {
+      name: 'sub1',
+    },
+    {
+      name: 'sub2',
+    },
+  ])
 
   const repository = new MongoDriver<Entity02>(model02.modelName, schema02)
   const inputs = [
@@ -213,12 +212,10 @@ test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
   const repository = new MongoDriver<Entity01>(model01.modelName, schema01)
 
   const entity = {
-    _id: mongoose.Types.ObjectId.createFromTime(10),
-    id: 'id',
     name: 'name',
     createdAt: 10000,
     updatedAt: 10000,
-  } as Entity01
+  }
   const created = await repository.create(entity)
   expect(created).toMatchObject(entity)
 
@@ -227,7 +224,7 @@ test('MongoDriver/03 Should be able to set createdAt / updatedAt', async () => {
     createdAt: 20000,
     updatedAt: 20000,
   }
-  const updated = await repository.update(entity.id, changes)
+  const updated = await repository.update(created.id, changes)
   expect(updated).toMatchObject(changes)
 })
 
@@ -292,4 +289,38 @@ test('MongoDriver/04 Transaction', async () => {
   })
   expect(await repository.findOne({ name: 'z' })).toBeTruthy()
   expect(await repository.findOne({ name: 'y' })).toBeNull()
+})
+
+test('MongoDriver/05 work without _id', async () => {
+  const repository1 = new MongoDriver<Entity01>(model01.modelName, schema01)
+  const repository2 = new MongoDriver<Entity02>(model02.modelName, schema02)
+
+  const sub01 = await repository1.create({
+    name: 'sub1',
+  })
+  const entity = await repository2.create({
+    name: 'xx',
+    sub: sub01,
+  })
+  const found = await repository2.findOne({
+    sub: sub01,
+  })
+  expect(found).toMatchObject({ id: entity.id })
+  const list = await repository2.find({
+    filter: {
+      sub: sub01,
+    },
+    page: 1,
+    limit: 10,
+    sort: [],
+  })
+  expect(list.total).toBe(1)
+  expect(list.entities[0].id).toBe(entity.id)
+  const sub02 = await repository1.create({
+    name: 'sub1',
+  })
+  const updated = await repository2.update(entity.id, {
+    sub: sub02,
+  })
+  expect(updated.sub).toMatchObject({ id: sub02.id })
 })
