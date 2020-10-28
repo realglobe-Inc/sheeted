@@ -1,16 +1,16 @@
 import { IAMUserEntity, DefaultIAMRoles, IAM_USER_SHEET } from '@sheeted/core'
-import { compileModel, MongoDriver } from '@sheeted/mongoose'
+import { compileModel, MongoDriver, createEntityId } from '@sheeted/mongoose'
 import { buildIAMUserSchema } from '@sheeted/core/build/sheets/IAMUserSheet/IAMUserSchema'
 
 export const adminUser = {
-  id: 'admin',
+  id: createEntityId(0),
   name: 'admin',
   email: 'admin@example.com',
   roles: [DefaultIAMRoles.ADMIN_ROLE],
 } as IAMUserEntity
 
 export const defaultUser = {
-  id: 'user',
+  id: createEntityId(1),
   name: 'user',
   email: 'user@example.com',
   roles: [DefaultIAMRoles.DEFAULT_ROLE],
@@ -25,9 +25,9 @@ export const userRepository = new MongoDriver(IAM_USER_SHEET, schema)
 
 export const seedUsers = async (): Promise<void> => {
   for (const user of users) {
-    const found = await userModel.findOne({ id: user.id })
+    const found = await userRepository.findById(user.id)
     if (!found) {
-      await userModel.create(user)
+      await userRepository.create(user)
     }
   }
 }

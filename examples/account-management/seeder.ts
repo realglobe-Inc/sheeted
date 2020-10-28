@@ -1,50 +1,44 @@
-import { Types } from 'mongoose'
-import { IAMUserModel } from '@sheeted/mongoose'
+import { IAMUserRepository, createEntityId } from '@sheeted/mongoose'
 import { IAMUserEntity } from '@sheeted/core'
 
 import { Seeder, reduce, defaultUsers } from '../util/seeder.util'
 
-import { AccountModel } from './sheets/account/account.model'
-import { AccountPlanModel } from './sheets/account-plan/account-plan.model'
-import { PlanModel } from './sheets/plan/plan.model'
+import { AccountRepository } from './sheets/account/account.repository'
+import { AccountPlanRepository } from './sheets/account-plan/account-plan.repository'
+import { PlanRepository } from './sheets/plan/plan.repository'
 import { AccountEntity } from './sheets/account/account.entity'
 import { AccountPlanEntity } from './sheets/account-plan/account-plan.entity'
 import { PlanEntity } from './sheets/plan/plan.entity'
 
 export const seeders = reduce([
-  new Seeder<IAMUserEntity>(IAMUserModel, defaultUsers),
-  new Seeder<AccountEntity>(AccountModel, [
+  new Seeder<IAMUserEntity>(IAMUserRepository, defaultUsers),
+  new Seeder<AccountEntity>(AccountRepository, [
     {
-      _id: Types.ObjectId.createFromTime(0),
-      id: 'user01',
+      id: createEntityId(1),
       name: 'John Doe',
       email: 'johndoe@example.com',
       currentPlan: undefined,
     },
   ]),
-  new Seeder<AccountPlanEntity>(AccountPlanModel, []),
-  new Seeder<PlanEntity>(PlanModel, [
+  new Seeder<AccountPlanEntity>(AccountPlanRepository, []),
+  new Seeder<PlanEntity>(PlanRepository, [
     {
-      _id: Types.ObjectId.createFromTime(0),
-      id: 'free',
+      id: createEntityId(1),
       name: 'free',
       price: 0,
     },
     {
-      _id: Types.ObjectId.createFromTime(1),
-      id: 'basic',
+      id: createEntityId(2),
       name: 'basic',
       price: 1000,
     },
     {
-      _id: Types.ObjectId.createFromTime(2),
-      id: 'premium',
+      id: createEntityId(3),
       name: 'premium',
       price: 5000,
     },
     {
-      _id: Types.ObjectId.createFromTime(3),
-      id: 'canceled',
+      id: createEntityId(4),
       name: 'canceled',
       price: 0,
     },

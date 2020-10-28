@@ -195,7 +195,7 @@ test('RelatedEntityFinder', async () => {
     await transaction.transact(entities, { transaction: t })
   })
 
-  expect(await BModel.count({ a: a2 })).toBe(1)
+  expect(await BModel.count({ a: a2.id as any })).toBe(1)
   expect(await BModel.count({ a: undefined })).toBe(2) // Query does not distinguish between null and undefined
   expect(await CModel.count({})).toBe(1)
   expect(await DModel.count({})).toBe(1)

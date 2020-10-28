@@ -265,19 +265,29 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
   },
   {
     action: 'update',
-    role: Roles.EDITOR_ROLE,
+    role: Roles.DEFAULT_ROLE,
     column: {
       effect: 'deny',
       columns: ['genre'],
     },
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean => {
+      return book.buyer && ctx?.user.id === book.buyer.id
+    },
+  },
+  {
+    action: 'update',
+    role: Roles.EDITOR_ROLE,
+  },
+  {
+    action: 'delete',
+    role: Roles.DEFAULT_ROLE,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean => {
+      return book.buyer && ctx?.user.id === book.buyer.id
+    },
   },
   {
     action: 'delete',
     role: Roles.EDITOR_ROLE,
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'custom',
@@ -295,24 +305,24 @@ Example:
 
 ```ts
 import { Hook } from '@sheeted/core'
-import { IAMUserModel } from '@sheeted/mongoose'
+import { IAMUserRepository } from '@sheeted/mongoose'
 
 import { BookEntity } from './book.entity'
-import { BookModel } from './book.model'
+import { BookRepository } from './book.repository'
 
 export const BookHook: Hook<BookEntity> = {
   async onCreate(book, ctx, options) {
-    const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
+    const user = await IAMUserRepository.findById(ctx.user.id)
     if (!user) {
       throw new Error(`user not found for id "${ctx.user.id}"`)
     }
-    await BookModel.updateOne(
-      { id: book.id },
+    await BookRepository.update(
+      book.id,
       {
         buyer: user,
       },
       {
-        session: options.transaction,
+        transaction: options.transaction,
       },
     )
   },
@@ -365,7 +375,7 @@ import { Action } from '@sheeted/core'
 import { ActionIds } from '../../constants'
 
 import { BookEntity } from './book.entity'
-import { BookModel } from './book.model'
+import { BookRepository } from './book.repository'
 
 export const BookActions: Action<BookEntity>[] = [
   {
@@ -373,16 +383,9 @@ export const BookActions: Action<BookEntity>[] = [
     title: 'Increment like count',
     icon: 'exposure_plus_1',
     perform: async (entity: BookEntity): Promise<void> => {
-      await BookModel.updateOne(
-        {
-          id: entity.id,
-        },
-        {
-          $inc: {
-            like: 1,
-          },
-        },
-      )
+      await BookRepository.update(entity.id, {
+        like: entity.like + 1,
+      })
     },
   },
 ]

@@ -6,7 +6,6 @@ import {
   Model as MongoModel,
   modelNames,
 } from 'mongoose'
-import { v4 as uuid } from 'uuid'
 import { Schema, SchemaField, EntityBase } from '@sheeted/core'
 
 /**
@@ -45,24 +44,23 @@ export const compileModel = <Entity>(
       return [field, definitionValue]
     }),
   )
-  const mongoSchema = new MongoSchema({
-    ...definition,
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true,
-      default: () => uuid(),
+  const mongoSchema = new MongoSchema(
+    {
+      ...definition,
+      createdAt: {
+        type: Number,
+        default: () => Date.now(),
+      },
+      updatedAt: {
+        type: Number,
+        default: () => Date.now(),
+      },
     },
-    createdAt: {
-      type: Number,
-      default: () => Date.now(),
+    {
+      toJSON: { getters: true, virtuals: true, versionKey: false },
+      toObject: { getters: true, virtuals: true, versionKey: false },
     },
-    updatedAt: {
-      type: Number,
-      default: () => Date.now(),
-    },
-  })
+  )
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   mongoSchema.plugin(require('mongoose-autopopulate'))
   return model<Document & Partial<Entity>>(name, mongoSchema)

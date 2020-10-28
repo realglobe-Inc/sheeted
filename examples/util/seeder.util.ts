@@ -1,5 +1,5 @@
-import { Model, Document, Types } from 'mongoose'
-import { EntityBase, DefaultIAMRoles } from '@sheeted/core'
+import { EntityBase, DefaultIAMRoles, Repository } from '@sheeted/core'
+import { createEntityId } from '@sheeted/mongoose'
 
 export interface ISeeder {
   seed(): Promise<void>
@@ -7,21 +7,21 @@ export interface ISeeder {
 
 export class Seeder<E extends EntityBase> implements ISeeder {
   constructor(
-    private model: Model<Partial<EntityBase> & Document>,
-    private data: (Partial<E> & { _id?: Types.ObjectId })[],
+    private repository: Repository<EntityBase>,
+    private data: Partial<E>[],
   ) {}
 
   async seed(): Promise<void> {
     let count = 0
     for (const entity of this.data.reverse()) {
-      const found = await this.model.findOne({ id: entity.id })
+      const found = await this.repository.findById(entity.id!)
       if (!found) {
-        await this.model.create(entity)
+        await this.repository.create(entity)
         count++
       }
     }
     console.log(
-      `[SEED] Created ${count} new entities in ${this.model.modelName} collection`,
+      `[SEED] Created ${count} new entities in ${this.repository.name} collection`,
     )
   }
 }
@@ -35,20 +35,15 @@ export const reduce = (seederList: Seeder<any>[]): ISeeder => ({
   },
 })
 
-export const generateId = (num: number): Types.ObjectId =>
-  Types.ObjectId.createFromTime(num)
-
 export const defaultUsers = [
   {
-    _id: Types.ObjectId.createFromTime(1000),
-    id: 'demo',
+    id: createEntityId(0),
     name: 'demo',
     email: `demo@example.com`,
     roles: [DefaultIAMRoles.DEFAULT_ROLE],
   },
   {
-    _id: Types.ObjectId.createFromTime(1001),
-    id: 'admin',
+    id: createEntityId(1),
     name: 'admin',
     email: `admin@example.com`,
     roles: [DefaultIAMRoles.ADMIN_ROLE],

@@ -1,0 +1,8 @@
+import { MongoDriver } from '@sheeted/mongoose'
+
+import { <%= entityNamePascal %>Schema } from './<%= entityNameParam %>.schema'
+
+export const <%= entityNamePascal %>Repository = new MongoDriver(
+  '<%= entityNamePascal %>',
+  <%= entityNamePascal %>Schema,
+)
