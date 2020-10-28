@@ -10,7 +10,7 @@ const Resources = [
   'actions',
   'entity',
   'hook',
-  'model',
+  'repository',
   'schema',
   'sheet',
   'validator',
