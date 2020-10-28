@@ -67,6 +67,9 @@
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-variable"><a href="globals.html#iamusermodel" class="tsd-kind-icon">IAMUser<wbr>Model</a></li>
+								<li class="tsd-kind-variable"><a href="globals.html#iamuserrepository" class="tsd-kind-icon">IAMUser<wbr>Repository</a></li>
+								<li class="tsd-kind-variable"><a href="globals.html#internal_id" class="tsd-kind-icon">INTERNAL_<wbr>ID</a></li>
+								<li class="tsd-kind-variable"><a href="globals.html#internal_version" class="tsd-kind-icon">INTERNAL_<wbr>VERSION</a></li>
 								<li class="tsd-kind-variable"><a href="globals.html#mongodriver" class="tsd-kind-icon">Mongo<wbr>Driver</a></li>
 							</ul>
 						</section>
@@ -74,6 +77,7 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#compilemodel" class="tsd-kind-icon">compile<wbr>Model</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#createentityid" class="tsd-kind-icon">create<wbr>Entity<wbr>Id</a></li>
 							</ul>
 						</section>
 					</div>
@@ -87,7 +91,7 @@
 					<div class="tsd-signature tsd-kind-icon">IAMUser<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Model</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Document</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IAMUserEntity</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = compileModel(IAM_USER_SHEET, iamUserSchema)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/d613150/packages/mongoose/src/IAMUserModel.ts#L12">mongoose/src/IAMUserModel.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/IAMUser.ts#L13">mongoose/src/IAMUser.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -97,12 +101,47 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="iamuserrepository" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> IAMUser<wbr>Repository</h3>
+					<div class="tsd-signature tsd-kind-icon">IAMUser<wbr>Repository<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Repository</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IAMUserEntity</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new MongoDriver(IAM_USER_SHEET, iamUserSchema)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/IAMUser.ts#L18">mongoose/src/IAMUser.ts:18</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A Mongoose Repository for IAM user.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="internal_id" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> INTERNAL_<wbr>ID</h3>
+					<div class="tsd-signature tsd-kind-icon">INTERNAL_<wbr>ID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"_id"</span><span class="tsd-signature-symbol"> = &quot;_id&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/Utils.ts#L3">mongoose/src/Utils.ts:3</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="internal_version" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> INTERNAL_<wbr>VERSION</h3>
+					<div class="tsd-signature tsd-kind-icon">INTERNAL_<wbr>VERSION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"__v"</span><span class="tsd-signature-symbol"> = &quot;__v&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/Utils.ts#L4">mongoose/src/Utils.ts:4</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
 					<a name="mongodriver" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> Mongo<wbr>Driver</h3>
 					<div class="tsd-signature tsd-kind-icon">Mongo<wbr>Driver<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RepositoryDriver</span><span class="tsd-signature-symbol"> = MongoRepositoryImpl</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/d613150/packages/mongoose/src/MongooseRepository.ts#L212">mongoose/src/MongooseRepository.ts:212</a></li>
+							<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/MongooseRepository.ts#L244">mongoose/src/MongooseRepository.ts:244</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -124,7 +163,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/d613150/packages/mongoose/src/MongooseModel.ts#L17">mongoose/src/MongooseModel.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/MongooseModel.ts#L16">mongoose/src/MongooseModel.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -161,6 +200,34 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="createentityid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> create<wbr>Entity<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Entity<wbr>Id<span class="tsd-signature-symbol">(</span>number<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/realglobe-Inc/sheeted/blob/2c04f02/packages/mongoose/src/Utils.ts#L70">mongoose/src/Utils.ts:70</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create ID string of an entity</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> number: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -177,10 +244,22 @@
 						<a href="globals.html#iamusermodel" class="tsd-kind-icon">IAMUser<wbr>Model</a>
 					</li>
 					<li class=" tsd-kind-variable">
+						<a href="globals.html#iamuserrepository" class="tsd-kind-icon">IAMUser<wbr>Repository</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#internal_id" class="tsd-kind-icon">INTERNAL_<wbr>ID</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#internal_version" class="tsd-kind-icon">INTERNAL_<wbr>VERSION</a>
+					</li>
+					<li class=" tsd-kind-variable">
 						<a href="globals.html#mongodriver" class="tsd-kind-icon">Mongo<wbr>Driver</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#compilemodel" class="tsd-kind-icon">compile<wbr>Model</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createentityid" class="tsd-kind-icon">create<wbr>Entity<wbr>Id</a>
 					</li>
 				</ul>
 			</nav>
