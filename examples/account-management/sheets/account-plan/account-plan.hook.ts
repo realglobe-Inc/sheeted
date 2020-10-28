@@ -10,7 +10,7 @@ export const AccountPlanHook: Hook<AccountPlanEntity> = {
     const { account } = entity
     const list = await AccountPlanRepository.find(
       {
-        filter: account,
+        filter: { account },
         sort: [{ order: 'desc', field: 'startDate' }],
         limit: 1,
         page: 1,
@@ -25,6 +25,12 @@ export const AccountPlanHook: Hook<AccountPlanEntity> = {
         {
           transaction: options.transaction,
         },
+      )
+    } else {
+      console.warn(
+        `[WARNING] Not found account plan for account: ${JSON.stringify(
+          account,
+        )}`,
       )
     }
   },

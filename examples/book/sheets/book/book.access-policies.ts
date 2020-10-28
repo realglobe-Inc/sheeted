@@ -15,19 +15,29 @@ export const BookAccessPolicies: AccessPolicy<BookEntity, Role>[] = [
   },
   {
     action: 'update',
-    role: Roles.EDITOR_ROLE,
+    role: Roles.DEFAULT_ROLE,
     column: {
       effect: 'deny',
       columns: ['genre'],
     },
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean => {
+      return book.buyer && ctx?.user.id === book.buyer.id
+    },
+  },
+  {
+    action: 'update',
+    role: Roles.EDITOR_ROLE,
+  },
+  {
+    action: 'delete',
+    role: Roles.DEFAULT_ROLE,
+    condition: (book: BookEntity, ctx?: Context<Role>): boolean => {
+      return book.buyer && ctx?.user.id === book.buyer.id
+    },
   },
   {
     action: 'delete',
     role: Roles.EDITOR_ROLE,
-    condition: (book: BookEntity, ctx?: Context<Role>): boolean =>
-      ctx?.user.id === book.buyer.id,
   },
   {
     action: 'custom',

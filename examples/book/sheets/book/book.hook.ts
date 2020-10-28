@@ -1,12 +1,12 @@
 import { Hook } from '@sheeted/core'
-import { IAMUserModel } from '@sheeted/mongoose'
+import { IAMUserRepository } from '@sheeted/mongoose'
 
 import { BookEntity } from './book.entity'
 import { BookRepository } from './book.repository'
 
 export const BookHook: Hook<BookEntity> = {
   async onCreate(book, ctx, options) {
-    const user = (await IAMUserModel.findOne({ id: ctx.user.id }))!.toObject()
+    const user = await IAMUserRepository.findById(ctx.user.id)
     if (!user) {
       throw new Error(`user not found for id "${ctx.user.id}"`)
     }
