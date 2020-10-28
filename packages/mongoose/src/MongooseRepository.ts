@@ -124,7 +124,15 @@ class MongoRepositoryImpl<Entity> implements Repository<Entity> {
     filter: Partial<Entity>,
     options?: TransactionOption,
   ): Promise<Entity | null> {
-    const _filter = convertInput(filter)
+    let _filter = convertInput(filter)
+    // id を _id にすり替える
+    if (_filter.id) {
+      _filter = {
+        ..._filter,
+        _id: _filter.id,
+      }
+      delete _filter.id
+    }
     const doc = await this.model.findOne(_filter).session(options?.transaction)
     const entity = doc?.toJSON()
     if (!entity) {

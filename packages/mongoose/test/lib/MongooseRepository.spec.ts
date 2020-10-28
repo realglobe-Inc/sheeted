@@ -306,6 +306,10 @@ test('MongoDriver/05 work without _id', async () => {
     sub: sub01,
   })
   expect(found).toMatchObject({ id: entity.id })
+  const found2 = await repository2.findOne({
+    id: entity.id,
+  })
+  expect(found2).toMatchObject({ id: entity.id })
   const list = await repository2.find({
     filter: {
       sub: sub01,
