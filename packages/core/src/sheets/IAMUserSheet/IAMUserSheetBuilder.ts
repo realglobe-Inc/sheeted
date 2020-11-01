@@ -9,7 +9,7 @@ import { IAMUserValidator } from './IAMUserValidator'
 
 export const buildIAMUserSheet = <Role extends string>(
   roles: readonly { value: Role; label: string }[],
-  options: { viewOverride?: Partial<View<IAMUserEntity>> },
+  options: { viewOverride?: Partial<View<IAMUserEntity>> } = {},
 ): Sheet<IAMUserEntity<Role>, Role> => {
   const { viewOverride } = options
   const roleValues: Role[] = roles.map((role) => role.value)
