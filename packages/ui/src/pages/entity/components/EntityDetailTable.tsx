@@ -34,7 +34,7 @@ export const EntityDetailTable: FC<{
     <Table className={classes.table}>
       <TableBody>
         {publicColumns.map((column) => {
-          const Value = EntityFieldValueHoc(column)
+          const Value = EntityFieldValueHoc(column, { isDetail: true })
           return (
             <TableRow key={column.field}>
               <TableCell className={classes.fieldName}>

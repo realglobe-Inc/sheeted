@@ -16,6 +16,10 @@ type FieldValueProps = {
   entity?: Record<string, any>
 }
 
+type Options = {
+  isDetail?: boolean
+}
+
 const PlainValueHoc = (column: Column): FC<FieldValueProps> => {
   return function PlainValue({ entity }: FieldValueProps) {
     if (!entity) {
@@ -45,19 +49,21 @@ const LinkTextValueHoc = (column: Column): FC<FieldValueProps> => {
   }
 }
 
-const MultilineTextValueHoc = (column: Column): FC<FieldValueProps> => {
+const MultilineTextValueHoc = (
+  column: Column,
+  options: Options,
+): FC<FieldValueProps> => {
   return function MultilineTextValue({ entity }: FieldValueProps) {
     if (!entity) {
       return null
     }
+    const { isDetail } = options
     const rawValue = (entity[column.field] || '') as string
-    return (
-      <div style={{ textAlign: 'left', ...column.style }}>
-        {rawValue.split('\n').map((line, i) => (
-          <div key={i}>{line}</div>
-        ))}
-      </div>
-    )
+    let lines = rawValue.split('\n').map((line, i) => <div key={i}>{line}</div>)
+    if (!isDetail && lines.length > 3) {
+      lines = lines.slice(0, 3).concat(<div key="...">...</div>)
+    }
+    return <div style={{ textAlign: 'left', ...column.style }}>{lines}</div>
   }
 }
 
@@ -139,7 +145,10 @@ const EntityValueHoc = (column: Column): FC<FieldValueProps> => {
   }
 }
 
-export const EntityFieldValueHoc = (column: Column): FC<FieldValueProps> => {
+export const EntityFieldValueHoc = (
+  column: Column,
+  options: Options = {},
+): FC<FieldValueProps> => {
   const isEnum = Boolean(column.custom.enum)
   const isEntity = Boolean(column.custom.entity)
   const isLink = Boolean(column.custom.text?.isLink)
@@ -155,7 +164,7 @@ export const EntityFieldValueHoc = (column: Column): FC<FieldValueProps> => {
     return LinkTextValueHoc(column)
   }
   if (isMultilineText) {
-    return MultilineTextValueHoc(column)
+    return MultilineTextValueHoc(column, options)
   }
   if (isNumeric) {
     return NumericValueHoc(column)
