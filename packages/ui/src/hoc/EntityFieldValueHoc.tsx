@@ -52,7 +52,7 @@ const MultilineTextValueHoc = (column: Column): FC<FieldValueProps> => {
     }
     const rawValue = (entity[column.field] || '') as string
     return (
-      <div style={column.style}>
+      <div style={{ textAlign: 'left', ...column.style }}>
         {rawValue.split('\n').map((line, i) => (
           <div key={i}>{line}</div>
         ))}
