@@ -1,6 +1,7 @@
 import { Sheet } from './Sheet.type'
 import { SheetGroup } from './SheetGroup.type'
 import { RepositoryDriver } from './Repository.type'
+import { Options } from './Options.type'
 
 /**
  * Role label and value
@@ -28,4 +29,5 @@ export type Application<Role extends string> = {
   DatabaseDriver: RepositoryDriver
   Groups?: readonly SheetGroup[]
   ApiUsers?: ApiUser[]
+  options?: Options
 }
