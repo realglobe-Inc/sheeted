@@ -36,7 +36,9 @@ export const createApp = (
   validateSheets(application.Sheets)
   const appTitle = application.AppTitle
   const groups = [...(application.Groups || [])]
-  const IAMUserSheet = buildIAMUserSheet(application.Roles)
+  const IAMUserSheet = buildIAMUserSheet(application.Roles, {
+    viewOverride: application.options?.iamUserView,
+  })
   const sheets = [IAMUserSheet].concat(application.Sheets)
   const repositories = createRepositories(sheets, application.DatabaseDriver)
 
