@@ -46,6 +46,7 @@ export const castObjectIdOrNull = (id: string): MongoTypes.ObjectId | null => {
   try {
     return MongoTypes.ObjectId.createFromHexString(id)
   } catch (e) {
+    console.warn(`[WARNING] Cannot cast string "${id}" to Mongo Object ID.`)
     return null
   }
 }
